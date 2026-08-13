@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compliance Checker</title>
+</head>
+<body>
+    <h1>PDPA Compliance Checker</h1>
+    <p>Upload your governance document to begin.</p>
+
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">Upload</button>
+
+    <p id="status"></p>
+
+<script>
+    function uploadFile() {
+        const fileInput = document.getElementById("fileInput");
+        const status = document.getElementById("status");
+
+        if (fileInput.files.length === 0) {
+            status.textContent = "Please select a file first.";
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        status.textContent = "Uploading...";
+
+        fetch("http://127.0.0.1:5000/upload", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            status.textContent = data;
+        })
+        .catch(error => {
+            status.textContent = "Error: " + error;
+        });
+    }
+</script>
+</body>
+</html>
