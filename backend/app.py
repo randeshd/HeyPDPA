@@ -3,9 +3,15 @@ from flask_cors import CORS
 from pypdf import PdfReader
 import docx
 import os
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()  # reads .env and loads GEMINI_API_KEY into the environment
 
 app = Flask(__name__)
 CORS(app)
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def extract_text_from_pdf(file):
     reader = PdfReader(file)
@@ -42,9 +48,19 @@ def upload_file():
         return f"Unsupported file type: {extension}", 400
 
     print(f"Extracted {len(extracted_text)} characters from {filename}")
-    print(extracted_text[:500])  # print first 500 characters as a preview
 
-    return f"Extracted {len(extracted_text)} characters from '{filename}'. Preview: {extracted_text[:200]}"
+    # Send the extracted text to Gemini as a basic test
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=f"Summarize this document in one sentence:\n\n{extracted_text[:3000]}"
+    )
+
+    return response.text
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    print("About to start Flask server...", flush=True)
+    try:
+        app.run(debug=True, port=5001)
+    except Exception as e:
+        print(f"ERROR: {e}", flush=True)
+    print("Flask server has stopped.", flush=True)
