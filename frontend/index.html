@@ -2,44 +2,298 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Compliance Checker</title>
-</head>
-<body>
-    <h1>PDPA Compliance Checker</h1>
-    <p>Upload your governance document to begin.</p>
-
-    <input type="file" id="fileInput">
-    <button onclick="uploadFile()">Upload</button>
-
-    <p id="status"></p>
-
-<script>
-    function uploadFile() {
-        const fileInput = document.getElementById("fileInput");
-        const status = document.getElementById("status");
-
-        if (fileInput.files.length === 0) {
-            status.textContent = "Please select a file first.";
-            return;
+    <title>PDPA Compliance Checker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        const formData = new FormData();
-        formData.append("file", fileInput.files[0]);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            display: flex;
+            justify-content: center;
+            padding: 60px 20px;
+        }
 
-        status.textContent = "Uploading...";
+        .container {
+            width: 100%;
+            max-width: 640px;
+        }
 
-        fetch("http://127.0.0.1:5001/upload", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            status.textContent = data;
-        })
-        .catch(error => {
-            status.textContent = "Error: " + error;
+        header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #6e6e73;
+            font-size: 15px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+        }
+
+        .upload-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        input[type="file"] {
+            flex: 1;
+            min-width: 200px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #1d1d1f;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        button:hover {
+            background-color: #3a3a3c;
+        }
+
+        button:disabled {
+            background-color: #c7c7cc;
+            cursor: not-allowed;
+        }
+
+        .status-card {
+            display: none;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .status-card.visible {
+            display: block;
+        }
+
+        .status-card.error {
+            border-left: 4px solid #ff3b30;
+        }
+
+        .status-card.success {
+            border-left: 4px solid #34c759;
+        }
+
+        .status-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6e6e73;
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #d1d1d6;
+            border-top-color: #1d1d1f;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e7;
+            padding: 16px 32px;
+            z-index: 10;
+        }
+
+        .nav-content {
+            max-width: 640px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .nav-tag {
+            font-size: 12px;
+            color: #6e6e73;
+            background: #f5f5f7;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        body {
+            padding-top: 100px;
+        }
+
+        .preview-area {
+            margin-top: 20px;
+        }
+
+        .preview-label {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 8px;
+        }
+
+        .pdf-frame {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #e5e5e7;
+            border-radius: 12px;
+        }
+
+        .no-preview {
+            font-size: 14px;
+            color: #6e6e73;
+            background: #f5f5f7;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <span class="nav-logo">PDPA Checker</span>
+            <span class="nav-tag">Hackathon MVP</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>PDPA Compliance Checker</h1>
+            <p>Upload your governance document to begin.</p>
+        </header>
+
+        <div class="card">
+            <div class="upload-row">
+                <input type="file" id="fileInput" accept=".pdf,.docx">
+                <button onclick="uploadFile()" id="uploadBtn">Upload</button>
+            </div>
+            <div class="preview-area" id="previewArea"></div>
+        </div>
+
+        <div class="status-card" id="statusCard">
+            <div class="status-label" id="statusLabel">Status</div>
+            <div class="status-text" id="statusText"></div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const previewArea = document.getElementById("previewArea");
+
+        fileInput.addEventListener("change", () => {
+            previewArea.innerHTML = "";
+
+            if (fileInput.files.length === 0) return;
+
+            const file = fileInput.files[0];
+            const extension = file.name.split(".").pop().toLowerCase();
+
+            if (extension === "pdf") {
+                const fileURL = URL.createObjectURL(file);
+                previewArea.innerHTML = `
+                    <div class="preview-label">Preview: ${file.name}</div>
+                    <iframe src="${fileURL}" class="pdf-frame"></iframe>
+                `;
+            } else {
+                previewArea.innerHTML = `
+                    <div class="preview-label">Selected: ${file.name}</div>
+                    <div class="no-preview">No preview available for .${extension} files.</div>
+                `;
+            }
         });
-    }
-</script>
+
+        function uploadFile() {
+            const uploadBtn = document.getElementById("uploadBtn");
+            const statusCard = document.getElementById("statusCard");
+            const statusLabel = document.getElementById("statusLabel");
+            const statusText = document.getElementById("statusText");
+
+            if (fileInput.files.length === 0) {
+                showStatus("error", "Notice", "Please select a file first.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = "Uploading...";
+            showStatus("", "Processing", '<span class="spinner"></span>Analyzing your document, this may take a moment...');
+
+            fetch("http://127.0.0.1:5001/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                return response.text();
+            })
+            .then(data => {
+                showStatus("success", "Summary", data);
+            })
+            .catch(error => {
+                showStatus("error", "Error", error.message);
+            })
+            .finally(() => {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = "Upload";
+            });
+
+            function showStatus(type, label, message) {
+                statusCard.className = "status-card visible" + (type ? " " + type : "");
+                statusLabel.textContent = label;
+                statusText.innerHTML = message;
+            }
+        }
+    </script>
 </body>
 </html>
