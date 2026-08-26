@@ -14,14 +14,14 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f5f5f7;
             color: #1d1d1f;
-            display: flex;
-            justify-content: center;
-            padding: 60px 20px;
+            padding-top: 80px;
         }
 
         .container {
             width: 100%;
-            max-width: 640px;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
         }
 
         header {
@@ -82,6 +82,32 @@
             cursor: not-allowed;
         }
 
+        .preview-area {
+            margin-top: 20px;
+        }
+
+        .preview-label {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 8px;
+        }
+
+        .pdf-frame {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #e5e5e7;
+            border-radius: 12px;
+        }
+
+        .no-preview {
+            font-size: 14px;
+            color: #6e6e73;
+            background: #f5f5f7;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
         .status-card {
             display: none;
             background: #ffffff;
@@ -96,10 +122,6 @@
 
         .status-card.error {
             border-left: 4px solid #ff3b30;
-        }
-
-        .status-card.success {
-            border-left: 4px solid #34c759;
         }
 
         .status-label {
@@ -131,7 +153,8 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
+
+        /* Navbar */
         .navbar {
             position: fixed;
             top: 0;
@@ -139,12 +162,12 @@
             right: 0;
             background: #ffffff;
             border-bottom: 1px solid #e5e5e7;
-            padding: 16px 32px;
+            padding: 14px 32px;
             z-index: 10;
         }
 
         .nav-content {
-            max-width: 640px;
+            max-width: 680px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -154,79 +177,331 @@
         .nav-logo {
             font-weight: 600;
             font-size: 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #1d1d1f;
+            padding: 0;
         }
 
-        .nav-tag {
-            font-size: 12px;
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-tab {
+            font-size: 13px;
+            font-weight: 500;
             color: #6e6e73;
-            background: #f5f5f7;
-            padding: 4px 10px;
+            background: none;
+            border: none;
+            padding: 6px 14px;
             border-radius: 8px;
+            cursor: pointer;
         }
 
-        body {
-            padding-top: 100px;
+        .nav-tab.active {
+            background: #f5f5f7;
+            color: #1d1d1f;
         }
 
-        .preview-area {
-            margin-top: 20px;
+        /* Views */
+        .view {
+            display: none;
         }
 
-        .preview-label {
+        .view.active {
+            display: block;
+        }
+
+        /* Compliance score - gauge */
+        .score-card {
+            text-align: center;
+        }
+
+        .gauge-wrap {
+            position: relative;
+            width: 220px;
+            margin: 0 auto;
+        }
+
+        .gauge-number {
+            position: absolute;
+            top: 62%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .score-label {
             font-size: 13px;
             color: #6e6e73;
-            margin-bottom: 8px;
+            margin-top: 4px;
         }
 
-        .pdf-frame {
-            width: 100%;
-            height: 400px;
-            border: 1px solid #e5e5e7;
-            border-radius: 12px;
+        /* Two-column results layout */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 20px;
+            align-items: start;
         }
 
-        .no-preview {
+        @media (max-width: 640px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Results list */
+        .results-list {
+            margin-top: 8px;
+        }
+
+        .result-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f2;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            gap: 8px;
+        }
+
+        .result-category {
             font-size: 14px;
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .badge-met {
+            background: #d1f7dc;
+            color: #167a3a;
+        }
+
+        .badge-partial {
+            background: #fff3cd;
+            color: #92700a;
+        }
+
+        .badge-not-addressed {
+            background: #ffe1de;
+            color: #b3261e;
+        }
+
+        .result-explanation {
+            font-size: 13px;
             color: #6e6e73;
-            background: #f5f5f7;
-            padding: 16px;
-            border-radius: 10px;
+            line-height: 1.5;
+        }
+
+        .severity-tag {
+            font-size: 11px;
+            color: #a1a1a6;
+            margin-top: 4px;
+        }
+
+        /* Recommendations */
+        .rec-list {
+            list-style: none;
+            margin-top: 4px;
+        }
+
+        .rec-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            line-height: 1.5;
+            border-bottom: 1px solid #f0f0f2;
+        }
+
+        .rec-item:last-child {
+            border-bottom: none;
+        }
+
+        .rec-number {
+            font-weight: 600;
+            color: #1d1d1f;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6e6e73;
+            margin-bottom: 14px;
+        }
+
+        /* How it works page */
+        .how-it-works p {
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            color: #3a3a3c;
+        }
+
+        .how-it-works h3 {
+            font-size: 16px;
+            margin: 20px 0 8px;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 24px;
+            margin: 20px 0;
+        }
+
+        .stat {
             text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6e6e73;
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <span class="nav-logo">PDPA Checker</span>
-            <span class="nav-tag">Hackathon MVP</span>
+            <button class="nav-logo" onclick="location.reload()">PDPA Checker</button>
+            <div class="nav-links">
+                <button class="nav-tab active" id="tabChecker" onclick="switchView('checker')">Checker</button>
+                <button class="nav-tab" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
+            </div>
         </div>
     </nav>
 
     <div class="container">
-        <header>
-            <h1>PDPA Compliance Checker</h1>
-            <p>Upload your governance document to begin.</p>
-        </header>
 
-        <div class="card">
-            <div class="upload-row">
-                <input type="file" id="fileInput" accept=".pdf,.docx">
-                <button onclick="uploadFile()" id="uploadBtn">Upload</button>
+        <!-- CHECKER VIEW -->
+        <div class="view active" id="view-checker">
+            <header>
+                <h1>PDPA Compliance Checker</h1>
+                <p>Upload your governance document to begin.</p>
+            </header>
+
+            <div class="card">
+                <div class="upload-row">
+                    <input type="file" id="fileInput" accept=".pdf,.docx">
+                    <button onclick="uploadFile()" id="uploadBtn">Upload</button>
+                </div>
+                <div class="preview-area" id="previewArea"></div>
             </div>
-            <div class="preview-area" id="previewArea"></div>
+
+            <div class="status-card" id="statusCard">
+                <div class="status-label" id="statusLabel">Status</div>
+                <div class="status-text" id="statusText"></div>
+            </div>
+
+            <!-- Results appear here after a successful analysis -->
+            <div id="resultsContainer"></div>
         </div>
 
-        <div class="status-card" id="statusCard">
-            <div class="status-label" id="statusLabel">Status</div>
-            <div class="status-text" id="statusText"></div>
+        <!-- HOW IT WORKS VIEW -->
+        <div class="view" id="view-howItWorks">
+            <header>
+                <h1>How It Works</h1>
+                <p>Our requirements analysis strategy, explained.</p>
+            </header>
+
+            <div class="card how-it-works">
+                <div class="stat-row" id="checklistStats">
+                    <div class="stat">
+                        <div class="stat-number">—</div>
+                        <div class="stat-label">Requirements</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">—</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                </div>
+
+                <h3>1. Document Upload</h3>
+                <p>You upload a governance or security document (PDF or DOCX). The system extracts all readable text, including content inside tables.</p>
+
+                <h3>2. Checklist Comparison</h3>
+                <p>The extracted text is compared against a structured checklist of PDPA (Personal Data Protection Act, Sri Lanka) requirements, covering lawful basis, data subject rights, security obligations, breach notification, DPO appointment, and more.</p>
+
+                <h3>3. AI-Assisted Analysis</h3>
+                <p>An AI model reviews the document against each requirement and determines whether it is <strong>Met</strong>, <strong>Partially Met</strong>, or <strong>Not Addressed</strong>, with a short explanation for each.</p>
+
+                <h3>4. Compliance Score</h3>
+                <p>An overall compliance percentage is calculated: fully met requirements count fully, partially met requirements count half, and unaddressed requirements count as zero.</p>
+
+                <h3>5. Recommendations</h3>
+                <p>The system highlights the most important, actionable next steps — prioritizing high-severity gaps first.</p>
+
+                <p style="margin-top: 24px; font-size: 13px; color: #a1a1a6;">Note: Many provisions of Sri Lanka's PDPA are not yet legally in force. This tool assesses documents against the Act's requirements regardless of current enforcement status, to help organizations prepare ahead of time.</p>
+            </div>
         </div>
+
     </div>
 
     <script>
         const fileInput = document.getElementById("fileInput");
         const previewArea = document.getElementById("previewArea");
 
+        // ----- View switching -----
+        function switchView(view) {
+            document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+            document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+
+            document.getElementById("view-" + view).classList.add("active");
+
+            if (view === "checker") {
+                document.getElementById("tabChecker").classList.add("active");
+            } else {
+                document.getElementById("tabHowItWorks").classList.add("active");
+                loadChecklistInfo();
+            }
+        }
+
+        function loadChecklistInfo() {
+            fetch("http://127.0.0.1:5001/checklist-info")
+                .then(res => res.json())
+                .then(data => {
+                    const statRow = document.getElementById("checklistStats");
+                    statRow.innerHTML = `
+                        <div class="stat">
+                            <div class="stat-number">${data.total_requirements}</div>
+                            <div class="stat-label">Requirements</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${data.categories.length}</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                    `;
+                })
+                .catch(() => {
+                    // Silently fail if backend isn't reachable; static content still shows
+                });
+        }
+
+        // ----- File preview -----
         fileInput.addEventListener("change", () => {
             previewArea.innerHTML = "";
 
@@ -249,11 +524,13 @@
             }
         });
 
+        // ----- Upload + analysis -----
         function uploadFile() {
             const uploadBtn = document.getElementById("uploadBtn");
             const statusCard = document.getElementById("statusCard");
             const statusLabel = document.getElementById("statusLabel");
             const statusText = document.getElementById("statusText");
+            const resultsContainer = document.getElementById("resultsContainer");
 
             if (fileInput.files.length === 0) {
                 showStatus("error", "Notice", "Please select a file first.");
@@ -265,7 +542,8 @@
 
             uploadBtn.disabled = true;
             uploadBtn.textContent = "Uploading...";
-            showStatus("", "Processing", '<span class="spinner"></span>Analyzing your document, this may take a moment...');
+            resultsContainer.innerHTML = "";
+            showStatus("", "Processing", '<span class="spinner"></span>Analyzing your document against the PDPA checklist, this may take a moment...');
 
             fetch("http://127.0.0.1:5001/upload", {
                 method: "POST",
@@ -275,10 +553,11 @@
                 if (!response.ok) {
                     return response.text().then(text => { throw new Error(text); });
                 }
-                return response.text();
+                return response.json();
             })
             .then(data => {
-                showStatus("success", "Summary", data);
+                statusCard.className = "status-card";
+                renderResults(data);
             })
             .catch(error => {
                 showStatus("error", "Error", error.message);
@@ -293,6 +572,100 @@
                 statusLabel.textContent = label;
                 statusText.innerHTML = message;
             }
+        }
+
+        function buildGaugeSVG(percentage) {
+            let color = "#ff3b30";
+            if (percentage >= 70) color = "#34c759";
+            else if (percentage >= 40) color = "#ff9500";
+
+            // Semicircle gauge using an SVG arc, dash-offset represents the % filled
+            const radius = 80;
+            const circumference = Math.PI * radius; // half the circle's circumference
+            const filled = (percentage / 100) * circumference;
+
+            return `
+                <svg width="220" height="120" viewBox="0 0 220 120">
+                    <path d="M 20 110 A 90 90 0 0 1 200 110"
+                        fill="none" stroke="#e5e5e7" stroke-width="16" stroke-linecap="round" />
+                    <path d="M 20 110 A 90 90 0 0 1 200 110"
+                        fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"
+                        stroke-dasharray="${circumference}"
+                        stroke-dashoffset="${circumference - filled}" />
+                </svg>
+            `;
+        }
+
+        function renderResults(data) {
+            const resultsContainer = document.getElementById("resultsContainer");
+            const percentage = data.compliance_percentage;
+
+            let color = "#ff3b30";
+            if (percentage >= 70) color = "#34c759";
+            else if (percentage >= 40) color = "#ff9500";
+
+            let html = `
+                <div class="card score-card">
+                    <div class="gauge-wrap">
+                        ${buildGaugeSVG(percentage)}
+                        <div class="gauge-number" style="color: ${color}">${percentage}%</div>
+                    </div>
+                    <div class="score-label">Overall PDPA Compliance — ${data.filename}</div>
+                </div>
+
+                <div class="results-grid">
+                    <div class="card">
+                        <div class="section-title">Requirement Breakdown</div>
+                        <div class="results-list">
+            `;
+
+            data.results.forEach(item => {
+                let badgeClass = "badge-not-addressed";
+                if (item.status === "Met") badgeClass = "badge-met";
+                else if (item.status === "Partially Met") badgeClass = "badge-partial";
+
+                html += `
+                    <div class="result-item">
+                        <div class="result-top-row">
+                            <div class="result-category">${item.category}</div>
+                            <span class="badge ${badgeClass}">${item.status}</span>
+                        </div>
+                        <div class="result-explanation">${item.explanation}</div>
+                        <div class="severity-tag">Severity: ${item.severity}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+                    </div>
+            `;
+
+            if (data.recommendations && data.recommendations.length > 0) {
+                html += `
+                    <div class="card">
+                        <div class="section-title">Recommendations</div>
+                        <ul class="rec-list">
+                `;
+
+                data.recommendations.forEach((rec, index) => {
+                    html += `
+                        <li class="rec-item">
+                            <span class="rec-number">${index + 1}.</span>
+                            <span>${rec}</span>
+                        </li>
+                    `;
+                });
+
+                html += `
+                        </ul>
+                    </div>
+                `;
+            }
+
+            html += `</div>`; // closes results-grid
+
+            resultsContainer.innerHTML = html;
         }
     </script>
 </body>

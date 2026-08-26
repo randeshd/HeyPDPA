@@ -1,0 +1,209 @@
+[
+  {
+    "id": "LAWFUL-01",
+    "category": "Lawful Basis for Processing",
+    "requirement": "Organization must process personal data only where a valid lawful basis exists (consent, contract necessity, legal obligation, vital interest/emergency, public interest/official function, or legitimate interest), and additional conditions apply where processing relies on consent, involves special categories of data, or relates to criminal investigations.",
+    "what_to_look_for": "A documented data processing/legal basis register or policy mapping each processing activity to a specific lawful ground; consent records showing consent was freely given, specific, informed and unambiguous; evidence special-category processing meets an additional Schedule II condition (e.g. explicit consent, employment/public health necessity, health professional involvement).",
+    "severity": "High",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 5" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "PURPOSE-01",
+    "category": "Purpose Limitation",
+    "requirement": "Personal data must be collected for specified, explicit and legitimate purposes, and not further processed in a manner incompatible with those purposes.",
+    "what_to_look_for": "A data inventory or processing register listing the stated purpose for each data collection activity; policy language restricting secondary use; documented compatibility assessment where data is reused for a new purpose.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 6" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "MIN-01",
+    "category": "Data Minimization",
+    "requirement": "Personal data processed must be adequate, relevant and proportionate to the purpose for which it is collected.",
+    "what_to_look_for": "Data collection forms/fields reviewed against stated purpose; a data minimization policy or field-justification review; evidence of periodic review of collected data fields.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 7" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "ACC-01",
+    "category": "Data Accuracy",
+    "requirement": "Personal data must be kept accurate and up to date, with reasonable steps taken to erase or rectify inaccurate or outdated data without undue delay.",
+    "what_to_look_for": "A data quality/update policy; process for periodic data verification; a documented procedure for correcting inaccurate records upon discovery or request.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 8" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "RET-01",
+    "category": "Retention Limitation",
+    "requirement": "Personal data must be kept in identifiable form only for as long as necessary for the purpose for which it is processed, subject to permitted extended retention for archiving, research, or statistical purposes.",
+    "what_to_look_for": "A data retention schedule/policy specifying retention periods per data category; evidence of a deletion or anonymization process at end of retention period.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 9" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "SEC-01",
+    "category": "Security of Processing",
+    "requirement": "Organization must implement appropriate technical and organizational measures (e.g. encryption, pseudonymisation, anonymisation, access controls) to ensure integrity and confidentiality of personal data and prevent unauthorized/unlawful processing, loss, destruction, or damage.",
+    "what_to_look_for": "An information security policy; evidence of encryption/access-control implementation; access control lists or role-based access documentation; a security risk assessment.",
+    "severity": "High",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 10" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "TRANSP-01",
+    "category": "Transparency / Privacy Notice",
+    "requirement": "Organization must provide data subjects, in writing or electronically, in a concise and easily accessible form, prescribed information about the processing (controller identity, DPO contact where applicable, purposes and legal basis, categories of data, recipients, cross-border transfers, retention period, and data subject rights).",
+    "what_to_look_for": "A published privacy notice/policy covering the required disclosure elements; evidence it is provided at the point of data collection; records showing notice was updated when processing purposes changed.",
+    "severity": "High",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 11" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "DPMP-01",
+    "category": "Accountability / Data Protection Management Programme",
+    "requirement": "Organization must implement internal controls and procedures (a Data Protection Management Programme) that demonstrate compliance with core data protection obligations, are scaled to the nature/scale of processing, are integrated into governance, include oversight and complaint-handling mechanisms, and are periodically reviewed and updated.",
+    "what_to_look_for": "A documented data protection management programme/framework; internal audit or compliance monitoring records; a complaints-handling or incident-intake mechanism; evidence of periodic review of the programme.",
+    "severity": "High",
+    "act_reference": { "part": "Part I — Processing of Personal Data", "section": "Section 12" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "RIGHTS-01",
+    "category": "Data Subject Rights — Access",
+    "requirement": "Organization must provide data subjects, upon written request, confirmation of whether their personal data is being processed and the prescribed information about that processing.",
+    "what_to_look_for": "A documented data subject access request (DSAR) procedure; a request log/tracker; a template response confirming processing status and required disclosures.",
+    "severity": "High",
+    "act_reference": { "part": "Part II — Rights of Data Subjects", "section": "Section 13" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. Was scheduled for 18 Mar 2025 but that provision was repealed (Gazette 2427/34); no new commencement date announced." }
+  },
+  {
+    "id": "RIGHTS-02",
+    "category": "Data Subject Rights — Withdrawal of Consent / Objection",
+    "requirement": "Organization must allow data subjects to withdraw consent at any time and to object to (request cessation of) processing based on legitimate interest or public interest grounds, upon written request.",
+    "what_to_look_for": "A consent withdrawal mechanism (e.g. opt-out link/form); a procedure for handling objection requests; evidence withdrawal does not affect the lawfulness of prior processing.",
+    "severity": "High",
+    "act_reference": { "part": "Part II — Rights of Data Subjects", "section": "Section 14" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. Was scheduled for 18 Mar 2025 but that provision was repealed (Gazette 2427/34); no new commencement date announced." }
+  },
+  {
+    "id": "RIGHTS-03",
+    "category": "Data Subject Rights — Rectification",
+    "requirement": "Organization must rectify or complete inaccurate or incomplete personal data upon a data subject's written request, without undue delay.",
+    "what_to_look_for": "A rectification request procedure; a request log; evidence of timely correction of records upon request.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part II — Rights of Data Subjects", "section": "Section 15" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. Was scheduled for 18 Mar 2025 but that provision was repealed (Gazette 2427/34); no new commencement date announced." }
+  },
+  {
+    "id": "RIGHTS-04",
+    "category": "Data Subject Rights — Erasure",
+    "requirement": "Organization must erase a data subject's personal data upon written request where processing contravenes core obligations, consent has been withdrawn, or erasure is legally required.",
+    "what_to_look_for": "An erasure/deletion request procedure; evidence of technical capability to delete data across systems and backups; a log of erasure requests and outcomes.",
+    "severity": "High",
+    "act_reference": { "part": "Part II — Rights of Data Subjects", "section": "Section 16" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. Was scheduled for 18 Mar 2025 but that provision was repealed (Gazette 2427/34); no new commencement date announced." }
+  },
+  {
+    "id": "RIGHTS-05",
+    "category": "Data Subject Rights — Request Handling Timeline & Appeal Notice",
+    "requirement": "Organization must respond in writing to access, withdrawal, rectification, erasure, and automated-decision-review requests without undue delay and within one month of receipt (extendable by up to two further months with notice given before the initial month expires), must handle such requests free of charge by default, and must inform the data subject of the right of appeal to the Authority where a request is refused.",
+    "what_to_look_for": "A documented SLA/turnaround policy of one month (with extension process); a request tracking log showing response times; template refusal letters that include reasons and appeal-rights notice; confirmation no fee is charged absent Authority-approved criteria.",
+    "severity": "High",
+    "act_reference": { "part": "Part II — Rights of Data Subjects", "section": "Section 17" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. Was scheduled for 18 Mar 2025 but that provision was repealed (Gazette 2427/34); no new commencement date announced." }
+  },
+  {
+    "id": "RIGHTS-06",
+    "category": "Data Subject Rights — Automated Decision-Making",
+    "requirement": "Where decisions are based solely on automated processing (including profiling) that significantly affects a data subject, the organization must provide safeguards, including the right for the data subject to request human review, and must inform data subjects of the logic, significance, and consequences of such processing.",
+    "what_to_look_for": "An inventory of automated/profiling decision systems; a documented human-review request mechanism; privacy notice language describing automated decision logic and consequences.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part II — Rights of Data Subjects", "section": "Section 18" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. Was scheduled for 18 Mar 2025 but that provision was repealed (Gazette 2427/34); no new commencement date announced." }
+  },
+  {
+    "id": "DPO-01",
+    "category": "Data Protection Officer",
+    "requirement": "Organization must designate/appoint a Data Protection Officer (who may be an internal employee or an external third party) with adequate qualifications and competency, where processing is carried out by a ministry or government department, or where core processing activities involve regular/systematic monitoring at scale, large-scale special-category processing, or processing that creates a risk of harm to data subjects; and must publish the DPO's contact details and communicate them to the Authority.",
+    "what_to_look_for": "A named DPO role/title or an engagement/contract with a third-party DPO; evidence of the DPO's relevant qualifications and competency; documentation of the organization's assessment of whether it meets a mandatory-DPO trigger; published DPO contact information (privacy notice, website, or internal policy); evidence of notification/registration of those details with the Authority.",
+    "severity": "High",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 20" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "PROC-01",
+    "category": "Controller Obligations — Processor Engagement",
+    "requirement": "Where a controller engages a processor, the controller must use only processors providing appropriate technical/organizational safeguards, and must bind the processor by a contract (or statutory provision) specifying subject-matter, duration, nature/purpose of processing, data types, data subject categories, and the parties' obligations. Joint controllers must be jointly responsible for compliance.",
+    "what_to_look_for": "Data processing agreements (DPAs) with vendors/processors covering the required contractual elements; a vendor due-diligence/security assessment record; a joint-controller agreement where applicable.",
+    "severity": "High",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 21" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "PROC-02",
+    "category": "Processor Obligations",
+    "requirement": "Where the organization acts as a processor, it must process only on the controller's written instructions, bind its personnel to confidentiality obligations with appropriate safeguards, facilitate compliance audits by the controller, and erase or return personal data upon completion of services per the controller's instructions (including in sub-processing arrangements).",
+    "what_to_look_for": "Confidentiality/NDA agreements with staff handling personal data; an audit-cooperation clause in processor contracts; a documented data return/deletion procedure at contract end; sub-processor agreements flowing down the same obligations.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 22" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "BREACH-01",
+    "category": "Personal Data Breach Notification",
+    "requirement": "Organization must notify the Authority of a personal data breach in the prescribed form and manner and within the prescribed timeframe, and must notify affected data subjects where the circumstances require.",
+    "what_to_look_for": "A documented data breach response/incident management plan; a breach notification template and escalation procedure; a breach log recording past incidents and notification timelines.",
+    "severity": "High",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 23" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "DPIA-01",
+    "category": "Data Protection Impact Assessment",
+    "requirement": "Organization must carry out a Data Protection Impact Assessment (DPIA) prior to processing that involves systematic/extensive evaluation or profiling, systematic monitoring of publicly accessible areas, or other prescribed high-risk processing; must involve the DPO in the assessment; must repeat the DPIA when processing methodology/technology changes; and must submit the DPIA to the Authority upon written request along with any other requested information.",
+    "what_to_look_for": "Completed DPIA documents for high-risk processing activities; a DPIA policy/template with a trigger-assessment checklist; evidence of DPO involvement/sign-off; a log of DPIA reviews triggered by process changes.",
+    "severity": "High",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 24" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "RISK-01",
+    "category": "Risk Mitigation",
+    "requirement": "Where a DPIA indicates a likely risk of harm to data subjects, the organization must take measures to mitigate that risk prior to processing.",
+    "what_to_look_for": "A risk mitigation plan or action log tied to DPIA findings; evidence mitigation measures were implemented before the relevant processing began.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 25" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "XBORDER-01",
+    "category": "Cross-Border Data Flow",
+    "requirement": "Organization must ensure cross-border transfers of personal data comply with the core processing obligations and data subject rights provisions, using binding and enforceable instruments (as specified by Authority directive) to secure appropriate safeguards from the overseas recipient, unless the transfer qualifies for an exception (explicit informed consent, contract necessity, legal claims, public interest, emergency, mere transit through Sri Lanka, or another prescribed condition). Public authorities are additionally restricted from transferring prescribed categories of personal data cross-border.",
+    "what_to_look_for": "A cross-border transfer inventory/register; standard contractual clauses or binding transfer instruments with overseas recipients/vendors; documented reliance on a specific exception (e.g. signed consent language referencing cross-border risk) where no transfer instrument is used; a public-authority assessment of restricted data categories, if applicable.",
+    "severity": "High",
+    "act_reference": { "part": "Part III — Controllers and Processors", "section": "Section 26" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  },
+  {
+    "id": "MARKETING-01",
+    "category": "Solicited Messages / Direct Marketing",
+    "requirement": "Organization must obtain valid consent before sending promotional/solicited messages (postal, electronic, telecommunication, or similar means), must provide a free opt-out mechanism at collection and with each message, and must disclose the message's nature and the identity of the controller/third party on whose behalf it is sent.",
+    "what_to_look_for": "Marketing consent capture records; an opt-out/unsubscribe mechanism present in campaigns and communications; message templates disclosing sender identity and purpose.",
+    "severity": "Medium",
+    "act_reference": { "part": "Part IV — Use of Personal Data to Disseminate Solicited Messages", "section": "Section 27" },
+    "enforcement": { "commenced": false, "effective_date": null, "note": "Not yet in force. No commencement date has ever been announced for Part IV in any gazette to date." }
+  },
+  {
+    "id": "CHILD-01",
+    "category": "Special Protections for Children",
+    "requirement": "Organization must apply heightened safeguards when processing personal data of a child (under 16), including obtaining consent from a parent or legal guardian where special category data is involved, and giving particular weight to the child's interests when relying on legitimate interest as a lawful basis.",
+    "what_to_look_for": "An age-verification or parental-consent mechanism for services directed at or used by children; policy language addressing child data specifically; a documented legitimate-interest balancing assessment noting child data subjects where relevant.",
+    "severity": "High",
+    "act_reference": { "part": "Part I — Processing of Personal Data (Schedule I & II)", "section": "Section 5, Schedule I(f) & Schedule II(a)" },
+    "enforcement": { "commenced": false, "effective_date": "2027-01-01", "note": "Not yet in force. Commences 1 Jan 2027 (Gazette 2498/16)." }
+  }
+]
