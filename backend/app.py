@@ -101,14 +101,10 @@ def calculate_compliance_percentage(results):
 def home():
     return "Backend is running!"
 
-@app.route("/checklist-info", methods=["GET"])
-def checklist_info():
-    """Returns basic info about the checklist for the 'How it works' page."""
-    categories = sorted(set(item["category"] for item in PDPA_CHECKLIST))
-    return {
-        "total_requirements": len(PDPA_CHECKLIST),
-        "categories": categories
-    }
+@app.route("/checklist", methods=["GET"])
+def checklist():
+    """Returns the full PDPA checklist for the Requirements tab."""
+    return {"requirements": PDPA_CHECKLIST}
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
@@ -170,6 +166,16 @@ def upload_file():
 
     results = analysis.get("results", [])
     recommendations = analysis.get("recommendations", [])
+
+    # Cross-reference with our own checklist to guarantee correct category/severity,
+    # rather than trusting the AI to repeat these accurately every time.
+    checklist_by_id = {item["id"]: item for item in PDPA_CHECKLIST}
+    for item in results:
+        source = checklist_by_id.get(item.get("id"))
+        if source:
+            item["category"] = source["category"]
+            item["severity"] = source["severity"]
+
     compliance_percentage = calculate_compliance_percentage(results)
 
     return {

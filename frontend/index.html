@@ -1,395 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PDPA Compliance Checker</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDPA Compliance Checker</title>
+<style>
+    :root {
+        --bg: #f5f5f7;
+        --ink: #1d1d1f;
+        --ink-soft: #6e6e73;
+        --ink-faint: #a1a1a6;
+        --line: rgba(0,0,0,0.07);
+        --card: #ffffff;
+        --accent: #0071e3;
+        --green: #1e8e3e;
+        --green-bg: #e5f7ea;
+        --amber: #92700a;
+        --amber-bg: #fff4d6;
+        --red: #b3261e;
+        --red-bg: #ffe4e1;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+        --shadow-1: 0 1px 2px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.05);
+        --shadow-2: 0 2px 6px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.08);
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-            padding-top: 80px;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .container {
-            width: 100%;
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 40px 20px 60px;
-        }
+    html { scroll-behavior: smooth; }
 
-        header {
-            margin-bottom: 32px;
-            text-align: center;
-        }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+        background:
+            radial-gradient(1200px 600px at 15% -10%, rgba(0,113,227,0.07), transparent 60%),
+            radial-gradient(1000px 500px at 100% 0%, rgba(88,86,214,0.06), transparent 55%),
+            var(--bg);
+        color: var(--ink);
+        padding-top: 76px;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+    }
 
-        header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+    .container {
+        width: 100%;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 44px 28px 90px;
+    }
 
-        header p {
-            color: #6e6e73;
-            font-size: 15px;
-        }
+    header.page-head {
+        margin-bottom: 30px;
+        text-align: center;
+    }
 
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            margin-bottom: 20px;
-        }
+    header.page-head .eyebrow {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent);
+        background: rgba(0,113,227,0.09);
+        padding: 5px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+    }
 
-        .upload-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
+    header.page-head h1 {
+        font-size: clamp(28px, 4vw, 38px);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin-bottom: 10px;
+    }
 
-        input[type="file"] {
-            flex: 1;
-            min-width: 200px;
-            font-size: 14px;
-        }
+    header.page-head p {
+        color: var(--ink-soft);
+        font-size: 16px;
+        letter-spacing: 0;
+        max-width: 480px;
+        margin: 0 auto;
+    }
 
-        button {
-            background-color: #1d1d1f;
-            color: white;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.15s ease;
-        }
+    /* ---------- Navbar: translucent material ---------- */
+    .navbar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        padding: 12px 28px;
+        z-index: 100;
+    }
 
-        button:hover {
-            background-color: #3a3a3c;
-        }
+    .nav-content {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        button:disabled {
-            background-color: #c7c7cc;
-            cursor: not-allowed;
-        }
+    .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: var(--ink);
+        padding: 0;
+    }
 
-        .preview-area {
-            margin-top: 20px;
-        }
+    .nav-logo .dot {
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0071e3, #5856d6);
+        box-shadow: 0 0 0 4px rgba(0,113,227,0.12);
+    }
 
-        .preview-label {
-            font-size: 13px;
-            color: #6e6e73;
-            margin-bottom: 8px;
-        }
+    .nav-links {
+        display: flex;
+        gap: 2px;
+        background: rgba(0,0,0,0.045);
+        padding: 4px;
+        border-radius: 12px;
+    }
 
-        .pdf-frame {
-            width: 100%;
-            height: 400px;
-            border: 1px solid #e5e5e7;
-            border-radius: 12px;
-        }
+    .nav-tab {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink-soft);
+        background: none;
+        border: none;
+        padding: 7px 16px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: color 150ms ease, background 150ms ease, transform 100ms ease;
+    }
 
-        .no-preview {
-            font-size: 14px;
-            color: #6e6e73;
-            background: #f5f5f7;
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-        }
+    .nav-tab:active { transform: scale(0.96); }
 
-        .status-card {
-            display: none;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 28px 32px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-        }
+    .nav-tab.active {
+        background: #ffffff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
 
-        .status-card.visible {
-            display: block;
-        }
+    /* ---------- Views ---------- */
+    .view { display: none; }
+    .view.active {
+        display: block;
+        animation: fadeUp 380ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-        .status-card.error {
-            border-left: 4px solid #ff3b30;
-        }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-        .status-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6e6e73;
-            margin-bottom: 10px;
-        }
+    @media (prefers-reduced-motion: reduce) {
+        .view.active { animation: none; }
+    }
 
-        .status-text {
-            font-size: 15px;
-            line-height: 1.6;
-        }
+    /* ---------- Cards ---------- */
+    .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 30px;
+        box-shadow: var(--shadow-1);
+        margin-bottom: 20px;
+    }
 
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid #d1d1d6;
-            border-top-color: #1d1d1f;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
+    /* ---------- Upload ---------- */
+    .upload-card { position: relative; overflow: hidden; }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+    .upload-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(0,113,227,0.05), transparent 60%);
+        pointer-events: none;
+    }
 
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e5e7;
-            padding: 14px 32px;
-            z-index: 10;
-        }
+    .upload-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        position: relative;
+    }
 
-        .nav-content {
-            max-width: 680px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .file-drop {
+        flex: 1;
+        min-width: 220px;
+        border: 1.5px dashed rgba(0,0,0,0.16);
+        border-radius: var(--radius-md);
+        padding: 22px 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 150ms ease, background 150ms ease;
+        background: rgba(0,0,0,0.015);
+    }
 
-        .nav-logo {
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #1d1d1f;
-            padding: 0;
-        }
+    .file-drop:hover, .file-drop.drag-over {
+        border-color: var(--accent);
+        background: rgba(0,113,227,0.05);
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 4px;
-        }
+    .file-drop input[type="file"] { display: none; }
 
-        .nav-tab {
-            font-size: 13px;
-            font-weight: 500;
-            color: #6e6e73;
-            background: none;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+    .file-drop-label {
+        font-size: 14px;
+        color: var(--ink-soft);
+        font-weight: 500;
+    }
 
-        .nav-tab.active {
-            background: #f5f5f7;
-            color: #1d1d1f;
-        }
+    .file-drop-label strong { color: var(--ink); }
 
-        /* Views */
-        .view {
-            display: none;
-        }
+    .file-drop-sub {
+        font-size: 12px;
+        color: var(--ink-faint);
+        margin-top: 4px;
+    }
 
-        .view.active {
-            display: block;
-        }
+    button.primary {
+        background-color: var(--ink);
+        color: white;
+        border: none;
+        padding: 12px 26px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 150ms ease, transform 100ms ease;
+        white-space: nowrap;
+    }
 
-        /* Compliance score - gauge */
-        .score-card {
-            text-align: center;
-        }
+    button.primary:hover { background-color: #3a3a3c; }
+    button.primary:active { transform: scale(0.97); }
 
-        .gauge-wrap {
-            position: relative;
-            width: 220px;
-            margin: 0 auto;
-        }
+    button.primary:disabled {
+        background-color: #c7c7cc;
+        cursor: not-allowed;
+        transform: none;
+    }
 
-        .gauge-number {
-            position: absolute;
-            top: 62%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 36px;
-            font-weight: 700;
-        }
+    .preview-area { margin-top: 20px; position: relative; }
 
-        .score-label {
-            font-size: 13px;
-            color: #6e6e73;
-            margin-top: 4px;
-        }
+    .preview-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
 
-        /* Two-column results layout */
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
+    .pdf-frame {
+        width: 100%;
+        height: 420px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+    }
 
-        @media (max-width: 640px) {
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    .no-preview {
+        font-size: 14px;
+        color: var(--ink-soft);
+        background: var(--bg);
+        padding: 18px;
+        border-radius: var(--radius-sm);
+        text-align: center;
+    }
 
-        /* Results list */
-        .results-list {
-            margin-top: 8px;
-        }
+    /* ---------- Status ---------- */
+    .status-card {
+        display: none;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 26px 30px;
+        box-shadow: var(--shadow-1);
+        margin-bottom: 20px;
+    }
 
-        .result-item {
-            padding: 16px 0;
-            border-bottom: 1px solid #f0f0f2;
-        }
+    .status-card.visible { display: block; animation: fadeUp 300ms ease; }
+    .status-card.error { border-left: 4px solid var(--red); }
 
-        .result-item:last-child {
-            border-bottom: none;
-        }
+    .status-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-soft);
+        margin-bottom: 8px;
+    }
 
-        .result-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-            gap: 8px;
-        }
+    .status-text { font-size: 15px; line-height: 1.6; }
 
-        .result-category {
-            font-size: 14px;
-            font-weight: 600;
-        }
+    .spinner {
+        display: inline-block;
+        width: 14px; height: 14px;
+        border: 2px solid #d1d1d6;
+        border-top-color: var(--ink);
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
 
-        .badge {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 999px;
-            white-space: nowrap;
-        }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-        .badge-met {
-            background: #d1f7dc;
-            color: #167a3a;
-        }
+    /* ---------- Score gauge ---------- */
+    .score-card { text-align: center; }
 
-        .badge-partial {
-            background: #fff3cd;
-            color: #92700a;
-        }
+    .gauge-wrap { position: relative; width: 240px; margin: 0 auto; }
 
-        .badge-not-addressed {
-            background: #ffe1de;
-            color: #b3261e;
-        }
+    .gauge-number {
+        position: absolute;
+        top: 64%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 38px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
 
-        .result-explanation {
-            font-size: 13px;
-            color: #6e6e73;
-            line-height: 1.5;
-        }
+    .score-label {
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin-top: 6px;
+    }
 
-        .severity-tag {
-            font-size: 11px;
-            color: #a1a1a6;
-            margin-top: 4px;
-        }
+    /* ---------- Results grid ---------- */
+    .results-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 20px;
+        align-items: start;
+    }
 
-        /* Recommendations */
-        .rec-list {
-            list-style: none;
-            margin-top: 4px;
-        }
+    @media (max-width: 700px) {
+        .results-grid { grid-template-columns: 1fr; }
+    }
 
-        .rec-item {
-            display: flex;
-            gap: 10px;
-            padding: 10px 0;
-            font-size: 14px;
-            line-height: 1.5;
-            border-bottom: 1px solid #f0f0f2;
-        }
+    .results-list { margin-top: 6px; }
 
-        .rec-item:last-child {
-            border-bottom: none;
-        }
+    .result-item {
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f2;
+        transition: background 150ms ease;
+        border-radius: 8px;
+    }
 
-        .rec-number {
-            font-weight: 600;
-            color: #1d1d1f;
-            flex-shrink: 0;
-        }
+    .result-item:last-child { border-bottom: none; }
+    .result-item:hover { background: rgba(0,0,0,0.015); }
 
-        .section-title {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6e6e73;
-            margin-bottom: 14px;
-        }
+    .result-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+        gap: 8px;
+    }
 
-        /* How it works page */
-        .how-it-works p {
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 16px;
-            color: #3a3a3c;
-        }
+    .result-category { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 
-        .how-it-works h3 {
-            font-size: 16px;
-            margin: 20px 0 8px;
-        }
+    .badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 11px;
+        border-radius: 999px;
+        white-space: nowrap;
+        letter-spacing: 0.01em;
+    }
 
-        .stat-row {
-            display: flex;
-            gap: 24px;
-            margin: 20px 0;
-        }
+    .badge-met { background: var(--green-bg); color: var(--green); }
+    .badge-partial { background: var(--amber-bg); color: var(--amber); }
+    .badge-not-addressed { background: var(--red-bg); color: var(--red); }
 
-        .stat {
-            text-align: center;
-        }
+    .result-explanation { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
 
-        .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-        }
+    .severity-tag { font-size: 11px; color: var(--ink-faint); margin-top: 5px; }
 
-        .stat-label {
-            font-size: 12px;
-            color: #6e6e73;
-        }
-    </style>
+    .rec-list { list-style: none; margin-top: 4px; }
+
+    .rec-item {
+        display: flex;
+        gap: 10px;
+        padding: 11px 0;
+        font-size: 14px;
+        line-height: 1.55;
+        border-bottom: 1px solid #f0f0f2;
+    }
+
+    .rec-item:last-child { border-bottom: none; }
+
+    .rec-number {
+        font-weight: 700;
+        color: var(--accent);
+        flex-shrink: 0;
+    }
+
+    .section-title {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-soft);
+        margin-bottom: 16px;
+    }
+
+    /* ---------- How it works ---------- */
+    .how-it-works p {
+        font-size: 15px;
+        line-height: 1.75;
+        margin-bottom: 16px;
+        color: #3a3a3c;
+    }
+
+    .how-it-works h3 {
+        font-size: 16px;
+        letter-spacing: -0.01em;
+        margin: 22px 0 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .step-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        background: rgba(0,113,227,0.1);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .stat-row {
+        display: flex;
+        gap: 16px;
+        margin: 6px 0 26px;
+        flex-wrap: wrap;
+    }
+
+    .stat {
+        text-align: center;
+        flex: 1;
+        min-width: 120px;
+        background: var(--bg);
+        border-radius: var(--radius-md);
+        padding: 18px 10px;
+    }
+
+    .stat-number { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-label { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+    .note-strip {
+        margin-top: 26px;
+        font-size: 13px;
+        color: var(--ink-faint);
+        background: var(--bg);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        line-height: 1.6;
+    }
+
+    /* ---------- Requirements tab ---------- */
+    .req-toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+    }
+
+    .req-search {
+        flex: 1;
+        min-width: 220px;
+        padding: 11px 16px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--line);
+        background: var(--card);
+        font-size: 14px;
+        color: var(--ink);
+        outline: none;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .req-search:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(0,113,227,0.12);
+    }
+
+    select.req-filter {
+        padding: 11px 14px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--line);
+        background: var(--card);
+        font-size: 13px;
+        color: var(--ink);
+        cursor: pointer;
+        outline: none;
+    }
+
+    .req-count {
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin-bottom: 14px;
+    }
+
+    .req-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .req-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        padding: 20px 22px;
+        box-shadow: var(--shadow-1);
+        transition: transform 150ms ease, box-shadow 150ms ease;
+        cursor: pointer;
+    }
+
+    .req-card:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-2);
+    }
+
+    .req-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .req-card-id {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--accent);
+        text-transform: uppercase;
+    }
+
+    .req-card-category {
+        font-size: 16px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+        margin-top: 3px;
+    }
+
+    .req-badges { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+
+    .sev-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+    }
+
+    .sev-high { background: var(--red-bg); color: var(--red); }
+    .sev-medium { background: var(--amber-bg); color: var(--amber); }
+    .sev-low { background: rgba(0,0,0,0.06); color: var(--ink-soft); }
+
+    .enforce-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        white-space: nowrap;
+        background: rgba(0,0,0,0.055);
+        color: var(--ink-soft);
+    }
+
+    .enforce-badge.commenced { background: var(--green-bg); color: var(--green); }
+
+    .req-card-text {
+        font-size: 14px;
+        color: #3a3a3c;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .req-card-details {
+        display: none;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0f0f2;
+    }
+
+    .req-card.expanded .req-card-details { display: block; animation: fadeUp 220ms ease; }
+
+    .req-detail-row { margin-bottom: 10px; }
+
+    .req-detail-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ink-faint);
+        margin-bottom: 4px;
+    }
+
+    .req-detail-value { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+
+    .req-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+    }
+
+    .req-act-ref { font-size: 12px; color: var(--ink-faint); }
+
+    .req-toggle {
+        font-size: 12px;
+        color: var(--accent);
+        font-weight: 600;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--ink-soft);
+        font-size: 14px;
+    }
+</style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <button class="nav-logo" onclick="location.reload()">PDPA Checker</button>
+            <button class="nav-logo" onclick="location.reload()">
+                <span class="dot"></span>
+                PDPA Checker
+            </button>
             <div class="nav-links">
                 <button class="nav-tab active" id="tabChecker" onclick="switchView('checker')">Checker</button>
+                <button class="nav-tab" id="tabRequirements" onclick="switchView('requirements')">Requirements</button>
                 <button class="nav-tab" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
             </div>
         </div>
@@ -399,15 +659,20 @@
 
         <!-- CHECKER VIEW -->
         <div class="view active" id="view-checker">
-            <header>
+            <header class="page-head">
+                <span class="eyebrow">Sri Lanka PDPA · Act No. 9 of 2022</span>
                 <h1>PDPA Compliance Checker</h1>
-                <p>Upload your governance document to begin.</p>
+                <p>Upload your governance document and get an instant gap analysis against the Personal Data Protection Act.</p>
             </header>
 
-            <div class="card">
+            <div class="card upload-card">
                 <div class="upload-row">
-                    <input type="file" id="fileInput" accept=".pdf,.docx">
-                    <button onclick="uploadFile()" id="uploadBtn">Upload</button>
+                    <label class="file-drop" id="fileDrop">
+                        <input type="file" id="fileInput" accept=".pdf,.docx">
+                        <div class="file-drop-label" id="fileDropLabel"><strong>Choose a file</strong> or drag it here</div>
+                        <div class="file-drop-sub">PDF or DOCX, up to 10MB</div>
+                    </label>
+                    <button class="primary" onclick="uploadFile()" id="uploadBtn">Analyze Document</button>
                 </div>
                 <div class="preview-area" id="previewArea"></div>
             </div>
@@ -417,13 +682,43 @@
                 <div class="status-text" id="statusText"></div>
             </div>
 
-            <!-- Results appear here after a successful analysis -->
             <div id="resultsContainer"></div>
+        </div>
+
+        <!-- REQUIREMENTS VIEW -->
+        <div class="view" id="view-requirements">
+            <header class="page-head">
+                <span class="eyebrow">Reference Library</span>
+                <h1>PDPA Requirements</h1>
+                <p>Browse all requirements the checker evaluates every document against.</p>
+            </header>
+
+            <div class="req-toolbar">
+                <input type="text" class="req-search" id="reqSearch" placeholder="Search requirements, categories, or keywords…">
+                <select class="req-filter" id="reqCategoryFilter">
+                    <option value="">All categories</option>
+                </select>
+                <select class="req-filter" id="reqSeverityFilter">
+                    <option value="">All severities</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+                <select class="req-filter" id="reqEnforceFilter">
+                    <option value="">All enforcement states</option>
+                    <option value="commenced">In force</option>
+                    <option value="pending">Not yet in force</option>
+                </select>
+            </div>
+
+            <div class="req-count" id="reqCount"></div>
+            <div class="req-list" id="reqList"></div>
         </div>
 
         <!-- HOW IT WORKS VIEW -->
         <div class="view" id="view-howItWorks">
-            <header>
+            <header class="page-head">
+                <span class="eyebrow">Under the hood</span>
                 <h1>How It Works</h1>
                 <p>Our requirements analysis strategy, explained.</p>
             </header>
@@ -440,29 +735,50 @@
                     </div>
                 </div>
 
-                <h3>1. Document Upload</h3>
+                <h3><span class="step-num">1</span> Document Upload</h3>
                 <p>You upload a governance or security document (PDF or DOCX). The system extracts all readable text, including content inside tables.</p>
 
-                <h3>2. Checklist Comparison</h3>
+                <h3><span class="step-num">2</span> Checklist Comparison</h3>
                 <p>The extracted text is compared against a structured checklist of PDPA (Personal Data Protection Act, Sri Lanka) requirements, covering lawful basis, data subject rights, security obligations, breach notification, DPO appointment, and more.</p>
 
-                <h3>3. AI-Assisted Analysis</h3>
+                <h3><span class="step-num">3</span> AI-Assisted Analysis</h3>
                 <p>An AI model reviews the document against each requirement and determines whether it is <strong>Met</strong>, <strong>Partially Met</strong>, or <strong>Not Addressed</strong>, with a short explanation for each.</p>
 
-                <h3>4. Compliance Score</h3>
+                <h3><span class="step-num">4</span> Compliance Score</h3>
                 <p>An overall compliance percentage is calculated: fully met requirements count fully, partially met requirements count half, and unaddressed requirements count as zero.</p>
 
-                <h3>5. Recommendations</h3>
+                <h3><span class="step-num">5</span> Recommendations</h3>
                 <p>The system highlights the most important, actionable next steps — prioritizing high-severity gaps first.</p>
 
-                <p style="margin-top: 24px; font-size: 13px; color: #a1a1a6;">Note: Many provisions of Sri Lanka's PDPA are not yet legally in force. This tool assesses documents against the Act's requirements regardless of current enforcement status, to help organizations prepare ahead of time.</p>
+                <div class="note-strip">Note: Many provisions of Sri Lanka's PDPA are not yet legally in force. This tool assesses documents against the Act's requirements regardless of current enforcement status, to help organizations prepare ahead of time. See the <strong>Requirements</strong> tab for the full list, including current enforcement status for each.</div>
             </div>
         </div>
 
     </div>
 
     <script>
+        // ============================================================
+        // PDPA CHECKLIST DATA — fetched from the backend at runtime so
+        // edits to backend/pdpa_checklist.json show up automatically.
+        // ============================================================
+        let PDPA_CHECKLIST = [];
+        let checklistLoadError = null;
+
+        async function loadChecklistData() {
+            try {
+                const res = await fetch("http://127.0.0.1:5001/checklist");
+                if (!res.ok) throw new Error("Server returned " + res.status);
+                const data = await res.json();
+                PDPA_CHECKLIST = data.requirements || [];
+            } catch (err) {
+                checklistLoadError = err.message;
+                PDPA_CHECKLIST = [];
+            }
+        }
+
         const fileInput = document.getElementById("fileInput");
+        const fileDrop = document.getElementById("fileDrop");
+        const fileDropLabel = document.getElementById("fileDropLabel");
         const previewArea = document.getElementById("previewArea");
 
         // ----- View switching -----
@@ -474,53 +790,207 @@
 
             if (view === "checker") {
                 document.getElementById("tabChecker").classList.add("active");
+            } else if (view === "requirements") {
+                document.getElementById("tabRequirements").classList.add("active");
+                openRequirementsTab();
             } else {
                 document.getElementById("tabHowItWorks").classList.add("active");
                 loadChecklistInfo();
             }
         }
 
-        function loadChecklistInfo() {
-            fetch("http://127.0.0.1:5001/checklist-info")
-                .then(res => res.json())
-                .then(data => {
-                    const statRow = document.getElementById("checklistStats");
-                    statRow.innerHTML = `
-                        <div class="stat">
-                            <div class="stat-number">${data.total_requirements}</div>
-                            <div class="stat-label">Requirements</div>
+        async function loadChecklistInfo() {
+            if (!reqDataLoaded) {
+                await loadChecklistData();
+                reqDataLoaded = true;
+            }
+
+            const statRow = document.getElementById("checklistStats");
+
+            if (checklistLoadError || PDPA_CHECKLIST.length === 0) {
+                statRow.innerHTML = `<div class="no-results" style="width:100%;">Couldn't reach the backend to load stats.</div>`;
+                return;
+            }
+
+            const categories = new Set(PDPA_CHECKLIST.map(item => item.category));
+            statRow.innerHTML = `
+                <div class="stat">
+                    <div class="stat-number">${PDPA_CHECKLIST.length}</div>
+                    <div class="stat-label">Requirements</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">${categories.size}</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            `;
+        }
+
+        // ----- Requirements tab -----
+        let reqInitialized = false;
+        let reqDataLoaded = false;
+
+        async function openRequirementsTab() {
+            const list = document.getElementById("reqList");
+
+            if (!reqDataLoaded) {
+                list.innerHTML = `<div class="no-results"><span class="spinner"></span>Loading requirements…</div>`;
+                document.getElementById("reqCount").textContent = "";
+
+                await loadChecklistData();
+                reqDataLoaded = true;
+
+                if (checklistLoadError || PDPA_CHECKLIST.length === 0) {
+                    list.innerHTML = `<div class="no-results">
+                        Couldn't load the checklist from the backend (${checklistLoadError || "no data returned"}).<br>
+                        Make sure the Flask server is running at <code>127.0.0.1:5001</code>, then
+                        <button class="req-toggle" onclick="reqDataLoaded=false; openRequirementsTab();">try again</button>.
+                    </div>`;
+                    return;
+                }
+            }
+
+            renderRequirements();
+        }
+
+        function initRequirementsFilters() {
+            const categoryFilter = document.getElementById("reqCategoryFilter");
+            const categories = [...new Set(PDPA_CHECKLIST.map(item => item.category))].sort();
+            categories.forEach(cat => {
+                const opt = document.createElement("option");
+                opt.value = cat;
+                opt.textContent = cat;
+                categoryFilter.appendChild(opt);
+            });
+
+            document.getElementById("reqSearch").addEventListener("input", renderRequirements);
+            categoryFilter.addEventListener("change", renderRequirements);
+            document.getElementById("reqSeverityFilter").addEventListener("change", renderRequirements);
+            document.getElementById("reqEnforceFilter").addEventListener("change", renderRequirements);
+
+            reqInitialized = true;
+        }
+
+        function toggleReqCard(id) {
+            const el = document.getElementById("req-" + id);
+            if (el) el.classList.toggle("expanded");
+        }
+
+        function renderRequirements() {
+            if (!reqInitialized) initRequirementsFilters();
+
+            const query = document.getElementById("reqSearch").value.trim().toLowerCase();
+            const catFilter = document.getElementById("reqCategoryFilter").value;
+            const sevFilter = document.getElementById("reqSeverityFilter").value;
+            const enforceFilter = document.getElementById("reqEnforceFilter").value;
+
+            const filtered = PDPA_CHECKLIST.filter(item => {
+                if (catFilter && item.category !== catFilter) return false;
+                if (sevFilter && item.severity !== sevFilter) return false;
+                if (enforceFilter === "commenced" && !item.enforcement.commenced) return false;
+                if (enforceFilter === "pending" && item.enforcement.commenced) return false;
+
+                if (query) {
+                    const haystack = (
+                        item.id + " " + item.category + " " + item.requirement + " " +
+                        item.what_to_look_for + " " + item.act_reference.part + " " + item.act_reference.section
+                    ).toLowerCase();
+                    if (!haystack.includes(query)) return false;
+                }
+                return true;
+            });
+
+            document.getElementById("reqCount").textContent =
+                `Showing ${filtered.length} of ${PDPA_CHECKLIST.length} requirements`;
+
+            const list = document.getElementById("reqList");
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="no-results">No requirements match your filters.</div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(item => {
+                const sevClass = item.severity === "High" ? "sev-high" : item.severity === "Medium" ? "sev-medium" : "sev-low";
+                const enforceClass = item.enforcement.commenced ? "enforce-badge commenced" : "enforce-badge";
+                const enforceLabel = item.enforcement.commenced ? "In force" : "Not yet in force";
+
+                return `
+                    <div class="req-card" id="req-${item.id}" onclick="toggleReqCard('${item.id}')">
+                        <div class="req-card-top">
+                            <div>
+                                <div class="req-card-id">${item.id}</div>
+                                <div class="req-card-category">${item.category}</div>
+                            </div>
+                            <div class="req-badges">
+                                <span class="sev-badge ${sevClass}">${item.severity}</span>
+                                <span class="${enforceClass}">${enforceLabel}</span>
+                            </div>
                         </div>
-                        <div class="stat">
-                            <div class="stat-number">${data.categories.length}</div>
-                            <div class="stat-label">Categories</div>
+                        <div class="req-card-text">${item.requirement}</div>
+                        <div class="req-card-footer">
+                            <div class="req-act-ref">${item.act_reference.part} · ${item.act_reference.section}</div>
+                            <button class="req-toggle" onclick="event.stopPropagation(); toggleReqCard('${item.id}')">Details</button>
                         </div>
-                    `;
-                })
-                .catch(() => {
-                    // Silently fail if backend isn't reachable; static content still shows
-                });
+                        <div class="req-card-details">
+                            <div class="req-detail-row">
+                                <div class="req-detail-label">What to look for</div>
+                                <div class="req-detail-value">${item.what_to_look_for}</div>
+                            </div>
+                            <div class="req-detail-row">
+                                <div class="req-detail-label">Enforcement status</div>
+                                <div class="req-detail-value">${item.enforcement.note}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
         }
 
         // ----- File preview -----
         fileInput.addEventListener("change", () => {
             previewArea.innerHTML = "";
 
-            if (fileInput.files.length === 0) return;
+            if (fileInput.files.length === 0) {
+                fileDropLabel.innerHTML = "<strong>Choose a file</strong> or drag it here";
+                return;
+            }
 
             const file = fileInput.files[0];
             const extension = file.name.split(".").pop().toLowerCase();
+            fileDropLabel.innerHTML = `<strong>${file.name}</strong>`;
 
             if (extension === "pdf") {
                 const fileURL = URL.createObjectURL(file);
                 previewArea.innerHTML = `
-                    <div class="preview-label">Preview: ${file.name}</div>
+                    <div class="preview-label">Preview</div>
                     <iframe src="${fileURL}" class="pdf-frame"></iframe>
                 `;
             } else {
                 previewArea.innerHTML = `
-                    <div class="preview-label">Selected: ${file.name}</div>
+                    <div class="preview-label">Selected</div>
                     <div class="no-preview">No preview available for .${extension} files.</div>
                 `;
+            }
+        });
+
+        ["dragover", "dragenter"].forEach(evt => {
+            fileDrop.addEventListener(evt, (e) => {
+                e.preventDefault();
+                fileDrop.classList.add("drag-over");
+            });
+        });
+
+        ["dragleave", "drop"].forEach(evt => {
+            fileDrop.addEventListener(evt, (e) => {
+                e.preventDefault();
+                fileDrop.classList.remove("drag-over");
+            });
+        });
+
+        fileDrop.addEventListener("drop", (e) => {
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event("change"));
             }
         });
 
@@ -541,7 +1011,7 @@
             formData.append("file", fileInput.files[0]);
 
             uploadBtn.disabled = true;
-            uploadBtn.textContent = "Uploading...";
+            uploadBtn.textContent = "Analyzing…";
             resultsContainer.innerHTML = "";
             showStatus("", "Processing", '<span class="spinner"></span>Analyzing your document against the PDPA checklist, this may take a moment...');
 
@@ -564,7 +1034,7 @@
             })
             .finally(() => {
                 uploadBtn.disabled = false;
-                uploadBtn.textContent = "Upload";
+                uploadBtn.textContent = "Analyze Document";
             });
 
             function showStatus(type, label, message) {
@@ -575,23 +1045,23 @@
         }
 
         function buildGaugeSVG(percentage) {
-            let color = "#ff3b30";
-            if (percentage >= 70) color = "#34c759";
-            else if (percentage >= 40) color = "#ff9500";
+            let color = "#e03b30";
+            if (percentage >= 70) color = "#1e8e3e";
+            else if (percentage >= 40) color = "#c98a06";
 
-            // Semicircle gauge using an SVG arc, dash-offset represents the % filled
-            const radius = 80;
-            const circumference = Math.PI * radius; // half the circle's circumference
+            const radius = 90;
+            const circumference = Math.PI * radius;
             const filled = (percentage / 100) * circumference;
 
             return `
-                <svg width="220" height="120" viewBox="0 0 220 120">
-                    <path d="M 20 110 A 90 90 0 0 1 200 110"
+                <svg width="240" height="130" viewBox="0 0 240 130">
+                    <path d="M 20 120 A 100 100 0 0 1 220 120"
                         fill="none" stroke="#e5e5e7" stroke-width="16" stroke-linecap="round" />
-                    <path d="M 20 110 A 90 90 0 0 1 200 110"
+                    <path d="M 20 120 A 100 100 0 0 1 220 120"
                         fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"
                         stroke-dasharray="${circumference}"
-                        stroke-dashoffset="${circumference - filled}" />
+                        stroke-dashoffset="${circumference - filled}"
+                        style="transition: stroke-dashoffset 700ms cubic-bezier(0.22,1,0.36,1);" />
                 </svg>
             `;
         }
@@ -600,9 +1070,9 @@
             const resultsContainer = document.getElementById("resultsContainer");
             const percentage = data.compliance_percentage;
 
-            let color = "#ff3b30";
-            if (percentage >= 70) color = "#34c759";
-            else if (percentage >= 40) color = "#ff9500";
+            let color = "#e03b30";
+            if (percentage >= 70) color = "#1e8e3e";
+            else if (percentage >= 40) color = "#c98a06";
 
             let html = `
                 <div class="card score-card">
@@ -663,8 +1133,7 @@
                 `;
             }
 
-            html += `</div>`; // closes results-grid
-
+            html += `</div>`;
             resultsContainer.innerHTML = html;
         }
     </script>
