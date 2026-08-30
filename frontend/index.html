@@ -766,7 +766,7 @@
 
         async function loadChecklistData() {
             try {
-                const res = await fetch("http://127.0.0.1:5001/checklist");
+                const res = await fetch("https://pdpa-checker.onrender.com/checklist");
                 if (!res.ok) throw new Error("Server returned " + res.status);
                 const data = await res.json();
                 PDPA_CHECKLIST = data.requirements || [];
@@ -842,7 +842,7 @@
                 if (checklistLoadError || PDPA_CHECKLIST.length === 0) {
                     list.innerHTML = `<div class="no-results">
                         Couldn't load the checklist from the backend (${checklistLoadError || "no data returned"}).<br>
-                        Make sure the Flask server is running at <code>127.0.0.1:5001</code>, then
+                        Make sure the backend is reachable, then
                         <button class="req-toggle" onclick="reqDataLoaded=false; openRequirementsTab();">try again</button>.
                     </div>`;
                     return;
@@ -1015,7 +1015,7 @@
             resultsContainer.innerHTML = "";
             showStatus("", "Processing", '<span class="spinner"></span>Analyzing your document against the PDPA checklist, this may take a moment...');
 
-            fetch("http://127.0.0.1:5001/upload", {
+            fetch("https://pdpa-checker.onrender.com/upload", {
                 method: "POST",
                 body: formData
             })
