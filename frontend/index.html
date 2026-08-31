@@ -3,27 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PDPA Compliance Checker</title>
+<title>HeyPDPA! · Sri Lanka PDPA Compliance Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg: #f5f5f7;
-        --ink: #1d1d1f;
-        --ink-soft: #6e6e73;
-        --ink-faint: #a1a1a6;
-        --line: rgba(0,0,0,0.07);
-        --card: #ffffff;
-        --accent: #0071e3;
-        --green: #1e8e3e;
-        --green-bg: #e5f7ea;
-        --amber: #92700a;
-        --amber-bg: #fff4d6;
-        --red: #b3261e;
-        --red-bg: #ffe4e1;
+        --bg-page: #fbf9f5;
+        --bg-subtle: #f4f0e6;
+        --bg-card: #ffffff;
+        --bg-card-alt: #f7f4ec;
+        
+        --ink-primary: #15291e;
+        --ink-secondary: #475d50;
+        --ink-faint: #83978b;
+        
+        --border-main: #e6e1d6;
+        --border-dark: #15291e;
+        --border-focus: #3b82f6;
+        
+        --accent-periwinkle: #d0e1fd;
+        --accent-periwinkle-hover: #b9d2fc;
+        --ink-periwinkle: #143275;
+        
+        --accent-lime: #ebfa6f;
+        --accent-lime-hover: #e0f250;
+        --accent-lime-dark: #9da826;
+        
+        --accent-forest: #15291e;
+        --accent-forest-hover: #223f30;
+        
+        --status-met: #1e8346;
+        --status-met-bg: #e6f6ec;
+        --status-partial: #b45309;
+        --status-partial-bg: #fef3c7;
+        --status-gap: #c53030;
+        --status-gap-bg: #fce8e6;
+        
+        --radius-pill: 9999px;
+        --radius-xl: 28px;
         --radius-lg: 20px;
         --radius-md: 14px;
-        --radius-sm: 10px;
-        --shadow-1: 0 1px 2px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.05);
-        --shadow-2: 0 2px 6px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.08);
+        --radius-sm: 8px;
+        
+        --shadow-soft: 0 4px 20px rgba(21, 41, 30, 0.05);
+        --shadow-card: 0 10px 30px rgba(21, 41, 30, 0.06);
+        --shadow-elevated: 0 18px 45px rgba(21, 41, 30, 0.09);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,830 +56,1505 @@
     html { scroll-behavior: smooth; }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-        background:
-            radial-gradient(1200px 600px at 15% -10%, rgba(0,113,227,0.07), transparent 60%),
-            radial-gradient(1000px 500px at 100% 0%, rgba(88,86,214,0.06), transparent 55%),
-            var(--bg);
-        color: var(--ink);
-        padding-top: 76px;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: var(--bg-page);
+        color: var(--ink-primary);
         min-height: 100vh;
+        overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
     }
 
+    /* Container */
     .container {
         width: 100%;
         max-width: 1120px;
         margin: 0 auto;
-        padding: 44px 28px 90px;
+        padding: 30px 24px 80px;
     }
 
-    header.page-head {
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    header.page-head .eyebrow {
-        display: inline-block;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--accent);
-        background: rgba(0,113,227,0.09);
-        padding: 5px 12px;
-        border-radius: 999px;
-        margin-bottom: 14px;
-    }
-
-    header.page-head h1 {
-        font-size: clamp(28px, 4vw, 38px);
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1.1;
-        margin-bottom: 10px;
-    }
-
-    header.page-head p {
-        color: var(--ink-soft);
-        font-size: 16px;
-        letter-spacing: 0;
-        max-width: 480px;
-        margin: 0 auto;
-    }
-
-    /* ---------- Navbar: translucent material ---------- */
+    /* ---------- Navigation Bar ---------- */
     .navbar {
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        background: rgba(255,255,255,0.72);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border-bottom: 1px solid rgba(0,0,0,0.06);
-        padding: 12px 28px;
-        z-index: 100;
+        position: sticky;
+        top: 0;
+        background: rgba(251, 249, 245, 0.94);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border-main);
+        padding: 14px 28px;
+        z-index: 1000;
+        transition: all 0.25s ease;
     }
 
-    .nav-content {
+    .nav-inner {
         max-width: 1120px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 16px;
     }
 
-    .nav-logo {
+    .nav-brand {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-weight: 700;
-        font-size: 15px;
-        letter-spacing: -0.01em;
+        gap: 10px;
         cursor: pointer;
-        background: none;
-        border: none;
-        color: var(--ink);
-        padding: 0;
+        text-decoration: none;
+        color: var(--ink-primary);
     }
 
-    .nav-logo .dot {
-        width: 9px; height: 9px;
+    .brand-logo-icon {
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #0071e3, #5856d6);
-        box-shadow: 0 0 0 4px rgba(0,113,227,0.12);
+        background: var(--ink-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-brand:hover .brand-logo-icon {
+        transform: rotate(15deg) scale(1.08);
+    }
+
+    .brand-logo-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+
+    .brand-text {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .brand-text span {
+        color: #3b82f6;
     }
 
     .nav-links {
         display: flex;
-        gap: 2px;
-        background: rgba(0,0,0,0.045);
-        padding: 4px;
-        border-radius: 12px;
+        align-items: center;
+        gap: 6px;
     }
 
-    .nav-tab {
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--ink-soft);
+    .nav-item {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink-secondary);
         background: none;
         border: none;
-        padding: 7px 16px;
-        border-radius: 9px;
+        padding: 8px 16px;
+        border-radius: var(--radius-pill);
         cursor: pointer;
-        transition: color 150ms ease, background 150ms ease, transform 100ms ease;
+        transition: all 0.2s ease;
+        text-decoration: none;
     }
 
-    .nav-tab:active { transform: scale(0.96); }
+    .nav-item:hover {
+        color: var(--ink-primary);
+        background: var(--bg-subtle);
+    }
 
-    .nav-tab.active {
+    .nav-item.active {
+        color: var(--ink-primary);
         background: #ffffff;
-        color: var(--ink);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(21, 41, 30, 0.06);
     }
 
-    /* ---------- Views ---------- */
+    .nav-item.disclaimer-tab {
+        color: #c53030;
+        background: rgba(197, 48, 48, 0.08);
+    }
+    .nav-item.disclaimer-tab.active {
+        background: #fce8e6;
+        color: #9b2c2c;
+    }
+
+    .btn-pill-periwinkle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--accent-periwinkle);
+        color: var(--ink-periwinkle);
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 22px;
+        border-radius: var(--radius-pill);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        text-decoration: none;
+    }
+
+    .btn-pill-periwinkle:hover {
+        background: var(--accent-periwinkle-hover);
+        transform: translateY(-2px) scale(1.02);
+    }
+
+    /* Views container */
     .view { display: none; }
     .view.active {
         display: block;
-        animation: fadeUp 380ms cubic-bezier(0.22, 1, 0.36, 1);
+        animation: fadeIn 0.35s ease;
     }
 
-    @keyframes fadeUp {
+    @keyframes fadeIn {
         from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        .view.active { animation: none; }
+    /* ============================================================
+       1. LANDING PAGE (Minimal & High Animation)
+       ============================================================ */
+    .hero-editorial {
+        text-align: center;
+        padding: 30px 10px 20px;
+        max-width: 860px;
+        margin: 0 auto;
     }
 
-    /* ---------- Cards ---------- */
-    .card {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: var(--radius-lg);
-        padding: 30px;
-        box-shadow: var(--shadow-1);
-        margin-bottom: 20px;
+    .hero-title {
+        font-size: clamp(34px, 5vw, 58px);
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.035em;
+        color: var(--ink-primary);
+        margin-bottom: 16px;
     }
 
-    /* ---------- Upload ---------- */
-    .upload-card { position: relative; overflow: hidden; }
+    /* Hand-drawn Loop around words */
+    .hand-loop {
+        position: relative;
+        display: inline-block;
+        white-space: nowrap;
+    }
 
-    .upload-card::before {
-        content: "";
+    .hand-loop-svg {
         position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(0,113,227,0.05), transparent 60%);
+        top: -22%;
+        left: -10%;
+        width: 120%;
+        height: 144%;
         pointer-events: none;
+        z-index: -1;
+        overflow: visible;
     }
 
-    .upload-row {
+    .hand-loop-path {
+        stroke: #c2d9ff;
+        stroke-width: 3.2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 600;
+        stroke-dashoffset: 600;
+        animation: drawLoop 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+    }
+
+    @keyframes drawLoop {
+        to { stroke-dashoffset: 0; }
+    }
+
+    .hero-subtitle {
+        font-size: clamp(15px, 1.8vw, 18px);
+        line-height: 1.5;
+        color: var(--ink-secondary);
+        max-width: 540px;
+        margin: 0 auto 28px;
+    }
+
+    /* Hero Art & Interactive Sketch Card */
+    .hero-art-container {
+        position: relative;
+        background: var(--bg-card);
+        border: 2px solid var(--border-dark);
+        border-radius: var(--radius-xl);
+        padding: 28px 20px 48px;
+        margin: 16px auto 36px;
+        box-shadow: 0 16px 36px rgba(21, 41, 30, 0.08);
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .art-top-strip {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        display: flex;
+    }
+    .strip-dark { flex: 0.94; background: var(--ink-primary); }
+    .strip-lime { flex: 0.06; background: var(--accent-lime); }
+
+    .editorial-sketch-wrapper {
+        position: relative;
+        max-width: 580px;
+        margin: 0 auto 16px;
+        min-height: 220px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        position: relative;
+        justify-content: center;
+        isolation: isolate;
     }
 
-    .file-drop {
-        flex: 1;
-        min-width: 220px;
-        border: 1.5px dashed rgba(0,0,0,0.16);
-        border-radius: var(--radius-md);
-        padding: 22px 18px;
+    /* Floating Stickers with Wiggle & Hover Animations */
+    .sketch-tag {
+        position: absolute;
+        background: #ffffff;
+        border: 1.5px solid var(--border-dark);
+        padding: 6px 14px;
+        border-radius: var(--radius-pill);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        box-shadow: 2px 3px 0 var(--border-dark);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+        cursor: default;
+        user-select: none;
+    }
+    .sketch-tag:hover {
+        transform: scale(1.12) rotate(3deg) translateY(-4px) !important;
+        box-shadow: 3px 5px 0 var(--border-dark);
+        background: var(--accent-lime);
+    }
+
+    .tag-consent {
+        top: 8px;
+        left: 24px;
+        transform: rotate(-7deg);
+        animation: floatTag1 4s ease-in-out infinite alternate;
+    }
+    .tag-dpo {
+        top: 12px;
+        right: 28px;
+        transform: rotate(6deg);
+        animation: floatTag2 4.5s ease-in-out infinite alternate;
+    }
+    .tag-sla {
+        bottom: 24px;
+        left: 20px;
+        transform: rotate(5deg);
+        background: var(--accent-lime);
+        animation: floatTag3 3.8s ease-in-out infinite alternate;
+    }
+    .tag-breach {
+        bottom: 28px;
+        right: 24px;
+        transform: rotate(-5deg);
+        animation: floatTag4 4.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatTag1 { 0% { transform: translateY(0) rotate(-7deg); } 100% { transform: translateY(-7px) rotate(-4deg); } }
+    @keyframes floatTag2 { 0% { transform: translateY(0) rotate(6deg); } 100% { transform: translateY(-9px) rotate(8deg); } }
+    @keyframes floatTag3 { 0% { transform: translateY(0) rotate(5deg); } 100% { transform: translateY(-6px) rotate(2deg); } }
+    @keyframes floatTag4 { 0% { transform: translateY(0) rotate(-5deg); } 100% { transform: translateY(-8px) rotate(-7deg); } }
+
+    /* Animated Central SVG Character */
+    .hero-char-svg {
+        animation: breathHero 4s ease-in-out infinite alternate;
+        transform-origin: center bottom;
+    }
+    @keyframes breathHero {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.02) translateY(-3px); }
+    }
+
+    /* Floating Pill Dock */
+    .floating-pill-dock {
+        position: relative;
+        background: #ffffff;
+        border: 2px solid var(--border-dark);
+        border-radius: var(--radius-pill);
+        padding: 8px 10px 8px 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        box-shadow: 0 8px 24px rgba(21, 41, 30, 0.12);
+        max-width: 520px;
+        width: 100%;
+        margin: 6px auto 0;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .floating-pill-dock:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(21, 41, 30, 0.16);
+    }
+
+    .pill-prompt-text {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ink-primary);
+        text-align: left;
+    }
+
+    .pill-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-pill-sec {
+        background: var(--bg-subtle);
+        color: var(--ink-primary);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 9px 16px;
+        border-radius: var(--radius-pill);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-pill-sec:hover { background: #e5e0d4; }
+
+    .btn-pill-primary {
+        background: var(--accent-forest);
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 22px;
+        border-radius: var(--radius-pill);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-pill-primary:hover {
+        background: var(--accent-forest-hover);
+        transform: scale(1.04);
+    }
+
+    /* Minimal Feature Cards with micro-animations */
+    .features-editorial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 18px;
+        margin: 36px 0 30px;
+    }
+
+    .feature-clean-card {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-main);
+        border-radius: var(--radius-lg);
+        padding: 24px 22px;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .feature-clean-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--ink-primary);
+        box-shadow: var(--shadow-card);
+    }
+
+    .card-badge-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--accent-periwinkle);
+        color: var(--ink-periwinkle);
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        margin-bottom: 14px;
+        transition: transform 0.25s ease;
+    }
+    .feature-clean-card:hover .card-badge-num {
+        transform: scale(1.15) rotate(-8deg);
+    }
+
+    .feature-clean-card:nth-child(2) .card-badge-num { background: var(--accent-lime); color: var(--ink-primary); }
+    .feature-clean-card:nth-child(3) .card-badge-num { background: #fee2e2; color: #991b1b; }
+    .feature-clean-card:nth-child(4) .card-badge-num { background: #e0e7ff; color: #3730a3; }
+
+    .feature-card-title {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        color: var(--ink-primary);
+    }
+
+    .feature-card-desc {
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--ink-secondary);
+    }
+
+    /* Minimal Conversion Banner */
+    .cta-banner-warm {
+        background: var(--ink-primary);
+        color: #ffffff;
+        border-radius: var(--radius-xl);
+        padding: 40px 30px;
+        text-align: center;
+        margin-top: 36px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-banner-warm h2 {
+        font-size: clamp(24px, 3vw, 32px);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin-bottom: 8px;
+    }
+
+    .cta-banner-warm p {
+        font-size: 15px;
+        color: #c0cfc5;
+        max-width: 440px;
+        margin: 0 auto 22px;
+    }
+
+    /* ============================================================
+       2. CHECKER VIEW
+       ============================================================ */
+    .section-head-editorial {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .pill-badge-sub {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-primary);
+        background: var(--bg-subtle);
+        border: 1px solid var(--border-main);
+        padding: 4px 12px;
+        border-radius: var(--radius-pill);
+        margin-bottom: 10px;
+    }
+
+    .section-head-editorial h1 {
+        font-size: clamp(28px, 3.8vw, 38px);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        margin-bottom: 6px;
+    }
+
+    .section-head-editorial p {
+        color: var(--ink-secondary);
+        font-size: 14.5px;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    .white-card {
+        background: #ffffff;
+        border: 1.5px solid var(--border-main);
+        border-radius: var(--radius-xl);
+        padding: 30px;
+        box-shadow: var(--shadow-card);
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    /* Upload Drag and Drop */
+    .drop-zone-editorial {
+        border: 2px dashed var(--border-main);
+        border-radius: var(--radius-lg);
+        padding: 40px 20px;
         text-align: center;
         cursor: pointer;
-        transition: border-color 150ms ease, background 150ms ease;
-        background: rgba(0,0,0,0.015);
+        background: var(--bg-page);
+        transition: all 0.25s ease;
+        position: relative;
+        display: block;
+        overflow: hidden;
     }
 
-    .file-drop:hover, .file-drop.drag-over {
-        border-color: var(--accent);
-        background: rgba(0,113,227,0.05);
+    .drop-zone-editorial:hover, .drop-zone-editorial.drag-over {
+        border-color: var(--ink-primary);
+        background: var(--bg-subtle);
+        transform: scale(1.005);
     }
 
-    .file-drop input[type="file"] { display: none; }
+    .drop-zone-editorial input[type="file"] { display: none; }
 
-    .file-drop-label {
-        font-size: 14px;
-        color: var(--ink-soft);
-        font-weight: 500;
+    .drop-icon-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--accent-periwinkle);
+        color: var(--ink-periwinkle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .drop-zone-editorial:hover .drop-icon-circle {
+        transform: translateY(-4px) scale(1.1);
     }
 
-    .file-drop-label strong { color: var(--ink); }
+    .drop-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--ink-primary);
+        margin-bottom: 4px;
+    }
 
-    .file-drop-sub {
-        font-size: 12px;
+    .drop-sub {
+        font-size: 12.5px;
         color: var(--ink-faint);
+    }
+
+    .upload-row-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 16px;
+    }
+
+    /* Status Bar */
+    .status-panel-editorial {
+        display: none;
+        background: #ffffff;
+        border: 2px solid var(--ink-primary);
+        border-radius: var(--radius-lg);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .status-panel-editorial.visible { display: block; animation: fadeIn 0.3s ease; }
+    .status-panel-editorial.error { border-color: #c53030; background: #fce8e6; }
+
+    .status-badge-lbl {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-secondary);
+        margin-bottom: 4px;
+    }
+
+    .status-msg-text {
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--ink-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .clean-spinner {
+        width: 18px;
+        height: 18px;
+        border: 2.5px solid var(--border-main);
+        border-top-color: var(--ink-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Results layout */
+    .score-banner-editorial {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 28px;
+        align-items: center;
+    }
+
+    @media (max-width: 760px) {
+        .score-banner-editorial { grid-template-columns: 1fr; text-align: center; }
+        .score-pills-row { justify-content: center; }
+    }
+
+    .gauge-wrap-clean {
+        position: relative;
+        width: 200px;
+        margin: 0 auto;
+    }
+
+    .gauge-display-center {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .gauge-score-num {
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+
+    .gauge-score-status {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ink-secondary);
         margin-top: 4px;
     }
 
-    button.primary {
-        background-color: var(--ink);
-        color: white;
-        border: none;
-        padding: 12px 26px;
-        border-radius: var(--radius-sm);
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 150ms ease, transform 100ms ease;
-        white-space: nowrap;
-    }
-
-    button.primary:hover { background-color: #3a3a3c; }
-    button.primary:active { transform: scale(0.97); }
-
-    button.primary:disabled {
-        background-color: #c7c7cc;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .preview-area { margin-top: 20px; position: relative; }
-
-    .preview-label {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--ink-soft);
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
-    .pdf-frame {
-        width: 100%;
-        height: 420px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius-md);
-    }
-
-    .no-preview {
-        font-size: 14px;
-        color: var(--ink-soft);
-        background: var(--bg);
-        padding: 18px;
-        border-radius: var(--radius-sm);
-        text-align: center;
-    }
-
-    /* ---------- Status ---------- */
-    .status-card {
-        display: none;
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: var(--radius-lg);
-        padding: 26px 30px;
-        box-shadow: var(--shadow-1);
-        margin-bottom: 20px;
-    }
-
-    .status-card.visible { display: block; animation: fadeUp 300ms ease; }
-    .status-card.error { border-left: 4px solid var(--red); }
-
-    .status-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--ink-soft);
-        margin-bottom: 8px;
-    }
-
-    .status-text { font-size: 15px; line-height: 1.6; }
-
-    .spinner {
-        display: inline-block;
-        width: 14px; height: 14px;
-        border: 2px solid #d1d1d6;
-        border-top-color: var(--ink);
-        border-radius: 50%;
-        animation: spin 0.75s linear infinite;
-        margin-right: 8px;
-        vertical-align: middle;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ---------- Score gauge ---------- */
-    .score-card { text-align: center; }
-
-    .gauge-wrap { position: relative; width: 240px; margin: 0 auto; }
-
-    .gauge-number {
-        position: absolute;
-        top: 64%; left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 38px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-
-    .score-label {
-        font-size: 13px;
-        color: var(--ink-soft);
-        margin-top: 6px;
-    }
-
-    /* ---------- Results grid ---------- */
-    .results-grid {
-        display: grid;
-        grid-template-columns: 1.3fr 1fr;
-        gap: 20px;
-        align-items: start;
-    }
-
-    @media (max-width: 700px) {
-        .results-grid { grid-template-columns: 1fr; }
-    }
-
-    .results-list { margin-top: 6px; }
-
-    .result-item {
-        padding: 16px 0;
-        border-bottom: 1px solid #f0f0f2;
-        transition: background 150ms ease;
-        border-radius: 8px;
-    }
-
-    .result-item:last-child { border-bottom: none; }
-    .result-item:hover { background: rgba(0,0,0,0.015); }
-
-    .result-top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 6px;
-        gap: 8px;
-    }
-
-    .result-category { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
-
-    .badge {
-        font-size: 11px;
-        font-weight: 700;
-        padding: 4px 11px;
-        border-radius: 999px;
-        white-space: nowrap;
-        letter-spacing: 0.01em;
-    }
-
-    .badge-met { background: var(--green-bg); color: var(--green); }
-    .badge-partial { background: var(--amber-bg); color: var(--amber); }
-    .badge-not-addressed { background: var(--red-bg); color: var(--red); }
-
-    .result-explanation { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
-
-    .severity-tag { font-size: 11px; color: var(--ink-faint); margin-top: 5px; }
-
-    .rec-list { list-style: none; margin-top: 4px; }
-
-    .rec-item {
+    .score-pills-row {
         display: flex;
         gap: 10px;
-        padding: 11px 0;
-        font-size: 14px;
-        line-height: 1.55;
-        border-bottom: 1px solid #f0f0f2;
+        flex-wrap: wrap;
+        margin-top: 14px;
     }
 
-    .rec-item:last-child { border-bottom: none; }
+    .stat-chip {
+        background: var(--bg-page);
+        border: 1px solid var(--border-main);
+        padding: 8px 16px;
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+        min-width: 84px;
+    }
 
-    .rec-number {
+    .stat-chip-num {
+        font-size: 19px;
+        font-weight: 800;
+    }
+    .stat-chip-lbl {
+        font-size: 10.5px;
+        color: var(--ink-faint);
         font-weight: 700;
-        color: var(--accent);
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    /* Breakdown & Recommendations Grid */
+    .results-editorial-grid {
+        display: grid;
+        grid-template-columns: 1.25fr 0.95fr;
+        gap: 22px;
+        align-items: start;
+        margin-top: 22px;
+    }
+
+    @media (max-width: 880px) {
+        .results-editorial-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-headline {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .result-row-editorial {
+        background: var(--bg-page);
+        border: 1px solid var(--border-main);
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .result-row-editorial:hover {
+        background: #ffffff;
+        border-color: var(--ink-primary);
+        transform: translateY(-1px);
+    }
+
+    .result-row-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+
+    .result-cat-title {
+        font-size: 14.5px;
+        font-weight: 750;
+        color: var(--ink-primary);
+    }
+
+    .badge-chip {
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: var(--radius-pill);
+        white-space: nowrap;
+    }
+    .badge-chip.Met { background: var(--status-met-bg); color: var(--status-met); }
+    .badge-chip.Partially.Met { background: var(--status-partial-bg); color: var(--status-partial); }
+    .badge-chip.Not.Addressed { background: var(--status-gap-bg); color: var(--status-gap); }
+
+    .result-row-expl {
+        font-size: 13px;
+        color: var(--ink-secondary);
+        line-height: 1.5;
+    }
+
+    .rec-item-editorial {
+        background: var(--bg-page);
+        border: 1px solid var(--border-main);
+        border-left: 4px solid var(--ink-primary);
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        gap: 12px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--ink-primary);
+    }
+
+    .rec-num-badge {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--ink-primary);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
     }
 
-    .section-title {
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--ink-soft);
-        margin-bottom: 16px;
-    }
-
-    /* ---------- How it works ---------- */
-    .how-it-works p {
-        font-size: 15px;
-        line-height: 1.75;
-        margin-bottom: 16px;
-        color: #3a3a3c;
-    }
-
-    .how-it-works h3 {
-        font-size: 16px;
-        letter-spacing: -0.01em;
-        margin: 22px 0 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .step-num {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 22px; height: 22px;
-        border-radius: 50%;
-        background: rgba(0,113,227,0.1);
-        color: var(--accent);
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .stat-row {
-        display: flex;
-        gap: 16px;
-        margin: 6px 0 26px;
-        flex-wrap: wrap;
-    }
-
-    .stat {
-        text-align: center;
-        flex: 1;
-        min-width: 120px;
-        background: var(--bg);
-        border-radius: var(--radius-md);
-        padding: 18px 10px;
-    }
-
-    .stat-number { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
-    .stat-label { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-
-    .note-strip {
-        margin-top: 26px;
-        font-size: 13px;
-        color: var(--ink-faint);
-        background: var(--bg);
-        border-radius: var(--radius-sm);
-        padding: 14px 16px;
-        line-height: 1.6;
-    }
-
-    /* ---------- Requirements tab ---------- */
-    .req-toolbar {
+    /* ============================================================
+       3. REQUIREMENTS VIEW
+       ============================================================ */
+    .search-filter-dock {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
 
-    .req-search {
+    .search-editorial-input {
         flex: 1;
         min-width: 220px;
         padding: 11px 16px;
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--line);
-        background: var(--card);
-        font-size: 14px;
-        color: var(--ink);
+        border-radius: var(--radius-pill);
+        border: 1.5px solid var(--border-main);
+        background: #ffffff;
+        font-size: 13.5px;
+        color: var(--ink-primary);
         outline: none;
-        transition: border-color 150ms ease, box-shadow 150ms ease;
+        transition: border-color 0.2s ease;
     }
 
-    .req-search:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 4px rgba(0,113,227,0.12);
+    .search-editorial-input:focus {
+        border-color: var(--ink-primary);
     }
 
-    select.req-filter {
-        padding: 11px 14px;
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--line);
-        background: var(--card);
+    .select-editorial {
+        padding: 11px 16px;
+        border-radius: var(--radius-pill);
+        border: 1.5px solid var(--border-main);
+        background: #ffffff;
         font-size: 13px;
-        color: var(--ink);
+        font-weight: 600;
+        color: var(--ink-primary);
         cursor: pointer;
         outline: none;
     }
 
-    .req-count {
-        font-size: 13px;
-        color: var(--ink-soft);
-        margin-bottom: 14px;
-    }
-
-    .req-list { display: flex; flex-direction: column; gap: 12px; }
-
-    .req-card {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: var(--radius-md);
-        padding: 20px 22px;
-        box-shadow: var(--shadow-1);
-        transition: transform 150ms ease, box-shadow 150ms ease;
+    .req-card-editorial {
+        background: #ffffff;
+        border: 1.5px solid var(--border-main);
+        border-radius: var(--radius-lg);
+        padding: 20px 24px;
+        margin-bottom: 12px;
         cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    .req-card:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-2);
+    .req-card-editorial:hover {
+        border-color: var(--ink-primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-card);
     }
 
-    .req-card-top {
+    .req-card-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 12px;
+        margin-bottom: 6px;
+    }
+
+    .req-item-id {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+    }
+
+    .req-item-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--ink-primary);
+        margin-top: 2px;
+    }
+
+    .req-badges-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .pill-tag {
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: var(--radius-pill);
+        background: var(--bg-subtle);
+        color: var(--ink-secondary);
+    }
+    .pill-tag.High { background: #fee2e2; color: #991b1b; }
+    .pill-tag.Medium { background: #fef3c7; color: #92400e; }
+    .pill-tag.Low { background: #f1f5f9; color: #475569; }
+    .pill-tag.in-force { background: #dcfce7; color: #166534; }
+
+    .req-card-body {
+        font-size: 13.5px;
+        color: var(--ink-secondary);
+        line-height: 1.55;
         margin-bottom: 8px;
     }
 
-    .req-card-id {
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        color: var(--accent);
-        text-transform: uppercase;
-    }
-
-    .req-card-category {
-        font-size: 16px;
-        font-weight: 650;
-        letter-spacing: -0.01em;
-        margin-top: 3px;
-    }
-
-    .req-badges { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
-
-    .sev-badge {
-        font-size: 10px;
-        font-weight: 700;
-        padding: 3px 9px;
-        border-radius: 999px;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        white-space: nowrap;
-    }
-
-    .sev-high { background: var(--red-bg); color: var(--red); }
-    .sev-medium { background: var(--amber-bg); color: var(--amber); }
-    .sev-low { background: rgba(0,0,0,0.06); color: var(--ink-soft); }
-
-    .enforce-badge {
-        font-size: 10px;
-        font-weight: 700;
-        padding: 3px 9px;
-        border-radius: 999px;
-        white-space: nowrap;
-        background: rgba(0,0,0,0.055);
-        color: var(--ink-soft);
-    }
-
-    .enforce-badge.commenced { background: var(--green-bg); color: var(--green); }
-
-    .req-card-text {
-        font-size: 14px;
-        color: #3a3a3c;
-        line-height: 1.6;
-        margin-bottom: 10px;
-    }
-
-    .req-card-details {
-        display: none;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid #f0f0f2;
-    }
-
-    .req-card.expanded .req-card-details { display: block; animation: fadeUp 220ms ease; }
-
-    .req-detail-row { margin-bottom: 10px; }
-
-    .req-detail-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: var(--ink-faint);
-        margin-bottom: 4px;
-    }
-
-    .req-detail-value { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
-
-    .req-card-footer {
+    .req-card-foot {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-top: 1px solid var(--border-main);
+        padding-top: 8px;
         margin-top: 4px;
     }
 
-    .req-act-ref { font-size: 12px; color: var(--ink-faint); }
+    .req-statutory-cite {
+        font-size: 11.5px;
+        color: var(--ink-faint);
+    }
 
-    .req-toggle {
+    .req-toggle-link {
         font-size: 12px;
-        color: var(--accent);
-        font-weight: 600;
+        font-weight: 700;
+        color: var(--ink-primary);
         background: none;
         border: none;
         cursor: pointer;
+        text-decoration: underline;
     }
 
-    .no-results {
-        text-align: center;
-        padding: 40px 20px;
-        color: var(--ink-soft);
-        font-size: 14px;
+    .req-details-drawer {
+        display: none;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border-main);
+        animation: fadeIn 0.2s ease;
     }
+
+    .req-card-editorial.open .req-details-drawer { display: block; }
+
+    /* ============================================================
+       4. HOW IT WORKS VIEW
+       ============================================================ */
+    .timeline-editorial {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin: 24px 0;
+    }
+
+    .step-editorial-card {
+        background: #ffffff;
+        border: 1.5px solid var(--border-main);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+    }
+
+    .step-editorial-num {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--ink-primary);
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .step-editorial-card:nth-child(2) .step-editorial-num { background: #3b82f6; }
+    .step-editorial-card:nth-child(3) .step-editorial-num { background: var(--accent-lime); color: var(--ink-primary); }
+    .step-editorial-card:nth-child(4) .step-editorial-num { background: #f59e0b; }
+    .step-editorial-card:nth-child(5) .step-editorial-num { background: #10b981; }
+
+    /* ============================================================
+       5. DISCLAIMER VIEW (Dedicated Toy Project Notice)
+       ============================================================ */
+    .disclaimer-hero-card {
+        background: #ffffff;
+        border: 2px solid #c53030;
+        border-radius: var(--radius-xl);
+        padding: 36px 28px;
+        box-shadow: var(--shadow-card);
+        margin-bottom: 24px;
+    }
+
+    .disclaimer-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fce8e6;
+        color: #9b2c2c;
+        font-size: 11.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 5px 12px;
+        border-radius: var(--radius-pill);
+        margin-bottom: 14px;
+    }
+
+    .disclaimer-title {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: var(--ink-primary);
+        margin-bottom: 12px;
+    }
+
+    .disclaimer-lead {
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--ink-secondary);
+        margin-bottom: 20px;
+    }
+
+    .disclaimer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .disclaimer-box {
+        background: var(--bg-page);
+        border: 1.5px solid var(--border-main);
+        border-radius: var(--radius-md);
+        padding: 20px;
+    }
+
+    .disclaimer-box h3 {
+        font-size: 15px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        color: var(--ink-primary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .disclaimer-box p {
+        font-size: 13px;
+        color: var(--ink-secondary);
+        line-height: 1.55;
+    }
+
+    /* Footer */
+    footer {
+        border-top: 1px solid var(--border-main);
+        padding: 30px 24px;
+        text-align: center;
+        font-size: 13px;
+        color: var(--ink-faint);
+        background: var(--bg-page);
+    }
+
+    .footer-nav {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        margin-bottom: 10px;
+    }
+
+    .footer-nav a {
+        color: var(--ink-secondary);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .footer-nav a:hover { color: var(--ink-primary); }
 </style>
 </head>
 <body>
+
+    <!-- Header Navigation -->
     <nav class="navbar">
-        <div class="nav-content">
-            <button class="nav-logo" onclick="location.reload()">
-                <span class="dot"></span>
-                PDPA Checker
-            </button>
+        <div class="nav-inner">
+            <a class="nav-brand" onclick="switchView('landing')">
+                <div class="brand-logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm0-10h2v8h-2V6z"/></svg>
+                </div>
+                <div class="brand-text">HeyPDPA!</div>
+            </a>
+
             <div class="nav-links">
-                <button class="nav-tab active" id="tabChecker" onclick="switchView('checker')">Checker</button>
-                <button class="nav-tab" id="tabRequirements" onclick="switchView('requirements')">Requirements</button>
-                <button class="nav-tab" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
+                <button class="nav-item active" id="tabLanding" onclick="switchView('landing')">What We Do</button>
+                <button class="nav-item" id="tabChecker" onclick="switchView('checker')">Checker</button>
+                <button class="nav-item" id="tabRequirements" onclick="switchView('requirements')">Requirements</button>
+                <button class="nav-item" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
+                <button class="nav-item disclaimer-tab" id="tabDisclaimer" onclick="switchView('disclaimer')">Disclaimer</button>
             </div>
+
+            <button class="btn-pill-periwinkle" onclick="switchView('checker')">
+                Check a Policy
+            </button>
         </div>
     </nav>
 
-    <div class="container">
+    <!-- App Views Container -->
+    <main>
+        <!-- ============================================================
+             1. LANDING PAGE VIEW (Minimal & Rich Animations)
+             ============================================================ -->
+        <div class="view active" id="view-landing">
+            <div class="container">
+                <section class="hero-editorial">
+                    <h1 class="hero-title">
+                        Unlock <span class="hand-loop">effortless<svg class="hand-loop-svg" viewBox="0 0 260 90"><path class="hand-loop-path" d="M 15,45 C 10,18 90,8 190,14 C 240,17 255,40 235,65 C 205,92 65,85 25,65 C 2,52 35,28 115,22 C 185,16 230,30 245,50" /></svg></span> PDPA compliance.
+                    </h1>
 
-        <!-- CHECKER VIEW -->
-        <div class="view active" id="view-checker">
-            <header class="page-head">
-                <span class="eyebrow">Sri Lanka PDPA · Act No. 9 of 2022</span>
-                <h1>PDPA Compliance Checker</h1>
-                <p>Upload your governance document and get an instant gap analysis against the Personal Data Protection Act.</p>
-            </header>
+                    <p class="hero-subtitle">
+                        Instant 23-point statutory gap detection for privacy notices, governance manuals, and vendor agreements under Sri Lanka's Personal Data Protection Act.
+                    </p>
 
-            <div class="card upload-card">
-                <div class="upload-row">
-                    <label class="file-drop" id="fileDrop">
+                    <!-- Interactive Editorial Card -->
+                    <div class="hero-art-container">
+                        <div class="art-top-strip">
+                            <div class="strip-dark"></div>
+                            <div class="strip-lime"></div>
+                        </div>
+
+                        <div class="editorial-sketch-wrapper">
+                            <!-- Floating Stickers with Hover physics -->
+                            <div class="sketch-tag tag-consent">📝 Lawful Consent</div>
+                            <div class="sketch-tag tag-dpo">🛡️ DPO Mandate</div>
+                            <div class="sketch-tag tag-sla">⚡ 21-Day SLA</div>
+                            <div class="sketch-tag tag-breach">🔔 Breach Notice</div>
+
+                            <!-- Central Animated Character SVG -->
+                            <svg class="hero-char-svg" viewBox="0 0 360 210" width="100%" height="200">
+                                <g stroke="#15291e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Head & Brain scribble -->
+                                    <circle cx="180" cy="100" r="24" fill="#fbf9f5" stroke-width="2.5" />
+                                    <path d="M 168,88 Q 158,70 178,75 Q 198,70 188,85 Q 208,80 198,100 Q 168,110 162,85 Q 178,65 202,70 Q 192,105 174,95" stroke-width="1.8" />
+                                    <!-- Eyes & Smile -->
+                                    <circle cx="173" cy="98" r="2.5" fill="#15291e" />
+                                    <circle cx="187" cy="98" r="2.5" fill="#15291e" />
+                                    <path d="M 175,110 Q 180,105 185,110" />
+                                    
+                                    <!-- Shrugging Arms & Hands -->
+                                    <path d="M 160,124 L 130,135 L 105,115" stroke-width="2.5" />
+                                    <path d="M 200,124 L 230,135 L 255,115" stroke-width="2.5" />
+                                    <!-- Hands -->
+                                    <path d="M 105,115 Q 95,105 100,95 M 105,115 Q 90,113 95,123 M 105,115 Q 98,127 108,129" />
+                                    <path d="M 255,115 Q 265,105 260,95 M 255,115 Q 270,113 265,123 M 255,115 Q 262,127 252,129" />
+                                    <!-- Torso -->
+                                    <path d="M 154,126 L 150,195 L 210,195 L 206,126 Z" fill="#fbf9f5" stroke-width="2.5" />
+                                    <path d="M 168,126 Q 180,136 192,126" />
+
+                                    <!-- Floating Paper Sheet left -->
+                                    <g transform="translate(35, 30) rotate(-10)">
+                                        <rect x="0" y="0" width="42" height="52" rx="4" fill="#ffffff" />
+                                        <line x1="8" y1="10" x2="34" y2="10" stroke="#83978b" />
+                                        <line x1="8" y1="18" x2="30" y2="18" stroke="#83978b" />
+                                        <line x1="8" y1="26" x2="24" y2="26" stroke="#83978b" />
+                                    </g>
+
+                                    <!-- Floating Clapper/Audit Board right -->
+                                    <g transform="translate(280, 32) rotate(12)">
+                                        <rect x="0" y="8" width="44" height="36" rx="3" fill="#ffffff" />
+                                        <rect x="0" y="0" width="44" height="8" fill="#15291e" />
+                                        <line x1="6" y1="18" x2="38" y2="18" stroke="#83978b" />
+                                        <line x1="6" y1="26" x2="28" y2="26" stroke="#83978b" />
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Floating Pill Dock -->
+                        <div class="floating-pill-dock">
+                            <span class="pill-prompt-text">Ready to check your policy?</span>
+                            <div class="pill-actions">
+                                <button class="btn-pill-sec" onclick="switchView('requirements')">View Checklist</button>
+                                <button class="btn-pill-primary" onclick="switchView('checker')">
+                                    <span>Start Checking Now!</span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4 Minimal Clean Feature Cards -->
+                <div class="features-editorial-grid">
+                    <div class="feature-clean-card">
+                        <div>
+                            <div class="card-badge-num">1</div>
+                            <h3 class="feature-card-title">Instant Parsing</h3>
+                            <p class="feature-card-desc">Upload PDF or DOCX policies. Body clauses and structured tables are extracted in seconds.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-clean-card">
+                        <div>
+                            <div class="card-badge-num">2</div>
+                            <h3 class="feature-card-title">23 Criteria Checks</h3>
+                            <p class="feature-card-desc">Evaluates consent, 21-day response timelines, DPO mandates, and data export rules.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-clean-card">
+                        <div>
+                            <div class="card-badge-num">3</div>
+                            <h3 class="feature-card-title">Priority Actions</h3>
+                            <p class="feature-card-desc">Actionable recommendations highlighting critical legal gaps first.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-clean-card">
+                        <div>
+                            <div class="card-badge-num">4</div>
+                            <h3 class="feature-card-title">Legal State Tracking</h3>
+                            <p class="feature-card-desc">Separates gazetted commencement dates from proactive substantive readiness.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minimal Call to action banner -->
+                <div class="cta-banner-warm">
+                    <h2>Benchmark Your Policies in Seconds.</h2>
+                    <p>Upload a document for instant evidence-based gap detection.</p>
+                    <button class="btn-pill-periwinkle" onclick="switchView('checker')" style="padding: 12px 28px; font-size: 14.5px;">
+                        <span>Launch Compliance Checker</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             2. CHECKER VIEW
+             ============================================================ -->
+        <div class="view" id="view-checker">
+            <div class="container">
+                <div class="section-head-editorial">
+                    <span class="pill-badge-sub">Act No. 9 of 2022 &amp; 2025 Amendment</span>
+                    <h1>Compliance Gap Checker</h1>
+                    <p>Upload your policy document (PDF or DOCX) to assess evidence against all 23 PDPA obligations.</p>
+                </div>
+
+                <div class="white-card">
+                    <label class="drop-zone-editorial" id="fileDrop">
                         <input type="file" id="fileInput" accept=".pdf,.docx">
-                        <div class="file-drop-label" id="fileDropLabel"><strong>Choose a file</strong> or drag it here</div>
-                        <div class="file-drop-sub">PDF or DOCX, up to 10MB</div>
+                        <div class="drop-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                        </div>
+                        <div class="drop-title" id="fileDropLabel"><strong>Click to browse</strong> or drag &amp; drop document</div>
+                        <div class="drop-sub">PDF or DOCX files up to 10MB</div>
                     </label>
-                    <button class="primary" onclick="uploadFile()" id="uploadBtn">Analyze Document</button>
+
+                    <div class="upload-row-actions">
+                        <button class="btn-pill-primary" id="uploadBtn" onclick="uploadFile()" style="padding: 11px 26px; font-size: 13.5px;">
+                            <span>Analyze Document</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+
+                    <div id="previewContainer" style="display: none; margin-top: 20px; border-top: 1px solid var(--border-main); padding-top: 18px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 700;">
+                            <span>Document Preview</span>
+                            <span id="previewFilename" style="color: var(--ink-secondary);"></span>
+                        </div>
+                        <div id="previewArea"></div>
+                    </div>
                 </div>
-                <div class="preview-area" id="previewArea"></div>
-            </div>
 
-            <div class="status-card" id="statusCard">
-                <div class="status-label" id="statusLabel">Status</div>
-                <div class="status-text" id="statusText"></div>
-            </div>
+                <!-- Status panel -->
+                <div class="status-panel-editorial" id="statusCard">
+                    <div class="status-badge-lbl" id="statusLabel">Analysis In Progress</div>
+                    <div class="status-msg-text" id="statusText">
+                        <span class="clean-spinner"></span>
+                        <span>Extracting document text and cross-referencing against 23 checklist criteria...</span>
+                    </div>
+                </div>
 
-            <div id="resultsContainer"></div>
+                <!-- Dynamic results container -->
+                <div id="resultsContainer"></div>
+            </div>
         </div>
 
-        <!-- REQUIREMENTS VIEW -->
+        <!-- ============================================================
+             3. REQUIREMENTS VIEW
+             ============================================================ -->
         <div class="view" id="view-requirements">
-            <header class="page-head">
-                <span class="eyebrow">Reference Library</span>
-                <h1>PDPA Requirements</h1>
-                <p>Browse all requirements the checker evaluates every document against.</p>
-            </header>
-
-            <div class="req-toolbar">
-                <input type="text" class="req-search" id="reqSearch" placeholder="Search requirements, categories, or keywords…">
-                <select class="req-filter" id="reqCategoryFilter">
-                    <option value="">All categories</option>
-                </select>
-                <select class="req-filter" id="reqSeverityFilter">
-                    <option value="">All severities</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                </select>
-                <select class="req-filter" id="reqEnforceFilter">
-                    <option value="">All enforcement states</option>
-                    <option value="commenced">In force</option>
-                    <option value="pending">Not yet in force</option>
-                </select>
-            </div>
-
-            <div class="req-count" id="reqCount"></div>
-            <div class="req-list" id="reqList"></div>
-        </div>
-
-        <!-- HOW IT WORKS VIEW -->
-        <div class="view" id="view-howItWorks">
-            <header class="page-head">
-                <span class="eyebrow">Under the hood</span>
-                <h1>How It Works</h1>
-                <p>Our requirements analysis strategy, explained.</p>
-            </header>
-
-            <div class="card how-it-works">
-                <div class="stat-row" id="checklistStats">
-                    <div class="stat">
-                        <div class="stat-number">—</div>
-                        <div class="stat-label">Requirements</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">—</div>
-                        <div class="stat-label">Categories</div>
-                    </div>
+            <div class="container">
+                <div class="section-head-editorial">
+                    <span class="pill-badge-sub">Statutory Reference</span>
+                    <h1>PDPA Requirements Catalog</h1>
+                    <p>Browse all 23 criteria evaluated during analysis, including categories, severities, and commencement notes.</p>
                 </div>
 
-                <h3><span class="step-num">1</span> Document Upload</h3>
-                <p>You upload a governance or security document (PDF or DOCX). The system extracts all readable text, including content inside tables.</p>
+                <div class="search-filter-dock">
+                    <input type="text" class="search-editorial-input" id="reqSearch" placeholder="Search criteria, section, or keywords (e.g. DPO, breach, 21 days)...">
+                    <select class="select-editorial" id="reqCategoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select class="select-editorial" id="reqSeverityFilter">
+                        <option value="">All Severities</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                    <select class="select-editorial" id="reqEnforceFilter">
+                        <option value="">All Legal States</option>
+                        <option value="commenced">In Force</option>
+                        <option value="pending">Pending Gazette</option>
+                    </select>
+                </div>
 
-                <h3><span class="step-num">2</span> Checklist Comparison</h3>
-                <p>The extracted text is compared against a structured checklist of PDPA (Personal Data Protection Act, Sri Lanka) requirements, covering lawful basis, data subject rights, security obligations, breach notification, DPO appointment, and more.</p>
-
-                <h3><span class="step-num">3</span> AI-Assisted Analysis</h3>
-                <p>An AI model reviews the document against each requirement and determines whether it is <strong>Met</strong>, <strong>Partially Met</strong>, or <strong>Not Addressed</strong>, with a short explanation for each.</p>
-
-                <h3><span class="step-num">4</span> Compliance Score</h3>
-                <p>An overall compliance percentage is calculated: fully met requirements count fully, partially met requirements count half, and unaddressed requirements count as zero.</p>
-
-                <h3><span class="step-num">5</span> Recommendations</h3>
-                <p>The system highlights the most important, actionable next steps — prioritizing high-severity gaps first.</p>
-
-                <div class="note-strip">Note: Many provisions of Sri Lanka's PDPA are not yet legally in force. This tool assesses documents against the Act's requirements regardless of current enforcement status, to help organizations prepare ahead of time. See the <strong>Requirements</strong> tab for the full list, including current enforcement status for each.</div>
+                <div id="reqCount" style="font-size: 13px; color: var(--ink-secondary); margin-bottom: 14px; font-weight: 600;">Loading requirements...</div>
+                <div id="reqList"></div>
             </div>
         </div>
 
-    </div>
+        <!-- ============================================================
+             4. HOW IT WORKS VIEW
+             ============================================================ -->
+        <div class="view" id="view-howItWorks">
+            <div class="container">
+                <div class="section-head-editorial">
+                    <span class="pill-badge-sub">Methodology</span>
+                    <h1>How the Checker Works</h1>
+                    <p>A deterministic, AI-assisted pipeline designed to evaluate policies against statutory requirements.</p>
+                </div>
 
+                <div class="timeline-editorial">
+                    <div class="step-editorial-card">
+                        <div class="step-editorial-num">1</div>
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Text &amp; Table Extraction</h3>
+                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">Uploaded PDFs or DOCX files are parsed server-side. All narrative clauses and table cells are cleanly extracted.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-editorial-card">
+                        <div class="step-editorial-num">2</div>
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Structured 23-Item Checklist</h3>
+                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">The backend evaluates evidence against predefined requirements derived from Act No. 9 of 2022 &amp; Act No. 22 of 2025.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-editorial-card">
+                        <div class="step-editorial-num">3</div>
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Gemini AI Analysis</h3>
+                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">The AI compares document clauses against each requirement and labels them <strong>Met</strong>, <strong>Partially Met</strong>, or <strong>Not Addressed</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-editorial-card">
+                        <div class="step-editorial-num">4</div>
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Deterministic Scoring</h3>
+                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">Overall percentage is calculated deterministically: Met = 1.0 pt, Partially Met = 0.5 pt, Not Addressed = 0.0 pt.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-editorial-card">
+                        <div class="step-editorial-num">5</div>
+                        <div>
+                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Remediation Priorities</h3>
+                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">High-severity gaps are highlighted first with concise action items.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             5. DISCLAIMER VIEW (Dedicated Toy Project Notice)
+             ============================================================ -->
+        <div class="view" id="view-disclaimer">
+            <div class="container">
+                <div class="disclaimer-hero-card">
+                    <div class="disclaimer-badge">
+                        <span>⚠️ Prototype &amp; Demonstration Project</span>
+                    </div>
+
+                    <h1 class="disclaimer-title">Project Scope &amp; Legal Notice</h1>
+
+                    <p class="disclaimer-lead">
+                        <strong>HeyPDPA! is an experimental toy project and educational prototype.</strong> It was created to demonstrate automated gap detection concepts and is not an official compliance audit tool. No output constitutes binding legal advice or formal certification.
+                    </p>
+
+                    <div class="disclaimer-grid">
+                        <div class="disclaimer-box">
+                            <h3>🏷️ Arbitrary Severity Weightings</h3>
+                            <p>Severity labels (<strong>High</strong>, <strong>Medium</strong>, <strong>Low</strong>) and scoring point values are demonstration heuristics assigned without formal regulatory backing or gazetted consensus.</p>
+                        </div>
+
+                        <div class="disclaimer-box">
+                            <h3>⚖️ Not Legal Advice</h3>
+                            <p>This software does not provide legal opinions or regulatory clearance. Compliance determinations require qualified legal counsel and data protection specialists.</p>
+                        </div>
+
+                        <div class="disclaimer-box">
+                            <h3>📜 Commencement Schedules</h3>
+                            <p>Provisions of the PDPA follow phased commencement dates via government Gazette notices. Some provisions are not yet legally in force.</p>
+                        </div>
+
+                        <div class="disclaimer-box">
+                            <h3>🤖 AI Verification</h3>
+                            <p>AI text models may overlook subtle nuances or misinterpret complex clauses. Results must always be verified manually against the primary legislation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-nav">
+            <a onclick="switchView('landing')">What We Do</a>
+            <a onclick="switchView('checker')">Checker</a>
+            <a onclick="switchView('requirements')">Requirements</a>
+            <a onclick="switchView('howItWorks')">How It Works</a>
+            <a onclick="switchView('disclaimer')" style="color: #c53030;">Disclaimer</a>
+        </div>
+        <p>&copy; 2026 HeyPDPA! · Educational Prototype for Sri Lanka Personal Data Protection Act (Act No. 9 of 2022 &amp; Act No. 22 of 2025)</p>
+    </footer>
+
+    <!-- ============================================================
+         SCRIPTS & LOGIC
+         ============================================================ -->
     <script>
-        // ============================================================
-        // PDPA CHECKLIST DATA — fetched from the backend at runtime so
-        // edits to backend/pdpa_checklist.json show up automatically.
-        // ============================================================
+        const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+            ? 'http://127.0.0.1:5001'
+            : 'https://pdpa-checker.onrender.com';
+
         let PDPA_CHECKLIST = [];
         let checklistLoadError = null;
+        let reqInitialized = false;
+        let reqDataLoaded = false;
 
         async function loadChecklistData() {
             try {
-                const res = await fetch("http://127.0.0.1:5001/checklist");
-                if (!res.ok) throw new Error("Server returned " + res.status);
+                const res = await fetch(`${API_BASE}/checklist`);
+                if (!res.ok) throw new Error("Server response: " + res.status);
                 const data = await res.json();
                 PDPA_CHECKLIST = data.requirements || [];
+                checklistLoadError = null;
             } catch (err) {
+                console.warn("Primary fetch error:", err);
+                if (API_BASE.includes('127.0.0.1') || API_BASE.includes('localhost')) {
+                    try {
+                        const fallbackRes = await fetch("https://pdpa-checker.onrender.com/checklist");
+                        if (fallbackRes.ok) {
+                            const data = await fallbackRes.json();
+                            PDPA_CHECKLIST = data.requirements || [];
+                            checklistLoadError = null;
+                            return;
+                        }
+                    } catch (fbErr) {}
+                }
                 checklistLoadError = err.message;
                 PDPA_CHECKLIST = [];
             }
         }
 
-        const fileInput = document.getElementById("fileInput");
-        const fileDrop = document.getElementById("fileDrop");
-        const fileDropLabel = document.getElementById("fileDropLabel");
-        const previewArea = document.getElementById("previewArea");
-
-        // ----- View switching -----
-        function switchView(view) {
+        // View Switching
+        function switchView(viewName) {
             document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-            document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".nav-item").forEach(t => t.classList.remove("active"));
 
-            document.getElementById("view-" + view).classList.add("active");
+            const targetView = document.getElementById("view-" + viewName);
+            if (targetView) {
+                targetView.classList.add("active");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
 
-            if (view === "checker") {
-                document.getElementById("tabChecker").classList.add("active");
-            } else if (view === "requirements") {
-                document.getElementById("tabRequirements").classList.add("active");
+            const tabBtnMap = {
+                'landing': 'tabLanding',
+                'checker': 'tabChecker',
+                'requirements': 'tabRequirements',
+                'howItWorks': 'tabHowItWorks',
+                'disclaimer': 'tabDisclaimer'
+            };
+
+            const activeBtn = document.getElementById(tabBtnMap[viewName]);
+            if (activeBtn) activeBtn.classList.add("active");
+
+            if (viewName === "requirements") {
                 openRequirementsTab();
-            } else {
-                document.getElementById("tabHowItWorks").classList.add("active");
-                loadChecklistInfo();
             }
         }
 
-        async function loadChecklistInfo() {
-            if (!reqDataLoaded) {
-                await loadChecklistData();
-                reqDataLoaded = true;
-            }
-
-            const statRow = document.getElementById("checklistStats");
-
-            if (checklistLoadError || PDPA_CHECKLIST.length === 0) {
-                statRow.innerHTML = `<div class="no-results" style="width:100%;">Couldn't reach the backend to load stats.</div>`;
-                return;
-            }
-
-            const categories = new Set(PDPA_CHECKLIST.map(item => item.category));
-            statRow.innerHTML = `
-                <div class="stat">
-                    <div class="stat-number">${PDPA_CHECKLIST.length}</div>
-                    <div class="stat-label">Requirements</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">${categories.size}</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-            `;
-        }
-
-        // ----- Requirements tab -----
-        let reqInitialized = false;
-        let reqDataLoaded = false;
-
+        // Requirements Tab logic
         async function openRequirementsTab() {
             const list = document.getElementById("reqList");
-
             if (!reqDataLoaded) {
-                list.innerHTML = `<div class="no-results"><span class="spinner"></span>Loading requirements…</div>`;
+                list.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--ink-faint);"><span class="clean-spinner"></span> Loading statutory criteria...</div>`;
                 document.getElementById("reqCount").textContent = "";
 
                 await loadChecklistData();
                 reqDataLoaded = true;
 
                 if (checklistLoadError || PDPA_CHECKLIST.length === 0) {
-                    list.innerHTML = `<div class="no-results">
-                        Couldn't load the checklist from the backend (${checklistLoadError || "no data returned"}).<br>
-                        Make sure the Flask server is running at <code>127.0.0.1:5001</code>, then
-                        <button class="req-toggle" onclick="reqDataLoaded=false; openRequirementsTab();">try again</button>.
-                    </div>`;
+                    list.innerHTML = `
+                        <div style="text-align:center; padding: 40px; color: var(--ink-secondary);">
+                            Unable to connect to server (${checklistLoadError || "no data returned"}).<br><br>
+                            <button class="btn-pill-sec" onclick="reqDataLoaded=false; openRequirementsTab();">Retry</button>
+                        </div>
+                    `;
                     return;
                 }
             }
-
             renderRequirements();
         }
 
         function initRequirementsFilters() {
             const categoryFilter = document.getElementById("reqCategoryFilter");
             const categories = [...new Set(PDPA_CHECKLIST.map(item => item.category))].sort();
+            
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
             categories.forEach(cat => {
                 const opt = document.createElement("option");
                 opt.value = cat;
@@ -871,8 +1571,8 @@
         }
 
         function toggleReqCard(id) {
-            const el = document.getElementById("req-" + id);
-            if (el) el.classList.toggle("expanded");
+            const el = document.getElementById("req-card-" + id);
+            if (el) el.classList.toggle("open");
         }
 
         function renderRequirements() {
@@ -900,45 +1600,44 @@
             });
 
             document.getElementById("reqCount").textContent =
-                `Showing ${filtered.length} of ${PDPA_CHECKLIST.length} requirements`;
+                `Showing ${filtered.length} of ${PDPA_CHECKLIST.length} statutory requirements`;
 
             const list = document.getElementById("reqList");
 
             if (filtered.length === 0) {
-                list.innerHTML = `<div class="no-results">No requirements match your filters.</div>`;
+                list.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--ink-faint);">No requirements match your current search filters.</div>`;
                 return;
             }
 
             list.innerHTML = filtered.map(item => {
-                const sevClass = item.severity === "High" ? "sev-high" : item.severity === "Medium" ? "sev-medium" : "sev-low";
-                const enforceClass = item.enforcement.commenced ? "enforce-badge commenced" : "enforce-badge";
-                const enforceLabel = item.enforcement.commenced ? "In force" : "Not yet in force";
+                const enforceLabel = item.enforcement.commenced ? "In Force" : "Pending Gazette";
+                const enforceClass = item.enforcement.commenced ? "pill-tag in-force" : "pill-tag";
 
                 return `
-                    <div class="req-card" id="req-${item.id}" onclick="toggleReqCard('${item.id}')">
-                        <div class="req-card-top">
+                    <div class="req-card-editorial" id="req-card-${item.id}" onclick="toggleReqCard('${item.id}')">
+                        <div class="req-card-header">
                             <div>
-                                <div class="req-card-id">${item.id}</div>
-                                <div class="req-card-category">${item.category}</div>
+                                <span class="req-item-id">${item.id} · ${item.category}</span>
+                                <div class="req-item-title">${item.requirement}</div>
                             </div>
-                            <div class="req-badges">
-                                <span class="sev-badge ${sevClass}">${item.severity}</span>
+                            <div class="req-badges-row">
+                                <span class="pill-tag ${item.severity}">${item.severity}</span>
                                 <span class="${enforceClass}">${enforceLabel}</span>
                             </div>
                         </div>
-                        <div class="req-card-text">${item.requirement}</div>
-                        <div class="req-card-footer">
-                            <div class="req-act-ref">${item.act_reference.part} · ${item.act_reference.section}</div>
-                            <button class="req-toggle" onclick="event.stopPropagation(); toggleReqCard('${item.id}')">Details</button>
+                        <div class="req-card-body">${item.what_to_look_for}</div>
+                        <div class="req-card-foot">
+                            <span class="req-statutory-cite">${item.act_reference.part} · ${item.act_reference.section}</span>
+                            <button class="req-toggle-link" onclick="event.stopPropagation(); toggleReqCard('${item.id}')">Details</button>
                         </div>
-                        <div class="req-card-details">
-                            <div class="req-detail-row">
-                                <div class="req-detail-label">What to look for</div>
-                                <div class="req-detail-value">${item.what_to_look_for}</div>
+                        <div class="req-details-drawer">
+                            <div style="margin-bottom: 8px;">
+                                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-faint);">Evidence to look for</div>
+                                <div style="font-size: 13px; color: var(--ink-secondary); line-height: 1.5;">${item.what_to_look_for}</div>
                             </div>
-                            <div class="req-detail-row">
-                                <div class="req-detail-label">Enforcement status</div>
-                                <div class="req-detail-value">${item.enforcement.note}</div>
+                            <div>
+                                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-faint);">Enforcement Schedule Note</div>
+                                <div style="font-size: 13px; color: var(--ink-secondary); line-height: 1.5;">${item.enforcement.note}</div>
                             </div>
                         </div>
                     </div>
@@ -946,33 +1645,41 @@
             }).join("");
         }
 
-        // ----- File preview -----
+        // File upload & preview
+        const fileInput = document.getElementById("fileInput");
+        const fileDrop = document.getElementById("fileDrop");
+        const fileDropLabel = document.getElementById("fileDropLabel");
+        const previewContainer = document.getElementById("previewContainer");
+        const previewArea = document.getElementById("previewArea");
+        const previewFilename = document.getElementById("previewFilename");
+
         fileInput.addEventListener("change", () => {
             previewArea.innerHTML = "";
-
             if (fileInput.files.length === 0) {
-                fileDropLabel.innerHTML = "<strong>Choose a file</strong> or drag it here";
+                fileDropLabel.innerHTML = "<strong>Click to browse</strong> or drag &amp; drop document";
+                previewContainer.style.display = "none";
                 return;
             }
 
             const file = fileInput.files[0];
-            const extension = file.name.split(".").pop().toLowerCase();
-            fileDropLabel.innerHTML = `<strong>${file.name}</strong>`;
+            const ext = file.name.split(".").pop().toLowerCase();
+            fileDropLabel.innerHTML = `Selected: <strong>${file.name}</strong> (${(file.size / (1024*1024)).toFixed(2)} MB)`;
+            previewContainer.style.display = "block";
+            previewFilename.textContent = file.name;
 
-            if (extension === "pdf") {
+            if (ext === "pdf") {
                 const fileURL = URL.createObjectURL(file);
-                previewArea.innerHTML = `
-                    <div class="preview-label">Preview</div>
-                    <iframe src="${fileURL}" class="pdf-frame"></iframe>
-                `;
+                previewArea.innerHTML = `<iframe src="${fileURL}" style="width:100%; height:380px; border:1px solid var(--border-main); border-radius:12px;"></iframe>`;
             } else {
                 previewArea.innerHTML = `
-                    <div class="preview-label">Selected</div>
-                    <div class="no-preview">No preview available for .${extension} files.</div>
+                    <div style="background:var(--bg-page); padding:18px; text-align:center; font-size:13.5px; color:var(--ink-secondary); border-radius:12px; border:1px solid var(--border-main);">
+                        Word Document (.${ext}) selected. Content and tables will be extracted during analysis.
+                    </div>
                 `;
             }
         });
 
+        // Drag & drop handlers
         ["dragover", "dragenter"].forEach(evt => {
             fileDrop.addEventListener(evt, (e) => {
                 e.preventDefault();
@@ -994,8 +1701,8 @@
             }
         });
 
-        // ----- Upload + analysis -----
-        function uploadFile() {
+        // Upload and AI Analysis
+        async function uploadFile() {
             const uploadBtn = document.getElementById("uploadBtn");
             const statusCard = document.getElementById("statusCard");
             const statusLabel = document.getElementById("statusLabel");
@@ -1003,7 +1710,7 @@
             const resultsContainer = document.getElementById("resultsContainer");
 
             if (fileInput.files.length === 0) {
-                showStatus("error", "Notice", "Please select a file first.");
+                showStatus("error", "Notice", "Please select a PDF or DOCX file first.");
                 return;
             }
 
@@ -1011,57 +1718,68 @@
             formData.append("file", fileInput.files[0]);
 
             uploadBtn.disabled = true;
-            uploadBtn.textContent = "Analyzing…";
+            uploadBtn.innerHTML = `<span>Analyzing...</span>`;
             resultsContainer.innerHTML = "";
-            showStatus("", "Processing", '<span class="spinner"></span>Analyzing your document against the PDPA checklist, this may take a moment...');
+            showStatus("", "AI Compliance Engine Active", '<span class="clean-spinner"></span><span>Extracting clauses and cross-referencing against 23 PDPA requirements...</span>');
 
-            fetch("http://127.0.0.1:5001/upload", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => {
+            try {
+                let response = await fetch(`${API_BASE}/upload`, {
+                    method: "POST",
+                    body: formData
+                });
+
                 if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text); });
+                    if (API_BASE.includes('127.0.0.1') || API_BASE.includes('localhost')) {
+                        try {
+                            response = await fetch("https://pdpa-checker.onrender.com/upload", {
+                                method: "POST",
+                                body: formData
+                            });
+                        } catch (e) {}
+                    }
                 }
-                return response.json();
-            })
-            .then(data => {
-                statusCard.className = "status-card";
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text || "Failed to analyze document");
+                }
+
+                const data = await response.json();
+                statusCard.className = "status-panel-editorial";
                 renderResults(data);
-            })
-            .catch(error => {
-                showStatus("error", "Error", error.message);
-            })
-            .finally(() => {
+            } catch (error) {
+                showStatus("error", "Analysis Error", error.message || "An unexpected error occurred.");
+            } finally {
                 uploadBtn.disabled = false;
-                uploadBtn.textContent = "Analyze Document";
-            });
+                uploadBtn.innerHTML = `<span>Analyze Document</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+            }
 
             function showStatus(type, label, message) {
-                statusCard.className = "status-card visible" + (type ? " " + type : "");
+                statusCard.className = "status-panel-editorial visible" + (type ? " " + type : "");
                 statusLabel.textContent = label;
                 statusText.innerHTML = message;
             }
         }
 
-        function buildGaugeSVG(percentage) {
-            let color = "#e03b30";
-            if (percentage >= 70) color = "#1e8e3e";
-            else if (percentage >= 40) color = "#c98a06";
+        // SVG Speedometer Meter
+        function buildSpeedometerSVG(percentage) {
+            let strokeColor = "#c53030";
+            if (percentage >= 70) strokeColor = "#1e8346";
+            else if (percentage >= 40) strokeColor = "#b45309";
 
-            const radius = 90;
+            const radius = 78;
             const circumference = Math.PI * radius;
             const filled = (percentage / 100) * circumference;
 
             return `
-                <svg width="240" height="130" viewBox="0 0 240 130">
-                    <path d="M 20 120 A 100 100 0 0 1 220 120"
-                        fill="none" stroke="#e5e5e7" stroke-width="16" stroke-linecap="round" />
-                    <path d="M 20 120 A 100 100 0 0 1 220 120"
-                        fill="none" stroke="${color}" stroke-width="16" stroke-linecap="round"
+                <svg width="200" height="115" viewBox="0 0 200 115">
+                    <path d="M 22 105 A 78 78 0 0 1 178 105"
+                        fill="none" stroke="#e6e1d6" stroke-width="15" stroke-linecap="round" />
+                    <path d="M 22 105 A 78 78 0 0 1 178 105"
+                        fill="none" stroke="${strokeColor}" stroke-width="15" stroke-linecap="round"
                         stroke-dasharray="${circumference}"
                         stroke-dashoffset="${circumference - filled}"
-                        style="transition: stroke-dashoffset 700ms cubic-bezier(0.22,1,0.36,1);" />
+                        style="transition: stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1);" />
                 </svg>
             `;
         }
@@ -1070,38 +1788,75 @@
             const resultsContainer = document.getElementById("resultsContainer");
             const percentage = data.compliance_percentage;
 
-            let color = "#e03b30";
-            if (percentage >= 70) color = "#1e8e3e";
-            else if (percentage >= 40) color = "#c98a06";
+            let scoreColor = "#c53030";
+            let statusLabel = "High Remediation Required";
+            if (percentage >= 70) {
+                scoreColor = "#1e8346";
+                statusLabel = "Substantially Aligned";
+            } else if (percentage >= 40) {
+                scoreColor = "#b45309";
+                statusLabel = "Partially Aligned";
+            }
+
+            const metCount = data.results.filter(r => r.status === "Met").length;
+            const partialCount = data.results.filter(r => r.status === "Partially Met").length;
+            const unaddressedCount = data.results.filter(r => r.status === "Not Addressed").length;
 
             let html = `
-                <div class="card score-card">
-                    <div class="gauge-wrap">
-                        ${buildGaugeSVG(percentage)}
-                        <div class="gauge-number" style="color: ${color}">${percentage}%</div>
+                <div class="white-card">
+                    <div class="score-banner-editorial">
+                        <div class="gauge-wrap-clean">
+                            ${buildSpeedometerSVG(percentage)}
+                            <div class="gauge-display-center">
+                                <div class="gauge-score-num" style="color: ${scoreColor}">${percentage}%</div>
+                                <div class="gauge-score-status">${statusLabel}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 21px; font-weight: 800; margin-bottom: 4px;">Overall PDPA Compliance Score</h3>
+                            <div style="font-size: 13px; color: var(--ink-secondary); font-weight: 600;">File: ${data.filename}</div>
+                            <div class="score-pills-row">
+                                <div class="stat-chip">
+                                    <span class="stat-chip-num" style="color: #1e8346;">${metCount}</span>
+                                    <span class="stat-chip-lbl">Met</span>
+                                </div>
+                                <div class="stat-chip">
+                                    <span class="stat-chip-num" style="color: #b45309;">${partialCount}</span>
+                                    <span class="stat-chip-lbl">Partial</span>
+                                </div>
+                                <div class="stat-chip">
+                                    <span class="stat-chip-num" style="color: #c53030;">${unaddressedCount}</span>
+                                    <span class="stat-chip-lbl">Missing</span>
+                                </div>
+                                <div class="stat-chip">
+                                    <span class="stat-chip-num">${data.results.length}</span>
+                                    <span class="stat-chip-lbl">Total Checks</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="score-label">Overall PDPA Compliance — ${data.filename}</div>
                 </div>
 
-                <div class="results-grid">
-                    <div class="card">
-                        <div class="section-title">Requirement Breakdown</div>
-                        <div class="results-list">
+                <div class="results-editorial-grid">
+                    <div class="white-card" style="padding: 22px;">
+                        <div class="panel-headline">
+                            <span>Requirement Breakdown</span>
+                            <span style="font-size: 12px; color: var(--ink-faint); font-weight: 600;">${data.results.length} Evaluated</span>
+                        </div>
+                        <div>
             `;
 
             data.results.forEach(item => {
-                let badgeClass = "badge-not-addressed";
-                if (item.status === "Met") badgeClass = "badge-met";
-                else if (item.status === "Partially Met") badgeClass = "badge-partial";
+                let badgeStatusClass = item.status === "Met" ? "Met" : item.status === "Partially Met" ? "Partially Met" : "Not Addressed";
 
                 html += `
-                    <div class="result-item">
-                        <div class="result-top-row">
-                            <div class="result-category">${item.category}</div>
-                            <span class="badge ${badgeClass}">${item.status}</span>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">${item.id ? '[' + item.id + '] ' : ''}${item.category}</span>
+                            <span class="badge-chip ${badgeStatusClass}">${item.status}</span>
                         </div>
-                        <div class="result-explanation">${item.explanation}</div>
-                        <div class="severity-tag">Severity: ${item.severity}</div>
+                        <div class="result-row-expl">${item.explanation}</div>
+                        <div style="font-size: 11px; color: var(--ink-faint); margin-top: 6px; font-weight: 600;">Severity: ${item.severity}</div>
                     </div>
                 `;
             });
@@ -1109,33 +1864,42 @@
             html += `
                         </div>
                     </div>
+
+                    <div class="white-card" style="padding: 22px;">
+                        <div class="panel-headline">
+                            <span>Recommended Actions</span>
+                            <span style="font-size: 11px; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 99px;">High Priority</span>
+                        </div>
+                        <div>
             `;
 
             if (data.recommendations && data.recommendations.length > 0) {
-                html += `
-                    <div class="card">
-                        <div class="section-title">Recommendations</div>
-                        <ul class="rec-list">
-                `;
-
-                data.recommendations.forEach((rec, index) => {
+                data.recommendations.forEach((rec, idx) => {
                     html += `
-                        <li class="rec-item">
-                            <span class="rec-number">${index + 1}.</span>
-                            <span>${rec}</span>
-                        </li>
+                        <div class="rec-item-editorial">
+                            <div class="rec-num-badge">${idx + 1}</div>
+                            <div>${rec}</div>
+                        </div>
                     `;
                 });
-
-                html += `
-                        </ul>
-                    </div>
-                `;
+            } else {
+                html += `<div style="color: var(--ink-secondary); font-size: 13.5px;">No critical gaps identified in this document.</div>`;
             }
 
-            html += `</div>`;
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+
             resultsContainer.innerHTML = html;
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        // Preload checklist on page startup
+        window.addEventListener("DOMContentLoaded", () => {
+            loadChecklistData();
+        });
     </script>
 </body>
 </html>
