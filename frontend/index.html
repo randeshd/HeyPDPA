@@ -72,7 +72,9 @@
         padding: 30px 24px 80px;
     }
 
-    /* ---------- Navigation Bar ---------- */
+    /* ============================================================
+       NAVIGATION BAR (Clean Desktop 3-Column & Mobile Dropdown)
+       ============================================================ */
     .navbar {
         position: sticky;
         top: 0;
@@ -80,7 +82,7 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border-bottom: 1px solid var(--border-main);
-        padding: 12px 24px;
+        padding: 14px 28px;
         z-index: 1000;
         transition: all 0.25s ease;
     }
@@ -91,15 +93,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 14px;
+        gap: 16px;
     }
 
-    .nav-brand-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
+    /* Brand (Left) */
     .nav-brand {
         display: flex;
         align-items: center;
@@ -110,8 +107,8 @@
     }
 
     .brand-logo-icon {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
         background: var(--ink-primary);
         display: flex;
@@ -127,13 +124,13 @@
     }
 
     .brand-logo-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 19px;
+        height: 19px;
         fill: currentColor;
     }
 
     .brand-text {
-        font-size: 19px;
+        font-size: 20px;
         font-weight: 800;
         letter-spacing: -0.03em;
         display: flex;
@@ -145,19 +142,20 @@
         color: #3b82f6;
     }
 
-    .nav-links {
+    /* Desktop Navigation Tabs (Center) */
+    .nav-links.desktop-nav {
         display: flex;
         align-items: center;
         gap: 6px;
     }
 
     .nav-item {
-        font-size: 13.5px;
+        font-size: 14px;
         font-weight: 600;
         color: var(--ink-secondary);
         background: none;
         border: none;
-        padding: 8px 15px;
+        padding: 8px 16px;
         border-radius: var(--radius-pill);
         cursor: pointer;
         transition: all 0.2s ease;
@@ -186,15 +184,21 @@
         color: #9b2c2c;
     }
 
+    /* Desktop CTA Button (Right) */
+    .nav-desktop-cta {
+        display: flex;
+        align-items: center;
+    }
+
     .btn-pill-periwinkle {
         display: inline-flex;
         align-items: center;
         gap: 8px;
         background: var(--accent-periwinkle);
         color: var(--ink-periwinkle);
-        font-size: 13.5px;
+        font-size: 14px;
         font-weight: 700;
-        padding: 9px 20px;
+        padding: 10px 22px;
         border-radius: var(--radius-pill);
         border: none;
         cursor: pointer;
@@ -207,6 +211,132 @@
     .btn-pill-periwinkle:hover {
         background: var(--accent-periwinkle-hover);
         transform: translateY(-2px) scale(1.02);
+    }
+
+    /* Mobile Nav Toggle & Dropdown */
+    .mobile-nav-toggle-wrap {
+        display: none;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hamburger-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1.5px solid var(--border-main);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .hamburger-btn:hover {
+        background: var(--bg-subtle);
+        border-color: var(--ink-primary);
+    }
+
+    .hamburger-line {
+        width: 17px;
+        height: 2px;
+        background: var(--ink-primary);
+        border-radius: 2px;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .hamburger-btn.open .hamburger-line:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+    .hamburger-btn.open .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-btn.open .hamburger-line:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .mobile-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 14px;
+        right: 14px;
+        background: #ffffff;
+        border: 1.5px solid var(--border-dark);
+        border-radius: var(--radius-xl);
+        padding: 18px 16px 20px;
+        box-shadow: 0 16px 40px rgba(21, 41, 30, 0.16);
+        animation: dropDownSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 1100;
+    }
+
+    @keyframes dropDownSlide {
+        from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+        to { opacity: 1; transform: translateY(8px) scale(1); }
+    }
+
+    .mobile-dropdown-menu.open {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .mobile-nav-link {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--ink-secondary);
+        background: none;
+        border: none;
+        padding: 12px 16px;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-nav-link:hover, .mobile-nav-link:active {
+        background: var(--bg-subtle);
+        color: var(--ink-primary);
+    }
+
+    .mobile-nav-link.active {
+        background: var(--bg-subtle);
+        color: var(--ink-primary);
+        border-left: 3px solid var(--ink-primary);
+    }
+
+    .mobile-nav-link.disclaimer {
+        color: #c53030;
+    }
+    .mobile-nav-link.disclaimer.active {
+        background: #fce8e6;
+        border-left-color: #c53030;
+    }
+
+    .mobile-dropdown-divider {
+        height: 1px;
+        background: var(--border-main);
+        margin: 8px 4px 12px;
+    }
+
+    .mobile-menu-cta {
+        width: 100%;
+        padding: 13px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: var(--radius-pill);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
 
     /* Views container */
@@ -232,7 +362,7 @@
     }
 
     .hero-title {
-        font-size: clamp(32px, 5vw, 56px);
+        font-size: clamp(34px, 5vw, 58px);
         font-weight: 800;
         line-height: 1.12;
         letter-spacing: -0.035em;
@@ -1116,49 +1246,24 @@
     .footer-nav a:hover { color: var(--ink-primary); }
 
     /* ============================================================
-       MOBILE OPTIMIZATION MEDIA QUERIES
+       RESPONSIVE & MOBILE BREAKPOINTS
        ============================================================ */
-    @media (max-width: 768px) {
+    @media (max-width: 860px) {
         .navbar {
-            padding: 10px 14px;
+            padding: 12px 18px;
         }
 
-        .nav-inner {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 10px;
+        /* Hide desktop center tabs and desktop right button */
+        .nav-links.desktop-nav {
+            display: none !important;
+        }
+        .nav-desktop-cta {
+            display: none !important;
         }
 
-        .nav-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 2px 2px 6px;
-            scrollbar-width: none;
-            width: 100%;
-        }
-        .nav-links::-webkit-scrollbar {
-            display: none;
-        }
-
-        .nav-item {
-            flex-shrink: 0;
-            font-size: 13px;
-            padding: 7px 13px;
-        }
-
-        .btn-pill-periwinkle.nav-cta {
-            padding: 8px 16px;
-            font-size: 13px;
+        /* Show mobile hamburger toggle */
+        .mobile-nav-toggle-wrap {
+            display: flex !important;
         }
 
         .results-editorial-grid {
@@ -1404,28 +1509,72 @@
 </head>
 <body>
 
-    <!-- Header Navigation (Mobile Optimized) -->
-    <nav class="navbar">
+    <!-- Header Navigation -->
+    <nav class="navbar" id="mainNavbar">
         <div class="nav-inner">
-            <div class="nav-top-row">
-                <a class="nav-brand" onclick="switchView('landing')">
-                    <div class="brand-logo-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm0-10h2v8h-2V6z"/></svg>
-                    </div>
-                    <div class="brand-text">HeyPDPA!</div>
-                </a>
-                <button class="btn-pill-periwinkle nav-cta" onclick="switchView('checker')">
-                    Check a Policy
-                </button>
-            </div>
+            <!-- Brand (Left) -->
+            <a class="nav-brand" onclick="switchView('landing')">
+                <div class="brand-logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm0-10h2v8h-2V6z"/></svg>
+                </div>
+                <div class="brand-text">HeyPDPA!</div>
+            </a>
 
-            <div class="nav-links">
+            <!-- Desktop Navigation Tabs (Center) -->
+            <div class="nav-links desktop-nav">
                 <button class="nav-item active" id="tabLanding" onclick="switchView('landing')">What We Do</button>
                 <button class="nav-item" id="tabChecker" onclick="switchView('checker')">Checker</button>
                 <button class="nav-item" id="tabRequirements" onclick="switchView('requirements')">Requirements</button>
                 <button class="nav-item" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
                 <button class="nav-item disclaimer-tab" id="tabDisclaimer" onclick="switchView('disclaimer')">Disclaimer</button>
             </div>
+
+            <!-- Desktop CTA Button (Right) -->
+            <div class="nav-desktop-cta">
+                <button class="btn-pill-periwinkle" onclick="switchView('checker')">
+                    Check a Policy
+                </button>
+            </div>
+
+            <!-- Mobile Navigation Toggle (Mobile Only) -->
+            <div class="mobile-nav-toggle-wrap">
+                <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div class="mobile-dropdown-menu" id="mobileDropdown">
+            <button class="mobile-nav-link active" id="mTabLanding" onclick="handleMobileNav('landing')">
+                <span>What We Do</span>
+                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
+            </button>
+            <button class="mobile-nav-link" id="mTabChecker" onclick="handleMobileNav('checker')">
+                <span>Checker</span>
+                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
+            </button>
+            <button class="mobile-nav-link" id="mTabRequirements" onclick="handleMobileNav('requirements')">
+                <span>Requirements</span>
+                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
+            </button>
+            <button class="mobile-nav-link" id="mTabHowItWorks" onclick="handleMobileNav('howItWorks')">
+                <span>How It Works</span>
+                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
+            </button>
+            <button class="mobile-nav-link disclaimer" id="mTabDisclaimer" onclick="handleMobileNav('disclaimer')">
+                <span>⚠️ Disclaimer</span>
+                <span style="font-size: 13px; color: #c53030;">➔</span>
+            </button>
+
+            <div class="mobile-dropdown-divider"></div>
+
+            <button class="btn-pill-primary mobile-menu-cta" onclick="handleMobileNav('checker')">
+                <span>Check a Policy Now</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
         </div>
     </nav>
 
@@ -1792,10 +1941,41 @@
             }
         }
 
+        // Mobile Menu Toggling
+        function toggleMobileMenu() {
+            const btn = document.getElementById("mobileMenuBtn");
+            const dropdown = document.getElementById("mobileDropdown");
+            if (btn && dropdown) {
+                btn.classList.toggle("open");
+                dropdown.classList.toggle("open");
+            }
+        }
+
+        function handleMobileNav(viewName) {
+            const btn = document.getElementById("mobileMenuBtn");
+            const dropdown = document.getElementById("mobileDropdown");
+            if (btn) btn.classList.remove("open");
+            if (dropdown) dropdown.classList.remove("open");
+
+            switchView(viewName);
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            const navbar = document.getElementById("mainNavbar");
+            const btn = document.getElementById("mobileMenuBtn");
+            const dropdown = document.getElementById("mobileDropdown");
+            if (navbar && !navbar.contains(e.target) && dropdown && dropdown.classList.contains("open")) {
+                dropdown.classList.remove("open");
+                if (btn) btn.classList.remove("open");
+            }
+        });
+
         // View Switching
         function switchView(viewName) {
             document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
             document.querySelectorAll(".nav-item").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".mobile-nav-link").forEach(l => l.classList.remove("active"));
 
             const targetView = document.getElementById("view-" + viewName);
             if (targetView) {
@@ -1811,8 +1991,19 @@
                 'disclaimer': 'tabDisclaimer'
             };
 
+            const mTabMap = {
+                'landing': 'mTabLanding',
+                'checker': 'mTabChecker',
+                'requirements': 'mTabRequirements',
+                'howItWorks': 'mTabHowItWorks',
+                'disclaimer': 'mTabDisclaimer'
+            };
+
             const activeBtn = document.getElementById(tabBtnMap[viewName]);
             if (activeBtn) activeBtn.classList.add("active");
+
+            const activeMBtn = document.getElementById(mTabMap[viewName]);
+            if (activeMBtn) activeMBtn.classList.add("active");
 
             if (viewName === "requirements") {
                 openRequirementsTab();
