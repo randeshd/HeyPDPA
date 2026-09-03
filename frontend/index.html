@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HeyPDPA! · Sri Lanka PDPA Compliance Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%2315291e'/%3E%3Cpath fill='%23ffffff' d='M12 5c-3.87 0-7 3.13-7 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm-1 3h2v5h-2V8zm0 6h2v2h-2v-2z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -1526,6 +1527,7 @@
                 <button class="nav-item" id="tabChecker" onclick="switchView('checker')">Checker</button>
                 <button class="nav-item" id="tabRequirements" onclick="switchView('requirements')">Requirements</button>
                 <button class="nav-item" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
+                <button class="nav-item" id="tabScoring" onclick="switchView('scoring')">Scoring</button>
                 <button class="nav-item disclaimer-tab" id="tabDisclaimer" onclick="switchView('disclaimer')">Disclaimer</button>
             </div>
 
@@ -1562,6 +1564,10 @@
             </button>
             <button class="mobile-nav-link" id="mTabHowItWorks" onclick="handleMobileNav('howItWorks')">
                 <span>How It Works</span>
+                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
+            </button>
+            <button class="mobile-nav-link" id="mTabScoring" onclick="handleMobileNav('scoring')">
+                <span>Scoring Methodology</span>
                 <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
             </button>
             <button class="mobile-nav-link disclaimer" id="mTabDisclaimer" onclick="handleMobileNav('disclaimer')">
@@ -1728,6 +1734,7 @@
                         </div>
                         <div class="drop-title" id="fileDropLabel"><strong>Click to browse</strong> or drag &amp; drop document</div>
                         <div class="drop-sub">PDF or DOCX files up to 10MB</div>
+                        <div class="drop-sub" style="margin-top: 2px;">Only the first ~8,000 characters of extracted text are analyzed per document</div>
                     </label>
 
                     <div class="upload-row-actions">
@@ -1850,7 +1857,83 @@
         </div>
 
         <!-- ============================================================
-             5. DISCLAIMER VIEW (Dedicated Toy Project Notice)
+             5. SCORING METHODOLOGY VIEW
+             ============================================================ -->
+        <div class="view" id="view-scoring">
+            <div class="container">
+                <div class="section-head-editorial">
+                    <span class="pill-badge-sub">Scoring Model</span>
+                    <h1>Scoring Methodology</h1>
+                    <p>How the overall compliance percentage is calculated from the 23-item checklist evaluation.</p>
+                </div>
+
+                <div class="white-card" style="padding: 20px 16px; margin-bottom: 20px;">
+                    <div class="panel-headline">
+                        <span>Points Per Requirement</span>
+                    </div>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">Fully addressed with clear evidence in the document</span>
+                            <span class="badge-chip Met">Met · 1.0 pt</span>
+                        </div>
+                    </div>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">Some evidence present, but incomplete or unclear</span>
+                            <span class="badge-chip Partially Met">Partially Met · 0.5 pt</span>
+                        </div>
+                    </div>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">No evidence found in the document</span>
+                            <span class="badge-chip Not Addressed">Not Addressed · 0.0 pt</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; color: var(--ink-secondary); margin-top: 14px; line-height: 1.6;">
+                        The overall score is the sum of points earned across all 23 requirements, divided by 23, expressed as a percentage:
+                    </p>
+                    <p style="font-size: 13.5px; font-weight: 700; margin-top: 8px; background: var(--bg-card-alt); padding: 10px 14px; border-radius: var(--radius-sm); display: inline-block;">
+                        (Total Points ÷ 23) × 100 = Compliance %
+                    </p>
+                </div>
+
+                <div class="white-card" style="padding: 20px 16px; margin-bottom: 20px;">
+                    <div class="panel-headline">
+                        <span>Score Bands</span>
+                    </div>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">70% and above</span>
+                            <span class="badge-chip Met">Substantially Aligned</span>
+                        </div>
+                    </div>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">40% to 69%</span>
+                            <span class="badge-chip Partially Met">Partially Aligned</span>
+                        </div>
+                    </div>
+                    <div class="result-row-editorial">
+                        <div class="result-row-head">
+                            <span class="result-cat-title">Below 40%</span>
+                            <span class="badge-chip Not Addressed">High Remediation Required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="white-card" style="padding: 20px 16px;">
+                    <div class="panel-headline">
+                        <span>A Note on Severity</span>
+                    </div>
+                    <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.6;">
+                        Each requirement also carries a <strong>severity</strong> rating (High, Medium, or Low) shown alongside its result. Severity does not currently change the points a requirement contributes to the overall score &mdash; every requirement is weighted equally. Severity instead signals which gaps to prioritize first when acting on the recommendations, since a "Not Addressed" High-severity item generally represents greater exposure than a "Not Addressed" Low-severity one.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             6. DISCLAIMER VIEW (Dedicated Toy Project Notice)
              ============================================================ -->
         <div class="view" id="view-disclaimer">
             <div class="container">
@@ -1898,6 +1981,7 @@
             <a onclick="switchView('checker')">Checker</a>
             <a onclick="switchView('requirements')">Requirements</a>
             <a onclick="switchView('howItWorks')">How It Works</a>
+            <a onclick="switchView('scoring')">Scoring</a>
             <a onclick="switchView('disclaimer')" style="color: #c53030;">Disclaimer</a>
         </div>
         <p>&copy; 2026 HeyPDPA! · Educational Prototype for Sri Lanka Personal Data Protection Act (Act No. 9 of 2022 &amp; Act No. 22 of 2025)</p>
@@ -1988,6 +2072,7 @@
                 'checker': 'tabChecker',
                 'requirements': 'tabRequirements',
                 'howItWorks': 'tabHowItWorks',
+                'scoring': 'tabScoring',
                 'disclaimer': 'tabDisclaimer'
             };
 
@@ -1996,6 +2081,7 @@
                 'checker': 'mTabChecker',
                 'requirements': 'mTabRequirements',
                 'howItWorks': 'mTabHowItWorks',
+                'scoring': 'mTabScoring',
                 'disclaimer': 'mTabDisclaimer'
             };
 
