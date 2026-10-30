@@ -3,1988 +3,1020 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>HeyPDPA! · Sri Lanka PDPA Compliance Intelligence</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='12' fill='%2315291e'/%3E%3Cpath fill='%23ffffff' d='M12 5c-3.87 0-7 3.13-7 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm-1 3h2v5h-2V8zm0 6h2v2h-2v-2z'/%3E%3C/svg%3E">
+<title>HeyPDPA! · A toy checker for Sri Lanka's PDPA</title>
+<meta name="description" content="A toy project that checks a privacy policy or governance document against 23 requirements of Sri Lanka's Personal Data Protection Act.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23FFC83D'/%3E%3Cpath fill='%2315110D' d='M10.5 4h3v10h-3zM10.5 16.5h3v3h-3z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg-page: #fbf9f5;
-        --bg-subtle: #f4f0e6;
-        --bg-card: #ffffff;
-        --bg-card-alt: #f7f4ec;
-        
-        --ink-primary: #15291e;
-        --ink-secondary: #475d50;
-        --ink-faint: #83978b;
-        
-        --border-main: #e6e1d6;
-        --border-dark: #15291e;
-        --border-focus: #3b82f6;
-        
-        --accent-periwinkle: #d0e1fd;
-        --accent-periwinkle-hover: #b9d2fc;
-        --ink-periwinkle: #143275;
-        
-        --accent-lime: #ebfa6f;
-        --accent-lime-hover: #e0f250;
-        --accent-lime-dark: #9da826;
-        
-        --accent-forest: #15291e;
-        --accent-forest-hover: #223f30;
-        
-        --status-met: #1e8346;
-        --status-met-bg: #e6f6ec;
-        --status-partial: #b45309;
-        --status-partial-bg: #fef3c7;
-        --status-gap: #c53030;
-        --status-gap-bg: #fce8e6;
-        
-        --radius-pill: 9999px;
-        --radius-xl: 28px;
-        --radius-lg: 20px;
-        --radius-md: 14px;
-        --radius-sm: 8px;
-        
-        --shadow-soft: 0 4px 20px rgba(21, 41, 30, 0.05);
-        --shadow-card: 0 10px 30px rgba(21, 41, 30, 0.06);
-        --shadow-elevated: 0 18px 45px rgba(21, 41, 30, 0.09);
+        --saffron: #FFC83D;
+        --ink: #15110D;
+        --paper: #F4F1EA;
+        --white: #FFFFFF;
+        --muted: #5C554B;
+        --line: #D8D2C4;
+
+        --met: #1D3FB0;
+        --partial: #B85200;
+        --partial-fill: #E88A2E;
+        --gap: #A8102E;
+
+        --ease-out: cubic-bezier(.16, 1, .3, 1);
+        --ease-snap: cubic-bezier(.2, .8, .2, 1);
+
+        --font-body: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; }
-
     body {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: var(--bg-page);
-        color: var(--ink-primary);
+        font-family: var(--font-body);
+        background: var(--paper);
+        color: var(--ink);
         min-height: 100vh;
-        overflow-x: hidden;
+        overflow-x: clip;
         -webkit-font-smoothing: antialiased;
     }
 
-    /* Container */
-    .container {
-        width: 100%;
-        max-width: 1120px;
+    a { color: inherit; }
+    button, input, select { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid var(--met); outline-offset: 3px; }
+
+    .wrap {
+        max-width: 1320px;
         margin: 0 auto;
-        padding: 30px 24px 80px;
+        padding-inline: clamp(16px, 4vw, 60px);
     }
 
+    .mono { font-family: var(--font-mono); }
+
     /* ============================================================
-       NAVIGATION BAR (Clean Desktop 3-Column & Mobile Dropdown)
+       HEADER
        ============================================================ */
-    .navbar {
+    .site-header {
         position: sticky;
         top: 0;
-        background: rgba(251, 249, 245, 0.96);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--border-main);
-        padding: 14px 28px;
-        z-index: 1000;
-        transition: all 0.25s ease;
+        z-index: 100;
+        background: var(--saffron);
     }
 
-    .nav-inner {
-        max-width: 1120px;
-        margin: 0 auto;
+    .header-inner {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-    }
-
-    /* Brand (Left) */
-    .nav-brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        text-decoration: none;
-        color: var(--ink-primary);
-    }
-
-    .brand-logo-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: var(--ink-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        flex-shrink: 0;
-    }
-
-    .nav-brand:hover .brand-logo-icon {
-        transform: rotate(15deg) scale(1.08);
-    }
-
-    .brand-logo-icon svg {
-        width: 19px;
-        height: 19px;
-        fill: currentColor;
-    }
-
-    .brand-text {
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .brand-text span {
-        color: #3b82f6;
-    }
-
-    /* Desktop Navigation Tabs (Center) */
-    .nav-links.desktop-nav {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .nav-item {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--ink-secondary);
-        background: none;
-        border: none;
-        padding: 8px 16px;
-        border-radius: var(--radius-pill);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        white-space: nowrap;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .nav-item:hover {
-        color: var(--ink-primary);
-        background: var(--bg-subtle);
-    }
-
-    .nav-item.active {
-        color: var(--ink-primary);
-        background: #ffffff;
-        box-shadow: 0 2px 8px rgba(21, 41, 30, 0.06);
-    }
-
-    .nav-item.disclaimer-tab {
-        color: #c53030;
-        background: rgba(197, 48, 48, 0.08);
-    }
-    .nav-item.disclaimer-tab.active {
-        background: #fce8e6;
-        color: #9b2c2c;
-    }
-
-    /* Desktop CTA Button (Right) */
-    .nav-desktop-cta {
-        display: flex;
-        align-items: center;
-    }
-
-    .btn-pill-periwinkle {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--accent-periwinkle);
-        color: var(--ink-periwinkle);
-        font-size: 14px;
-        font-weight: 700;
-        padding: 10px 22px;
-        border-radius: var(--radius-pill);
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        text-decoration: none;
-        white-space: nowrap;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .btn-pill-periwinkle:hover {
-        background: var(--accent-periwinkle-hover);
-        transform: translateY(-2px) scale(1.02);
-    }
-
-    /* Mobile Nav Toggle & Dropdown */
-    .mobile-nav-toggle-wrap {
-        display: none;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .hamburger-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 1.5px solid var(--border-main);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .hamburger-btn:hover {
-        background: var(--bg-subtle);
-        border-color: var(--ink-primary);
-    }
-
-    .hamburger-line {
-        width: 17px;
-        height: 2px;
-        background: var(--ink-primary);
-        border-radius: 2px;
-        transition: transform 0.25s ease, opacity 0.25s ease;
-    }
-
-    .hamburger-btn.open .hamburger-line:nth-child(1) {
-        transform: translateY(6px) rotate(45deg);
-    }
-    .hamburger-btn.open .hamburger-line:nth-child(2) {
-        opacity: 0;
-    }
-    .hamburger-btn.open .hamburger-line:nth-child(3) {
-        transform: translateY(-6px) rotate(-45deg);
-    }
-
-    .mobile-dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 14px;
-        right: 14px;
-        background: #ffffff;
-        border: 1.5px solid var(--border-dark);
-        border-radius: var(--radius-xl);
-        padding: 18px 16px 20px;
-        box-shadow: 0 16px 40px rgba(21, 41, 30, 0.16);
-        animation: dropDownSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        z-index: 1100;
-    }
-
-    @keyframes dropDownSlide {
-        from { opacity: 0; transform: translateY(-8px) scale(0.98); }
-        to { opacity: 1; transform: translateY(8px) scale(1); }
-    }
-
-    .mobile-dropdown-menu.open {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .mobile-nav-link {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--ink-secondary);
-        background: none;
-        border: none;
-        padding: 12px 16px;
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        text-align: left;
-        display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        transition: all 0.15s ease;
-        -webkit-tap-highlight-color: transparent;
+        gap: 2px 28px;
+        padding-block: 12px;
     }
 
-    .mobile-nav-link:hover, .mobile-nav-link:active {
-        background: var(--bg-subtle);
-        color: var(--ink-primary);
-    }
-
-    .mobile-nav-link.active {
-        background: var(--bg-subtle);
-        color: var(--ink-primary);
-        border-left: 3px solid var(--ink-primary);
-    }
-
-    .mobile-nav-link.disclaimer {
-        color: #c53030;
-    }
-    .mobile-nav-link.disclaimer.active {
-        background: #fce8e6;
-        border-left-color: #c53030;
-    }
-
-    .mobile-dropdown-divider {
-        height: 1px;
-        background: var(--border-main);
-        margin: 8px 4px 12px;
-    }
-
-    .mobile-menu-cta {
-        width: 100%;
-        padding: 13px 20px;
-        font-size: 14px;
-        font-weight: 700;
-        border-radius: var(--radius-pill);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    /* Views container */
-    .view { display: none; }
-    .view.active {
-        display: block;
-        animation: fadeIn 0.35s ease;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ============================================================
-       1. LANDING PAGE (Minimal & High Animation)
-       ============================================================ */
-    .hero-editorial {
-        text-align: center;
-        padding: 30px 10px 20px;
-        max-width: 860px;
-        margin: 0 auto;
-    }
-
-    .hero-title {
-        font-size: clamp(34px, 5vw, 58px);
+    .brand {
+        text-decoration: none;
+        font-size: 27px;
         font-weight: 800;
-        line-height: 1.12;
-        letter-spacing: -0.035em;
-        color: var(--ink-primary);
-        margin-bottom: 16px;
-    }
-
-    /* Hand-drawn Loop around words */
-    .hand-loop {
-        position: relative;
+        letter-spacing: -.04em;
         display: inline-block;
-        white-space: nowrap;
+        transition: transform .3s var(--ease-snap);
     }
+    .brand:hover { transform: rotate(-2deg) scale(1.03); }
 
-    .hand-loop-svg {
-        position: absolute;
-        top: -22%;
-        left: -10%;
-        width: 120%;
-        height: 144%;
-        pointer-events: none;
-        z-index: -1;
-        overflow: visible;
-    }
+    .main-nav { display: flex; flex-wrap: wrap; gap: 0 26px; }
 
-    .hand-loop-path {
-        stroke: #c2d9ff;
-        stroke-width: 3.2;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-dasharray: 600;
-        stroke-dashoffset: 600;
-        animation: drawLoop 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
-    }
-
-    @keyframes drawLoop {
-        to { stroke-dashoffset: 0; }
-    }
-
-    .hero-subtitle {
-        font-size: clamp(15px, 1.8vw, 18px);
-        line-height: 1.5;
-        color: var(--ink-secondary);
-        max-width: 540px;
-        margin: 0 auto 28px;
-    }
-
-    /* Hero Art & Interactive Sketch Card */
-    .hero-art-container {
+    .navlink {
         position: relative;
-        background: var(--bg-card);
-        border: 2px solid var(--border-dark);
-        border-radius: var(--radius-xl);
-        padding: 28px 20px 48px;
-        margin: 16px auto 36px;
-        box-shadow: 0 16px 36px rgba(21, 41, 30, 0.08);
-        overflow: hidden;
-        isolation: isolate;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px 2px;
+        display: inline-block;
     }
-
-    .art-top-strip {
+    .navlink::after {
+        content: "";
         position: absolute;
-        top: 0;
         left: 0;
         right: 0;
-        height: 6px;
-        display: flex;
+        bottom: 8px;
+        height: 2px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform .35s var(--ease-snap);
     }
-    .strip-dark { flex: 0.94; background: var(--ink-primary); }
-    .strip-lime { flex: 0.06; background: var(--accent-lime); }
-
-    .editorial-sketch-wrapper {
-        position: relative;
-        max-width: 580px;
-        margin: 0 auto 16px;
-        min-height: 220px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        isolation: isolate;
-    }
-
-    /* Floating Stickers with Wiggle & Hover Animations */
-    .sketch-tag {
-        position: absolute;
-        background: #ffffff;
-        border: 1.5px solid var(--border-dark);
-        padding: 6px 14px;
-        border-radius: var(--radius-pill);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: -0.01em;
-        box-shadow: 2px 3px 0 var(--border-dark);
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-        cursor: default;
-        user-select: none;
-    }
-    .sketch-tag:hover {
-        transform: scale(1.12) rotate(3deg) translateY(-4px) !important;
-        box-shadow: 3px 5px 0 var(--border-dark);
-        background: var(--accent-lime);
-    }
-
-    .tag-consent {
-        top: 8px;
-        left: 24px;
-        transform: rotate(-7deg);
-        animation: floatTag1 4s ease-in-out infinite alternate;
-    }
-    .tag-dpo {
-        top: 12px;
-        right: 28px;
-        transform: rotate(6deg);
-        animation: floatTag2 4.5s ease-in-out infinite alternate;
-    }
-    .tag-sla {
-        bottom: 24px;
-        left: 20px;
-        transform: rotate(5deg);
-        background: var(--accent-lime);
-        animation: floatTag3 3.8s ease-in-out infinite alternate;
-    }
-    .tag-breach {
-        bottom: 28px;
-        right: 24px;
-        transform: rotate(-5deg);
-        animation: floatTag4 4.2s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatTag1 { 0% { transform: translateY(0) rotate(-7deg); } 100% { transform: translateY(-7px) rotate(-4deg); } }
-    @keyframes floatTag2 { 0% { transform: translateY(0) rotate(6deg); } 100% { transform: translateY(-9px) rotate(8deg); } }
-    @keyframes floatTag3 { 0% { transform: translateY(0) rotate(5deg); } 100% { transform: translateY(-6px) rotate(2deg); } }
-    @keyframes floatTag4 { 0% { transform: translateY(0) rotate(-5deg); } 100% { transform: translateY(-8px) rotate(-7deg); } }
-
-    /* Animated Central SVG Character */
-    .hero-char-svg {
-        animation: breathHero 4s ease-in-out infinite alternate;
-        transform-origin: center bottom;
-    }
-    @keyframes breathHero {
-        0% { transform: scale(1); }
-        100% { transform: scale(1.02) translateY(-3px); }
-    }
-
-    /* Floating Pill Dock */
-    .floating-pill-dock {
-        position: relative;
-        background: #ffffff;
-        border: 2px solid var(--border-dark);
-        border-radius: var(--radius-pill);
-        padding: 8px 10px 8px 24px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        box-shadow: 0 8px 24px rgba(21, 41, 30, 0.12);
-        max-width: 520px;
-        width: 100%;
-        margin: 6px auto 0;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .floating-pill-dock:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(21, 41, 30, 0.16);
-    }
-
-    .pill-prompt-text {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--ink-primary);
-        text-align: left;
-    }
-
-    .pill-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-pill-sec {
-        background: var(--bg-subtle);
-        color: var(--ink-primary);
-        font-size: 13px;
-        font-weight: 700;
-        padding: 9px 16px;
-        border-radius: var(--radius-pill);
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-    }
-    .btn-pill-sec:hover { background: #e5e0d4; }
-
-    .btn-pill-primary {
-        background: var(--accent-forest);
-        color: #ffffff;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 10px 22px;
-        border-radius: var(--radius-pill);
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        white-space: nowrap;
-    }
-    .btn-pill-primary:hover {
-        background: var(--accent-forest-hover);
-        transform: scale(1.04);
-    }
-
-    /* Minimal Feature Cards with micro-animations */
-    .features-editorial-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 18px;
-        margin: 36px 0 30px;
-    }
-
-    .feature-clean-card {
-        background: var(--bg-card);
-        border: 1.5px solid var(--border-main);
-        border-radius: var(--radius-lg);
-        padding: 24px 22px;
-        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .feature-clean-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--ink-primary);
-        box-shadow: var(--shadow-card);
-    }
-
-    .card-badge-num {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--accent-periwinkle);
-        color: var(--ink-periwinkle);
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        margin-bottom: 14px;
-        transition: transform 0.25s ease;
-    }
-    .feature-clean-card:hover .card-badge-num {
-        transform: scale(1.15) rotate(-8deg);
-    }
-
-    .feature-clean-card:nth-child(2) .card-badge-num { background: var(--accent-lime); color: var(--ink-primary); }
-    .feature-clean-card:nth-child(3) .card-badge-num { background: #fee2e2; color: #991b1b; }
-    .feature-clean-card:nth-child(4) .card-badge-num { background: #e0e7ff; color: #3730a3; }
-
-    .feature-card-title {
-        font-size: 18px;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 6px;
-        color: var(--ink-primary);
-    }
-
-    .feature-card-desc {
-        font-size: 13.5px;
-        line-height: 1.5;
-        color: var(--ink-secondary);
-    }
-
-    /* Minimal Conversion Banner */
-    .cta-banner-warm {
-        background: var(--ink-primary);
-        color: #ffffff;
-        border-radius: var(--radius-xl);
-        padding: 40px 30px;
-        text-align: center;
-        margin-top: 36px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .cta-banner-warm h2 {
-        font-size: clamp(24px, 3vw, 32px);
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        margin-bottom: 8px;
-    }
-
-    .cta-banner-warm p {
-        font-size: 15px;
-        color: #c0cfc5;
-        max-width: 440px;
-        margin: 0 auto 22px;
+    .navlink:hover::after,
+    .navlink[aria-current="page"]::after {
+        transform: scaleX(1);
+        transform-origin: left;
     }
 
     /* ============================================================
-       2. CHECKER VIEW
+       BUTTONS
        ============================================================ */
-    .section-head-editorial {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .pill-badge-sub {
-        display: inline-block;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--ink-primary);
-        background: var(--bg-subtle);
-        border: 1px solid var(--border-main);
-        padding: 4px 12px;
-        border-radius: var(--radius-pill);
-        margin-bottom: 10px;
-    }
-
-    .section-head-editorial h1 {
-        font-size: clamp(28px, 3.8vw, 38px);
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1.15;
-        margin-bottom: 6px;
-    }
-
-    .section-head-editorial p {
-        color: var(--ink-secondary);
-        font-size: 14.5px;
-        max-width: 520px;
-        margin: 0 auto;
-    }
-
-    .white-card {
-        background: #ffffff;
-        border: 1.5px solid var(--border-main);
-        border-radius: var(--radius-xl);
-        padding: 30px;
-        box-shadow: var(--shadow-card);
-        margin-bottom: 24px;
+    .btn {
         position: relative;
         overflow: hidden;
         isolation: isolate;
-    }
-
-    /* Upload Drag and Drop */
-    .drop-zone-editorial {
-        border: 2px dashed var(--border-main);
-        border-radius: var(--radius-lg);
-        padding: 40px 20px;
-        text-align: center;
-        cursor: pointer;
-        background: var(--bg-page);
-        transition: all 0.25s ease;
-        position: relative;
-        display: block;
-        overflow: hidden;
-    }
-
-    .drop-zone-editorial:hover, .drop-zone-editorial.drag-over {
-        border-color: var(--ink-primary);
-        background: var(--bg-subtle);
-        transform: scale(1.005);
-    }
-
-    .drop-zone-editorial input[type="file"] { display: none; }
-
-    .drop-icon-circle {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: var(--accent-periwinkle);
-        color: var(--ink-periwinkle);
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 14px;
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        gap: 12px;
+        min-height: 58px;
+        padding: 0 30px;
+        background: var(--ink);
+        color: var(--white);
+        border: 0;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 18px;
+        transition: transform .15s;
     }
-    .drop-zone-editorial:hover .drop-icon-circle {
-        transform: translateY(-4px) scale(1.1);
+    .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--gap);
+        transform: translateY(101%);
+        transition: transform .4s var(--ease-snap);
+        z-index: -1;
+    }
+    .btn:hover::before { transform: none; }
+    .btn:active { transform: translateY(3px) scale(.98); }
+    .btn svg { transition: transform .35s var(--ease-snap); }
+    .btn:hover svg { transform: translateX(6px); }
+    .btn[disabled] { cursor: progress; opacity: .7; }
+    .btn[disabled]::before { display: none; }
+
+    .btn-quiet {
+        min-height: 44px;
+        padding: 0 18px;
+        background: none;
+        border: 2px solid var(--ink);
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color .2s, color .2s;
+    }
+    .btn-quiet:hover { background: var(--ink); color: var(--white); }
+
+    /* ============================================================
+       VIEWS AND SCROLL REVEALS
+       ============================================================ */
+    .view { display: none; }
+    .view.active { display: block; animation: viewIn .45s var(--ease-out); }
+
+    @keyframes viewIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: none; }
     }
 
-    .drop-title {
+    .js .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
+        transition-delay: var(--d, 0s);
+    }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    /* ============================================================
+       HOME: HERO
+       ============================================================ */
+    .hero { background: var(--saffron); overflow-x: clip; }
+
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        gap: clamp(48px, 6vw, 88px);
+        align-items: center;
+        padding-block: clamp(44px, 5vw, 76px) clamp(72px, 7vw, 104px);
+    }
+
+    .hero h1 {
+        font-size: clamp(44px, 8vw, 118px);
+        font-weight: 800;
+        letter-spacing: -.05em;
+        line-height: .92;
+    }
+
+    .ln { display: block; overflow: hidden; padding-bottom: .1em; }
+    .ln > span { display: block; animation: rise 1s var(--ease-out) both; }
+    .ln:nth-child(1) > span { animation-delay: .1s; }
+    .ln:nth-child(2) > span { animation-delay: .2s; }
+    .ln:nth-child(3) > span { animation-delay: .3s; }
+
+    @keyframes rise {
+        from { transform: translateY(115%); }
+        to { transform: none; }
+    }
+
+    .fade { animation: fadeUp .9s var(--ease-out) both; }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: none; }
+    }
+
+    .hero-lead {
+        margin-top: 28px;
+        max-width: 31em;
+        font-size: clamp(17px, 1.5vw, 20px);
+        line-height: 1.42;
+        animation-delay: .6s;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 26px;
+        margin-top: 30px;
+        animation-delay: .75s;
+    }
+
+    /* The stamping loop runs 15s. Impacts land at 1s, 3s, 5s, 7s and 9s. */
+    .desk {
+        position: relative;
+        width: min(560px, 100%);
+        margin-inline: auto;
+        animation: fadeUp 1.1s var(--ease-out) both .2s;
+    }
+
+    .under { position: absolute; inset: 0; box-shadow: 0 2px 0 #C99A1F; }
+    .under.a { transform: rotate(-4deg); background: #FFF3CF; animation: driftA 7s ease-in-out infinite alternate; }
+    .under.b { transform: rotate(3deg); background: #FFE9A8; animation: driftB 8s ease-in-out infinite alternate; }
+    @keyframes driftA { to { transform: rotate(-2.4deg) translateX(-8px); } }
+    @keyframes driftB { to { transform: rotate(4.6deg) translateX(8px); } }
+
+    .sheet {
+        position: relative;
+        background: var(--white);
+        box-shadow: 0 30px 50px -30px rgba(21, 17, 13, .55);
+        animation: jolt 15s linear infinite;
+    }
+    @keyframes jolt {
+        0%, 6.6%, 8%, 19.9%, 21.3%, 33.2%, 34.6%, 46.6%, 48%, 59.9%, 61.3%, 100% { transform: translateY(0); }
+        6.8%, 20.1%, 33.4%, 46.8%, 60.1% { transform: translateY(4px) rotate(-.25deg); }
+    }
+
+    .sheet-head {
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-inline: clamp(14px, 2.4vw, 24px);
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .srow {
+        height: 78px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(118px, 28%, 160px);
+        align-items: center;
+        gap: 10px;
+        padding-inline: clamp(14px, 2.4vw, 24px);
+        border-top: 1px solid #E7E2D6;
+    }
+    .srow h3 { font-size: clamp(16px, 1.6vw, 20px); font-weight: 600; letter-spacing: -.01em; line-height: 1.1; }
+    .srow p { margin-top: 3px; font-size: 12px; color: var(--muted); }
+
+    .print {
+        justify-self: center;
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(11px, 1.05vw, 14px);
+        line-height: 1.05;
+        text-align: center;
+        letter-spacing: .04em;
+        white-space: nowrap;
+    }
+    .print.met { color: var(--met); transform: rotate(-5deg); }
+    .print.partial { color: var(--partial); transform: rotate(3deg); }
+    .print.gap { color: var(--gap); transform: rotate(-3deg); }
+
+    .ink { display: block; padding: 5px 9px; border: 2.5px solid currentColor; }
+    .i1 { animation: i1 15s linear infinite; }
+    .i2 { animation: i2 15s linear infinite; }
+    .i3 { animation: i3 15s linear infinite; }
+    .i4 { animation: i4 15s linear infinite; }
+    .i5 { animation: i5 15s linear infinite; }
+    @keyframes i1 { 0%, 6.8% { opacity: 0; transform: scale(1.25); } 7.2%, 90% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+    @keyframes i2 { 0%, 20.1% { opacity: 0; transform: scale(1.25); } 20.5%, 90% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+    @keyframes i3 { 0%, 33.4% { opacity: 0; transform: scale(1.25); } 33.8%, 90% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+    @keyframes i4 { 0%, 46.8% { opacity: 0; transform: scale(1.25); } 47.2%, 90% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+    @keyframes i5 { 0%, 60.1% { opacity: 0; transform: scale(1.25); } 60.5%, 90% { opacity: 1; transform: none; } 95%, 100% { opacity: 0; } }
+
+    /* Pressed offsets put the pad on each row's stamp slot: 78px per row. */
+    .stamp {
+        position: absolute;
+        right: clamp(4px, 1.6vw, 20px);
+        top: 0;
+        width: clamp(110px, 25%, 140px);
+        height: 112px;
+        pointer-events: none;
+        animation: stamp 15s cubic-bezier(.5, 0, .2, 1) infinite;
+        filter: drop-shadow(0 10px 8px rgba(21, 17, 13, .3));
+    }
+    @keyframes stamp {
+        0% { transform: translate(70px, -60px); opacity: 0; }
+        3.5% { transform: translate(0, -60px); opacity: 1; }
+        6.67%, 8.5% { transform: translate(0, -1px); }
+        10.7% { transform: translate(0, -60px); }
+        16.8% { transform: translate(0, 18px); }
+        20%, 21.8% { transform: translate(0, 77px); }
+        24% { transform: translate(0, 18px); }
+        30.1% { transform: translate(0, 96px); }
+        33.33%, 35.1% { transform: translate(0, 155px); }
+        37.3% { transform: translate(0, 96px); }
+        43.5% { transform: translate(0, 174px); }
+        46.67%, 48.5% { transform: translate(0, 233px); }
+        50.7% { transform: translate(0, 174px); }
+        56.8% { transform: translate(0, 252px); }
+        60%, 61.8% { transform: translate(0, 311px); }
+        64% { transform: translate(0, 252px); opacity: 1; }
+        70%, 100% { transform: translate(90px, -110px); opacity: 0; }
+    }
+
+    /* ============================================================
+       HOME: SECTION TAPE
+       ============================================================ */
+    .tape { overflow: hidden; background: var(--ink); color: var(--white); }
+    .tape-track {
+        display: flex;
+        gap: 44px;
+        width: max-content;
+        padding: 14px 0;
+        animation: tape 80s linear infinite;
+    }
+    .tape:hover .tape-track { animation-play-state: paused; }
+    .tape span { white-space: nowrap; font-size: 14px; }
+    .tape b { color: var(--saffron); font-weight: 500; }
+    @keyframes tape { to { transform: translateX(-50%); } }
+
+    /* ============================================================
+       HOME: HOW IT WORKS AND SCORING
+       ============================================================ */
+    .section-title {
+        font-size: clamp(40px, 6vw, 88px);
+        font-weight: 800;
+        letter-spacing: -.045em;
+        line-height: .96;
+        margin-bottom: 36px;
+    }
+
+    .how { padding-block: clamp(64px, 8vw, 112px) clamp(40px, 5vw, 64px); scroll-margin-top: 60px; }
+
+    .step {
+        display: grid;
+        grid-template-columns: clamp(56px, 9vw, 130px) minmax(0, 1fr) minmax(0, 1fr);
+        gap: clamp(12px, 3vw, 40px);
+        align-items: baseline;
+        padding: clamp(18px, 2.4vw, 30px) 0;
+        border-top: 2px solid var(--ink);
+    }
+    .step:last-child { border-bottom: 2px solid var(--ink); }
+    .js .step.reveal.in { transition: opacity .8s var(--ease-out), transform .8s var(--ease-out), padding-left .45s var(--ease-out); }
+    .step:hover { padding-left: 20px; }
+    .step .num { font-family: var(--font-mono); font-size: 15px; }
+    .step h3 { font-size: clamp(26px, 3.4vw, 46px); font-weight: 800; letter-spacing: -.03em; line-height: 1.02; }
+    .step p { font-size: clamp(16px, 1.4vw, 18px); line-height: 1.45; }
+
+    .stamps-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+        gap: clamp(20px, 3vw, 40px);
+        padding-block: clamp(32px, 4vw, 56px);
+    }
+    .stamps-row p { margin-top: 18px; font-size: 18px; line-height: 1.4; }
+
+    .big-print {
+        display: inline-block;
+        padding: 10px 16px;
+        border: 4px solid currentColor;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(22px, 2.4vw, 32px);
+        letter-spacing: .04em;
+        line-height: 1.05;
+        transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .big-print.met { color: var(--met); transform: rotate(-2deg); }
+    .big-print.partial { color: var(--partial); transform: rotate(1.5deg); }
+    .big-print.gap { color: var(--gap); transform: rotate(-1deg); }
+    .stamps-row > div:hover .big-print { transform: rotate(-3deg) scale(1.06); }
+    .js .reveal .big-print { transform: scale(1.5); opacity: 0; }
+    .js .reveal.in .big-print { animation: thump .45s var(--ease-snap) both; animation-delay: calc(var(--d, 0s) + .15s); opacity: 1; }
+    .js .reveal.in .big-print.met { --r: -2deg; }
+    .js .reveal.in .big-print.partial { --r: 1.5deg; }
+    .js .reveal.in .big-print.gap { --r: -1deg; }
+    @keyframes thump {
+        from { transform: scale(1.5) rotate(var(--r, 0deg)); opacity: 0; }
+        to { transform: scale(1) rotate(var(--r, 0deg)); opacity: 1; }
+    }
+
+    .scoring-notes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+        gap: 18px clamp(24px, 4vw, 64px);
+        padding-bottom: clamp(40px, 5vw, 72px);
         font-size: 16px;
-        font-weight: 700;
-        color: var(--ink-primary);
-        margin-bottom: 4px;
+        line-height: 1.5;
+    }
+    .formula { font-family: var(--font-mono); font-size: clamp(15px, 1.6vw, 19px); line-height: 1.5; }
+
+    /* ============================================================
+       SCORE PANEL (home example and real results)
+       ============================================================ */
+    .report-panel { background: var(--white); padding: clamp(20px, 4vw, 56px); }
+
+    .score-top {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 18px;
+    }
+    .score-kicker { margin-bottom: 10px; font-size: 13px; color: var(--muted); font-family: var(--font-mono); word-break: break-word; }
+    .score-num {
+        font-size: clamp(84px, 14vw, 190px);
+        font-weight: 800;
+        letter-spacing: -.055em;
+        line-height: .85;
+        font-variant-numeric: tabular-nums;
+    }
+    .score-num small { font-size: .5em; }
+    .score-counts { font-family: var(--font-mono); font-size: 15px; line-height: 1.7; text-align: right; }
+
+    .bands { position: relative; display: flex; height: 12px; margin-top: 44px; }
+    .bands i { display: block; }
+    .bands .b1 { flex: 40 1 0; background: var(--gap); }
+    .bands .b2 { flex: 30 1 0; background: var(--partial-fill); }
+    .bands .b3 { flex: 30 1 0; background: var(--met); }
+    .pin {
+        position: absolute;
+        top: -10px;
+        bottom: -10px;
+        left: 0;
+        width: 3px;
+        background: var(--ink);
+        transition: left 1.6s var(--ease-out) .2s;
+    }
+    .in .pin, html:not(.js) .pin { left: var(--at); }
+
+    .band-labels {
+        display: grid;
+        grid-template-columns: 40fr 30fr 30fr;
+        gap: 10px;
+        margin-top: 14px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .ticks {
+        display: flex;
+        align-items: flex-end;
+        gap: clamp(2px, .7vw, 9px);
+        height: 130px;
+        margin-top: 44px;
+    }
+    .bar { flex: 1 1 0; min-width: 0; transform-origin: bottom; }
+    .bar.met { height: 100%; background: var(--met); }
+    .bar.partial { height: 55%; background: var(--partial-fill); }
+    .bar.gap { height: 14%; background: var(--gap); }
+    .js .bar { transform: scaleY(0); transition: transform .8s var(--ease-out); transition-delay: var(--d, 0s); }
+    .js .in .bar { transform: none; }
+
+    .band-stamp {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 6px 12px;
+        border: 3px solid currentColor;
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: clamp(13px, 1.3vw, 16px);
+        letter-spacing: .04em;
+        animation: thumpLate .45s var(--ease-snap) both 1.1s;
+    }
+    @keyframes thumpLate {
+        from { transform: scale(1.6) rotate(-2deg); opacity: 0; }
+        to { transform: rotate(-2deg); opacity: 1; }
+    }
+
+    .example-section { padding-bottom: clamp(64px, 8vw, 110px); }
+
+    /* ============================================================
+       PAGE HEADS (Checker, Requirements)
+       ============================================================ */
+    .page-head { padding-block: clamp(40px, 6vw, 80px) clamp(24px, 3vw, 40px); }
+    .page-head h1 {
+        font-size: clamp(48px, 8vw, 118px);
+        font-weight: 800;
+        letter-spacing: -.05em;
+        line-height: .94;
+    }
+    .page-head p { margin-top: 18px; max-width: 36em; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.42; }
+
+    /* ============================================================
+       CHECKER
+       ============================================================ */
+    .drop {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: 300px;
+        padding: 32px 20px;
+        text-align: center;
+        cursor: pointer;
+        background: var(--white);
+        transition: background-color .3s;
+    }
+    .drop:hover, .drop.drag-over { background: #FFF3CF; }
+    .drop:focus-within { outline: 3px solid var(--met); outline-offset: 3px; }
+    .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+    .ants { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .ants rect { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 10 8; animation: ants 1.4s linear infinite; }
+    .drop:hover .ants rect, .drop.drag-over .ants rect { animation-duration: .45s; }
+    @keyframes ants { to { stroke-dashoffset: -18; } }
+    .drop-arrow { animation: bob 2s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(-8px); } }
+    .drop-title {
+        font-size: clamp(26px, 3.6vw, 48px);
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.05;
         word-break: break-word;
     }
+    .drop-sub { font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--muted); }
 
-    .drop-sub {
-        font-size: 12.5px;
-        color: var(--ink-faint);
-    }
+    .upload-actions { display: flex; justify-content: flex-end; margin-top: 18px; }
 
-    .upload-row-actions {
+    .preview { margin-top: 24px; }
+    .preview-head {
         display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        margin-top: 16px;
-    }
-
-    /* Status Bar */
-    .status-panel-editorial {
-        display: none;
-        background: #ffffff;
-        border: 2px solid var(--ink-primary);
-        border-radius: var(--radius-lg);
-        padding: 20px 24px;
-        margin-bottom: 24px;
-        box-shadow: var(--shadow-soft);
-    }
-
-    .status-panel-editorial.visible { display: block; animation: fadeIn 0.3s ease; }
-    .status-panel-editorial.error { border-color: #c53030; background: #fce8e6; }
-
-    .status-badge-lbl {
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--ink-secondary);
-        margin-bottom: 4px;
-    }
-
-    .status-msg-text {
-        font-size: 14.5px;
-        font-weight: 600;
-        color: var(--ink-primary);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .clean-spinner {
-        width: 18px;
-        height: 18px;
-        border: 2.5px solid var(--border-main);
-        border-top-color: var(--ink-primary);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Results layout */
-    .score-banner-editorial {
-        display: grid;
-        grid-template-columns: 240px 1fr;
-        gap: 28px;
-        align-items: center;
-    }
-
-    .gauge-wrap-clean {
-        position: relative;
-        width: 200px;
-        margin: 0 auto;
-    }
-
-    .gauge-display-center {
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-    }
-
-    .gauge-score-num {
-        font-size: 38px;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1;
-    }
-
-    .gauge-score-status {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--ink-secondary);
-        margin-top: 4px;
-    }
-
-    .score-pills-row {
-        display: flex;
-        gap: 10px;
         flex-wrap: wrap;
-        margin-top: 14px;
+        justify-content: space-between;
+        gap: 4px 16px;
+        margin-bottom: 10px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+    }
+    .preview iframe { display: block; width: 100%; height: 340px; border: 2px solid var(--ink); background: var(--white); }
+    .preview-note { padding: 18px; background: var(--white); border: 2px solid var(--ink); font-size: 15px; line-height: 1.45; }
+
+    .status { display: none; margin-top: 28px; padding: 22px 24px; background: var(--white); border: 2px solid var(--ink); }
+    .status.visible { display: flex; align-items: center; gap: 22px; animation: fadeUp .4s var(--ease-out); }
+    .status.error { border-color: var(--gap); color: var(--gap); }
+    .status-label { font-family: var(--font-mono); font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+    .status-text { font-size: 17px; line-height: 1.4; word-break: break-word; }
+
+    .mini-stamp { flex: none; width: 44px; height: 54px; animation: thumping 1.1s cubic-bezier(.5, 0, .2, 1) infinite; }
+    .status.error .mini-stamp, .status.idle .mini-stamp { display: none; }
+    @keyframes thumping {
+        0%, 100% { transform: translateY(-5px); }
+        45% { transform: translateY(-5px); }
+        60%, 72% { transform: translateY(5px); }
     }
 
-    .stat-chip {
-        background: var(--bg-page);
-        border: 1px solid var(--border-main);
-        padding: 8px 16px;
-        border-radius: var(--radius-md);
-        display: flex;
-        flex-direction: column;
-        min-width: 84px;
+    .results { padding-block: 28px clamp(64px, 8vw, 110px); }
+
+    .notice {
+        margin-top: 18px;
+        padding: 12px 14px;
+        border: 2px solid var(--partial);
+        color: #8A3D00;
+        font-size: 15px;
+        line-height: 1.45;
     }
 
-    .stat-chip-num {
-        font-size: 19px;
-        font-weight: 800;
-    }
-    .stat-chip-lbl {
-        font-size: 10.5px;
-        color: var(--ink-faint);
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-top: 2px;
-    }
-
-    /* Breakdown & Recommendations Grid */
-    .results-editorial-grid {
+    .results-grid {
         display: grid;
-        grid-template-columns: 1.25fr 0.95fr;
-        gap: 22px;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: clamp(32px, 5vw, 72px);
         align-items: start;
-        margin-top: 22px;
+        margin-top: clamp(40px, 5vw, 64px);
     }
 
-    .panel-headline {
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: -0.01em;
-        margin-bottom: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+    .col-title { font-size: clamp(26px, 2.8vw, 38px); font-weight: 800; letter-spacing: -.03em; line-height: 1.05; margin-bottom: 18px; }
 
-    .result-row-editorial {
-        background: var(--bg-page);
-        border: 1px solid var(--border-main);
-        border-radius: var(--radius-md);
-        padding: 14px 16px;
-        margin-bottom: 10px;
-        transition: all 0.2s ease;
-    }
-
-    .result-row-editorial:hover {
-        background: #ffffff;
-        border-color: var(--ink-primary);
-        transform: translateY(-1px);
-    }
-
-    .result-row-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 4px;
-    }
-
-    .result-cat-title {
-        font-size: 14.5px;
-        font-weight: 750;
-        color: var(--ink-primary);
-    }
-
-    .badge-chip {
-        font-size: 10.5px;
-        font-weight: 700;
-        padding: 3px 9px;
-        border-radius: var(--radius-pill);
-        white-space: nowrap;
-    }
-    .badge-chip.Met { background: var(--status-met-bg); color: var(--status-met); }
-    .badge-chip.Partially.Met { background: var(--status-partial-bg); color: var(--status-partial); }
-    .badge-chip.Not.Addressed { background: var(--status-gap-bg); color: var(--status-gap); }
-
-    .result-row-expl {
-        font-size: 13px;
-        color: var(--ink-secondary);
-        line-height: 1.5;
-    }
-
-    .rec-item-editorial {
-        background: var(--bg-page);
-        border: 1px solid var(--border-main);
-        border-left: 4px solid var(--ink-primary);
-        border-radius: var(--radius-md);
-        padding: 14px 16px;
-        margin-bottom: 10px;
-        display: flex;
-        gap: 12px;
-        font-size: 13.5px;
-        line-height: 1.5;
-        color: var(--ink-primary);
-    }
-
-    .rec-num-badge {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: var(--ink-primary);
-        color: #ffffff;
-        font-size: 11px;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    /* ============================================================
-       3. REQUIREMENTS VIEW
-       ============================================================ */
-    .search-filter-dock {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-    }
-
-    .search-editorial-input {
-        flex: 1;
-        min-width: 220px;
-        padding: 11px 16px;
-        border-radius: var(--radius-pill);
-        border: 1.5px solid var(--border-main);
-        background: #ffffff;
-        font-size: 13.5px;
-        color: var(--ink-primary);
-        outline: none;
-        transition: border-color 0.2s ease;
-    }
-
-    .search-editorial-input:focus {
-        border-color: var(--ink-primary);
-    }
-
-    .select-editorial {
-        padding: 11px 16px;
-        border-radius: var(--radius-pill);
-        border: 1.5px solid var(--border-main);
-        background: #ffffff;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--ink-primary);
-        cursor: pointer;
-        outline: none;
-    }
-
-    .req-card-editorial {
-        background: #ffffff;
-        border: 1.5px solid var(--border-main);
-        border-radius: var(--radius-lg);
-        padding: 20px 24px;
-        margin-bottom: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .req-card-editorial:hover {
-        border-color: var(--ink-primary);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-card);
-    }
-
-    .req-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 6px;
-    }
-
-    .req-item-id {
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-    }
-
-    .req-item-title {
-        font-size: 16px;
-        font-weight: 800;
-        color: var(--ink-primary);
-        margin-top: 2px;
-    }
-
-    .req-badges-row {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-
-    .pill-tag {
-        font-size: 10.5px;
-        font-weight: 700;
-        padding: 3px 9px;
-        border-radius: var(--radius-pill);
-        background: var(--bg-subtle);
-        color: var(--ink-secondary);
-    }
-    .pill-tag.High { background: #fee2e2; color: #991b1b; }
-    .pill-tag.Medium { background: #fef3c7; color: #92400e; }
-    .pill-tag.Low { background: #f1f5f9; color: #475569; }
-    .pill-tag.in-force { background: #dcfce7; color: #166534; }
-
-    .req-card-body {
-        font-size: 13.5px;
-        color: var(--ink-secondary);
-        line-height: 1.55;
-        margin-bottom: 8px;
-    }
-
-    .req-card-foot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid var(--border-main);
-        padding-top: 8px;
-        margin-top: 4px;
-    }
-
-    .req-statutory-cite {
-        font-size: 11.5px;
-        color: var(--ink-faint);
-    }
-
-    .req-toggle-link {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--ink-primary);
-        background: none;
-        border: none;
-        cursor: pointer;
-        text-decoration: underline;
-    }
-
-    .req-details-drawer {
-        display: none;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px dashed var(--border-main);
-        animation: fadeIn 0.2s ease;
-    }
-
-    .req-card-editorial.open .req-details-drawer { display: block; }
-
-    /* ============================================================
-       4. HOW IT WORKS VIEW
-       ============================================================ */
-    .timeline-editorial {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        margin: 24px 0;
-    }
-
-    .step-editorial-card {
-        background: #ffffff;
-        border: 1.5px solid var(--border-main);
-        border-radius: var(--radius-lg);
-        padding: 22px;
-        display: flex;
-        gap: 18px;
-        align-items: flex-start;
-    }
-
-    .step-editorial-num {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: var(--ink-primary);
-        color: #ffffff;
-        font-size: 16px;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .step-editorial-card:nth-child(2) .step-editorial-num { background: #3b82f6; }
-    .step-editorial-card:nth-child(3) .step-editorial-num { background: var(--accent-lime); color: var(--ink-primary); }
-    .step-editorial-card:nth-child(4) .step-editorial-num { background: #f59e0b; }
-    .step-editorial-card:nth-child(5) .step-editorial-num { background: #10b981; }
-
-    /* ============================================================
-       5. DISCLAIMER VIEW (Dedicated Toy Project Notice)
-       ============================================================ */
-    .disclaimer-hero-card {
-        background: #ffffff;
-        border: 2px solid #c53030;
-        border-radius: var(--radius-xl);
-        padding: 36px 28px;
-        box-shadow: var(--shadow-card);
-        margin-bottom: 24px;
-    }
-
-    .disclaimer-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #fce8e6;
-        color: #9b2c2c;
-        font-size: 11.5px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 5px 12px;
-        border-radius: var(--radius-pill);
-        margin-bottom: 14px;
-    }
-
-    .disclaimer-title {
-        font-size: 26px;
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        color: var(--ink-primary);
-        margin-bottom: 12px;
-    }
-
-    .disclaimer-lead {
-        font-size: 15px;
-        line-height: 1.6;
-        color: var(--ink-secondary);
-        margin-bottom: 20px;
-    }
-
-    .disclaimer-grid {
+    .result-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 16px;
-        margin-top: 20px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px 18px;
+        padding: 18px 0;
+        border-top: 1px solid var(--line);
     }
+    .result-row h3 { font-size: clamp(17px, 1.5vw, 20px); font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
+    .result-row .meta { margin-top: 4px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); word-break: break-word; }
+    .result-row .expl { grid-column: 1 / -1; font-size: 15.5px; line-height: 1.5; }
+    .result-row .print { align-self: start; font-size: 12px; }
+    .result-row.reveal .print { transform-origin: right center; transition: transform .4s var(--ease-snap) .25s; }
+    .js .result-row.reveal:not(.in) .print { transform: scale(1.5); }
 
-    .disclaimer-box {
-        background: var(--bg-page);
-        border: 1.5px solid var(--border-main);
-        border-radius: var(--radius-md);
-        padding: 20px;
-    }
-
-    .disclaimer-box h3 {
-        font-size: 15px;
-        font-weight: 800;
-        margin-bottom: 6px;
-        color: var(--ink-primary);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .disclaimer-box p {
-        font-size: 13px;
-        color: var(--ink-secondary);
-        line-height: 1.55;
-    }
-
-    /* Footer */
-    footer {
-        border-top: 1px solid var(--border-main);
-        padding: 30px 24px;
-        text-align: center;
-        font-size: 13px;
-        color: var(--ink-faint);
-        background: var(--bg-page);
-    }
-
-    .footer-nav {
-        display: flex;
-        justify-content: center;
-        gap: 18px;
-        margin-bottom: 10px;
-    }
-
-    .footer-nav a {
-        color: var(--ink-secondary);
-        text-decoration: none;
-        font-weight: 600;
-        cursor: pointer;
-    }
-    .footer-nav a:hover { color: var(--ink-primary); }
+    .recs { position: sticky; top: 76px; }
+    .rec { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 6px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 16px; line-height: 1.45; }
+    .rec .n { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--gap); padding-top: 2px; }
 
     /* ============================================================
-       RESPONSIVE & MOBILE BREAKPOINTS
+       REQUIREMENTS
        ============================================================ */
-    @media (max-width: 860px) {
-        .navbar {
-            padding: 12px 18px;
-        }
+    .filters { display: flex; flex-wrap: wrap; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 5px; font-family: var(--font-mono); font-size: 12px; }
+    .field.grow { flex: 1 1 280px; }
+    .field input, .field select {
+        min-height: 48px;
+        padding: 0 12px;
+        background: var(--white);
+        border: 2px solid var(--ink);
+        border-radius: 0;
+        font-family: var(--font-body);
+        font-size: 16px;
+        width: 100%;
+        transition: box-shadow .2s;
+    }
+    .field input:focus, .field select:focus { outline: 0; box-shadow: 4px 4px 0 var(--saffron), 4px 4px 0 2px var(--ink); }
 
-        /* Hide desktop center tabs and desktop right button */
-        .nav-links.desktop-nav {
-            display: none !important;
-        }
-        .nav-desktop-cta {
-            display: none !important;
-        }
+    .req-count { margin-block: 24px 8px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+    .req-list { padding-bottom: clamp(64px, 8vw, 110px); }
 
-        /* Show mobile hamburger toggle */
-        .mobile-nav-toggle-wrap {
-            display: flex !important;
-        }
+    .req { border-top: 2px solid var(--ink); animation: fadeUp .5s var(--ease-out) both; animation-delay: var(--d, 0s); }
+    .req:last-child { border-bottom: 2px solid var(--ink); }
 
-        .results-editorial-grid {
-            grid-template-columns: 1fr;
-        }
+    .req-toggle {
+        width: 100%;
+        display: grid;
+        grid-template-columns: clamp(52px, 7vw, 100px) minmax(0, 1fr) auto 24px;
+        align-items: center;
+        gap: 12px clamp(12px, 2vw, 24px);
+        min-height: 72px;
+        padding: 14px 4px;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        text-align: left;
+        transition: background-color .25s, padding-inline .35s var(--ease-out);
+    }
+    .req-toggle:hover { background: var(--white); padding-inline: 14px; }
+    .req-sec { font-family: var(--font-mono); font-size: 13px; }
+    .req-name { font-size: clamp(19px, 2.2vw, 30px); font-weight: 800; letter-spacing: -.025em; line-height: 1.1; }
+    .req-sev { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+    .req-sev.High { color: var(--gap); }
+    .req-chev { transition: transform .35s var(--ease-snap); }
+    .req.open .req-chev { transform: rotate(45deg); }
+
+    .req-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease-out); }
+    .req.open .req-body { grid-template-rows: 1fr; }
+    .req-body > div { overflow: hidden; min-height: 0; visibility: hidden; transition: visibility .4s; }
+    .req.open .req-body > div { visibility: visible; }
+    .req-inner {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+        gap: 18px clamp(24px, 4vw, 56px);
+        padding: 6px 4px 26px;
+    }
+    .req-inner h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+    .req-inner p { font-size: 16px; line-height: 1.5; }
+    .req-inner .wide { grid-column: 1 / -1; }
+
+    .empty { padding: 48px 0; font-size: 18px; line-height: 1.45; }
+
+    .loader-line { display: flex; align-items: center; gap: 16px; padding: 40px 0; font-size: 17px; }
+    .loader-line .mini-stamp { display: block; }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer { background: var(--ink); color: var(--white); padding-block: clamp(40px, 5vw, 72px) 30px; scroll-margin-top: 60px; }
+    .notice-lead { max-width: 40em; font-size: clamp(20px, 2.2vw, 30px); font-weight: 600; letter-spacing: -.02em; line-height: 1.2; }
+    .notice-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+        gap: 24px clamp(24px, 3vw, 44px);
+        margin-block: 34px 44px;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #DDD8CE;
+    }
+    .notice-grid h3 { margin-bottom: 6px; font-size: 16px; font-weight: 700; color: var(--white); }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 0 26px; margin-bottom: 24px; }
+    .wordmark {
+        font-size: clamp(70px, 17.5vw, 270px);
+        font-weight: 800;
+        letter-spacing: -.05em;
+        line-height: .8;
+        white-space: nowrap;
+        color: var(--saffron);
+        padding-bottom: .08em;
+    }
+    .wordmark span { display: inline-block; transition: transform .5s var(--ease-out); }
+    .wordmark span:hover { transform: translateY(-12px) rotate(-3deg); }
+    .legal { margin-top: 18px; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; color: #C9C3B8; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 900px) {
+        .hero-grid { grid-template-columns: minmax(0, 1fr); }
+        .step { grid-template-columns: 44px minmax(0, 1fr); }
+        .step p { grid-column: 2; }
+        .results-grid { grid-template-columns: minmax(0, 1fr); }
+        .recs { position: static; order: -1; }
     }
 
     @media (max-width: 600px) {
-        .container {
-            padding: 16px 14px 60px;
-        }
+        .header-inner { flex-wrap: nowrap; gap: 10px; padding-block: 6px; }
+        .brand { font-size: 21px; }
+        .main-nav { flex-wrap: nowrap; gap: 0 14px; }
+        .navlink { font-size: 14px; }
+        .upload-actions .btn { width: 100%; }
+        .field { flex: 1 1 100%; }
+        .req-toggle { grid-template-columns: 44px minmax(0, 1fr) 20px; }
+        .req-sev { grid-column: 2; grid-row: 2; }
+        .req-chev { grid-column: 3; grid-row: 1; }
+        .score-counts { text-align: left; }
+        .band-labels { font-size: 11px; }
+        .status.visible { align-items: flex-start; }
+    }
 
-        .hero-editorial {
-            padding: 16px 4px 10px;
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
         }
-
-        .hero-title {
-            font-size: clamp(26px, 7.5vw, 36px);
-            line-height: 1.15;
-            margin-bottom: 12px;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .hero-art-container {
-            padding: 16px 12px 24px;
-            margin: 10px auto 26px;
-            border-radius: var(--radius-lg);
-        }
-
-        .editorial-sketch-wrapper {
-            min-height: 160px;
-            margin-bottom: 10px;
-        }
-
-        .sketch-tag {
-            font-size: 10px;
-            padding: 4px 8px;
-        }
-        .tag-consent { top: 4px; left: 4px; }
-        .tag-dpo { top: 6px; right: 4px; }
-        .tag-sla { bottom: 8px; left: 4px; }
-        .tag-breach { bottom: 8px; right: 4px; }
-
-        .floating-pill-dock {
-            flex-direction: column;
-            border-radius: var(--radius-lg);
-            padding: 14px 14px;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .pill-prompt-text {
-            text-align: center;
-            font-size: 13.5px;
-        }
-
-        .pill-actions {
-            width: 100%;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .btn-pill-sec, .btn-pill-primary {
-            width: 100%;
-            justify-content: center;
-            text-align: center;
-            padding: 11px 16px;
-            font-size: 13.5px;
-        }
-
-        .features-editorial-grid {
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin: 24px 0 20px;
-        }
-
-        .feature-clean-card {
-            padding: 18px 16px;
-        }
-
-        .cta-banner-warm {
-            padding: 28px 18px;
-            border-radius: var(--radius-lg);
-            margin-top: 24px;
-        }
-
-        .cta-banner-warm h2 {
-            font-size: 22px;
-        }
-
-        .cta-banner-warm p {
-            font-size: 14px;
-            margin-bottom: 18px;
-        }
-
-        /* Checker on mobile */
-        .section-head-editorial {
-            margin-bottom: 20px;
-        }
-        .section-head-editorial h1 {
-            font-size: 26px;
-        }
-        .section-head-editorial p {
-            font-size: 13.5px;
-        }
-
-        .white-card {
-            padding: 16px 14px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 16px;
-        }
-
-        .drop-zone-editorial {
-            padding: 26px 12px;
-            border-radius: var(--radius-md);
-        }
-
-        .drop-icon-circle {
-            width: 44px;
-            height: 44px;
-            margin-bottom: 10px;
-        }
-
-        .drop-title {
-            font-size: 14.5px;
-        }
-        .drop-sub {
-            font-size: 11.5px;
-        }
-
-        .upload-row-actions {
-            margin-top: 14px;
-            width: 100%;
-        }
-
-        .upload-row-actions button {
-            width: 100%;
-            justify-content: center;
-            padding: 12px 18px !important;
-        }
-
-        .score-banner-editorial {
-            grid-template-columns: 1fr;
-            gap: 16px;
-            text-align: center;
-        }
-
-        .score-pills-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .stat-chip {
-            min-width: unset;
-            width: 100%;
-            padding: 8px 10px;
-        }
-
-        .stat-chip-num {
-            font-size: 18px;
-        }
-
-        .result-row-editorial {
-            padding: 12px 12px;
-        }
-
-        .result-row-head {
-            flex-direction: column;
-            gap: 6px;
-            align-items: flex-start;
-        }
-
-        .rec-item-editorial {
-            padding: 12px 12px;
-            font-size: 13px;
-        }
-
-        /* Requirements on mobile */
-        .search-filter-dock {
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .search-editorial-input, .select-editorial {
-            width: 100%;
-            min-width: 100%;
-        }
-
-        .req-card-editorial {
-            padding: 16px 14px;
-        }
-
-        .req-card-header {
-            flex-direction: column;
-            gap: 8px;
-            align-items: flex-start;
-        }
-
-        /* How it works on mobile */
-        .step-editorial-card {
-            padding: 16px 14px;
-            gap: 12px;
-        }
-
-        .step-editorial-num {
-            width: 32px;
-            height: 32px;
-            font-size: 14px;
-        }
-
-        /* Disclaimer on mobile */
-        .disclaimer-hero-card {
-            padding: 22px 16px;
-            border-radius: var(--radius-lg);
-        }
-
-        .disclaimer-title {
-            font-size: 22px;
-        }
-
-        .disclaimer-grid {
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        footer {
-            padding: 24px 14px;
-        }
-
-        .footer-nav {
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+        .stamp { display: none; }
+        .js .reveal, .js .reveal .big-print { opacity: 1; transform: none; }
+        .js .bar { transform: none; }
+        .pin { left: var(--at); }
+        .band-stamp { transform: rotate(-2deg); }
     }
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.add("js");</script>
 
-    <!-- Header Navigation -->
-    <nav class="navbar" id="mainNavbar">
-        <div class="nav-inner">
-            <!-- Brand (Left) -->
-            <a class="nav-brand" onclick="switchView('landing')">
-                <div class="brand-logo-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm0-10h2v8h-2V6z"/></svg>
-                </div>
-                <div class="brand-text">HeyPDPA!</div>
-            </a>
-
-            <!-- Desktop Navigation Tabs (Center) -->
-            <div class="nav-links desktop-nav">
-                <button class="nav-item active" id="tabLanding" onclick="switchView('landing')">What We Do</button>
-                <button class="nav-item" id="tabChecker" onclick="switchView('checker')">Checker</button>
-                <button class="nav-item" id="tabRequirements" onclick="switchView('requirements')">Requirements</button>
-                <button class="nav-item" id="tabHowItWorks" onclick="switchView('howItWorks')">How It Works</button>
-                <button class="nav-item" id="tabScoring" onclick="switchView('scoring')">Scoring</button>
-                <button class="nav-item disclaimer-tab" id="tabDisclaimer" onclick="switchView('disclaimer')">Disclaimer</button>
-            </div>
-
-            <!-- Desktop CTA Button (Right) -->
-            <div class="nav-desktop-cta">
-                <button class="btn-pill-periwinkle" onclick="switchView('checker')">
-                    Check a Policy
-                </button>
-            </div>
-
-            <!-- Mobile Navigation Toggle (Mobile Only) -->
-            <div class="mobile-nav-toggle-wrap">
-                <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                </button>
-            </div>
+    <header class="site-header">
+        <div class="wrap header-inner">
+            <a class="brand" href="#home">HeyPDPA!</a>
+            <nav class="main-nav" aria-label="Primary">
+                <a class="navlink" href="#home" data-nav="landing">Home</a>
+                <a class="navlink" href="#checker" data-nav="checker">Checker</a>
+                <a class="navlink" href="#requirements" data-nav="requirements">Requirements</a>
+            </nav>
         </div>
+    </header>
 
-        <!-- Mobile Dropdown Menu -->
-        <div class="mobile-dropdown-menu" id="mobileDropdown">
-            <button class="mobile-nav-link active" id="mTabLanding" onclick="handleMobileNav('landing')">
-                <span>What We Do</span>
-                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
-            </button>
-            <button class="mobile-nav-link" id="mTabChecker" onclick="handleMobileNav('checker')">
-                <span>Checker</span>
-                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
-            </button>
-            <button class="mobile-nav-link" id="mTabRequirements" onclick="handleMobileNav('requirements')">
-                <span>Requirements</span>
-                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
-            </button>
-            <button class="mobile-nav-link" id="mTabHowItWorks" onclick="handleMobileNav('howItWorks')">
-                <span>How It Works</span>
-                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
-            </button>
-            <button class="mobile-nav-link" id="mTabScoring" onclick="handleMobileNav('scoring')">
-                <span>Scoring Methodology</span>
-                <span style="font-size: 13px; color: var(--ink-faint);">➔</span>
-            </button>
-            <button class="mobile-nav-link disclaimer" id="mTabDisclaimer" onclick="handleMobileNav('disclaimer')">
-                <span>⚠️ Disclaimer</span>
-                <span style="font-size: 13px; color: #c53030;">➔</span>
-            </button>
-
-            <div class="mobile-dropdown-divider"></div>
-
-            <button class="btn-pill-primary mobile-menu-cta" onclick="handleMobileNav('checker')">
-                <span>Check a Policy Now</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-        </div>
-    </nav>
-
-    <!-- App Views Container -->
     <main>
         <!-- ============================================================
-             1. LANDING PAGE VIEW (Minimal & Rich Animations)
+             HOME
              ============================================================ -->
         <div class="view active" id="view-landing">
-            <div class="container">
-                <section class="hero-editorial">
-                    <h1 class="hero-title">
-                        Unlock <span class="hand-loop">effortless<svg class="hand-loop-svg" viewBox="0 0 260 90"><path class="hand-loop-path" d="M 15,45 C 10,18 90,8 190,14 C 240,17 255,40 235,65 C 205,92 65,85 25,65 C 2,52 35,28 115,22 C 185,16 230,30 245,50" /></svg></span> PDPA compliance.
-                    </h1>
-
-                    <p class="hero-subtitle">
-                        Instant 23-point statutory gap detection for privacy notices, governance manuals, and vendor agreements under Sri Lanka's Personal Data Protection Act.
-                    </p>
-
-                    <!-- Interactive Editorial Card -->
-                    <div class="hero-art-container">
-                        <div class="art-top-strip">
-                            <div class="strip-dark"></div>
-                            <div class="strip-lime"></div>
+            <section class="hero">
+                <div class="wrap hero-grid">
+                    <div>
+                        <h1>
+                            <span class="ln"><span>Get your</span></span>
+                            <span class="ln"><span>privacy policy</span></span>
+                            <span class="ln"><span>stamped.</span></span>
+                        </h1>
+                        <p class="hero-lead fade">HeyPDPA! is a toy project. Upload a PDF or DOCX and it checks the text against 23 requirements of Sri Lanka's Personal Data Protection Act.</p>
+                        <div class="hero-actions fade">
+                            <a class="btn" href="#checker">Try it
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+                            </a>
+                            <a class="navlink" href="#how">See how it works</a>
                         </div>
+                    </div>
 
-                        <div class="editorial-sketch-wrapper">
-                            <!-- Floating Stickers with Hover physics -->
-                            <div class="sketch-tag tag-consent">📝 Lawful Consent</div>
-                            <div class="sketch-tag tag-dpo">🛡️ DPO Mandate</div>
-                            <div class="sketch-tag tag-sla">⚡ 21-Day SLA</div>
-                            <div class="sketch-tag tag-breach">🔔 Breach Notice</div>
-
-                            <!-- Central Animated Character SVG -->
-                            <svg class="hero-char-svg" viewBox="0 0 360 210" width="100%" height="190">
-                                <g stroke="#15291e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <!-- Head & Brain scribble -->
-                                    <circle cx="180" cy="100" r="24" fill="#fbf9f5" stroke-width="2.5" />
-                                    <path d="M 168,88 Q 158,70 178,75 Q 198,70 188,85 Q 208,80 198,100 Q 168,110 162,85 Q 178,65 202,70 Q 192,105 174,95" stroke-width="1.8" />
-                                    <!-- Eyes & Smile -->
-                                    <circle cx="173" cy="98" r="2.5" fill="#15291e" />
-                                    <circle cx="187" cy="98" r="2.5" fill="#15291e" />
-                                    <path d="M 175,110 Q 180,105 185,110" />
-                                    
-                                    <!-- Shrugging Arms & Hands -->
-                                    <path d="M 160,124 L 130,135 L 105,115" stroke-width="2.5" />
-                                    <path d="M 200,124 L 230,135 L 255,115" stroke-width="2.5" />
-                                    <!-- Hands -->
-                                    <path d="M 105,115 Q 95,105 100,95 M 105,115 Q 90,113 95,123 M 105,115 Q 98,127 108,129" />
-                                    <path d="M 255,115 Q 265,105 260,95 M 255,115 Q 270,113 265,123 M 255,115 Q 262,127 252,129" />
-                                    <!-- Torso -->
-                                    <path d="M 154,126 L 150,195 L 210,195 L 206,126 Z" fill="#fbf9f5" stroke-width="2.5" />
-                                    <path d="M 168,126 Q 180,136 192,126" />
-
-                                    <!-- Floating Paper Sheet left -->
-                                    <g transform="translate(35, 30) rotate(-10)">
-                                        <rect x="0" y="0" width="42" height="52" rx="4" fill="#ffffff" />
-                                        <line x1="8" y1="10" x2="34" y2="10" stroke="#83978b" />
-                                        <line x1="8" y1="18" x2="30" y2="18" stroke="#83978b" />
-                                        <line x1="8" y1="26" x2="24" y2="26" stroke="#83978b" />
-                                    </g>
-
-                                    <!-- Floating Clapper/Audit Board right -->
-                                    <g transform="translate(280, 32) rotate(12)">
-                                        <rect x="0" y="8" width="44" height="36" rx="3" fill="#ffffff" />
-                                        <rect x="0" y="0" width="44" height="8" fill="#15291e" />
-                                        <line x1="6" y1="18" x2="38" y2="18" stroke="#83978b" />
-                                        <line x1="6" y1="26" x2="28" y2="26" stroke="#83978b" />
-                                    </g>
-                                </g>
-                            </svg>
-                        </div>
-
-                        <!-- Floating Pill Dock (Responsive on Mobile) -->
-                        <div class="floating-pill-dock">
-                            <span class="pill-prompt-text">Ready to check your policy?</span>
-                            <div class="pill-actions">
-                                <button class="btn-pill-sec" onclick="switchView('requirements')">View Checklist</button>
-                                <button class="btn-pill-primary" onclick="switchView('checker')">
-                                    <span>Start Checking Now!</span>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                </button>
+                    <figure class="desk" aria-label="Animated example: a rubber stamp marks five requirements on a sample policy as met, partially met or not addressed">
+                        <div class="under a" aria-hidden="true"></div>
+                        <div class="under b" aria-hidden="true"></div>
+                        <div class="sheet">
+                            <figcaption class="sheet-head mono"><span>sample-privacy-policy.pdf</span><span>example</span></figcaption>
+                            <div class="srow">
+                                <div><h3>Security of processing</h3><p class="mono">Section 10</p></div>
+                                <span class="print met"><span class="ink i1">MET</span></span>
+                            </div>
+                            <div class="srow">
+                                <div><h3>Retention limitation</h3><p class="mono">Section 9</p></div>
+                                <span class="print partial"><span class="ink i2">PARTIALLY<br>MET</span></span>
+                            </div>
+                            <div class="srow">
+                                <div><h3>Right of access</h3><p class="mono">Section 13</p></div>
+                                <span class="print met"><span class="ink i3">MET</span></span>
+                            </div>
+                            <div class="srow">
+                                <div><h3>Breach notification</h3><p class="mono">Section 23</p></div>
+                                <span class="print gap"><span class="ink i4">NOT<br>ADDRESSED</span></span>
+                            </div>
+                            <div class="srow">
+                                <div><h3>Data Protection Officer</h3><p class="mono">Section 20</p></div>
+                                <span class="print gap"><span class="ink i5">NOT<br>ADDRESSED</span></span>
                             </div>
                         </div>
-                    </div>
-                </section>
+                        <svg class="stamp" viewBox="0 0 150 120" aria-hidden="true">
+                            <circle cx="75" cy="22" r="20" fill="#15110D"/>
+                            <rect x="65" y="38" width="20" height="34" fill="#15110D"/>
+                            <rect x="40" y="70" width="70" height="14" fill="#15110D"/>
+                            <rect x="16" y="84" width="118" height="26" fill="#A8102E"/>
+                            <rect x="16" y="110" width="118" height="8" fill="#15110D"/>
+                        </svg>
+                    </figure>
+                </div>
+            </section>
 
-                <!-- 4 Minimal Clean Feature Cards -->
-                <div class="features-editorial-grid">
-                    <div class="feature-clean-card">
-                        <div>
-                            <div class="card-badge-num">1</div>
-                            <h3 class="feature-card-title">Instant Parsing</h3>
-                            <p class="feature-card-desc">Upload PDF or DOCX policies. Body clauses and structured tables are extracted in seconds.</p>
-                        </div>
-                    </div>
+            <div class="tape mono" aria-hidden="true"><div class="tape-track" id="tapeTrack"></div></div>
 
-                    <div class="feature-clean-card">
-                        <div>
-                            <div class="card-badge-num">2</div>
-                            <h3 class="feature-card-title">23 Criteria Checks</h3>
-                            <p class="feature-card-desc">Evaluates consent, 21-day response timelines, DPO mandates, and data export rules.</p>
-                        </div>
+            <section class="wrap how" id="how">
+                <h2 class="section-title reveal">How it works</h2>
+                <div>
+                    <div class="step reveal">
+                        <span class="num">1</span>
+                        <h3>Read</h3>
+                        <p>The text and tables are pulled out of your PDF or DOCX on the server.</p>
                     </div>
-
-                    <div class="feature-clean-card">
-                        <div>
-                            <div class="card-badge-num">3</div>
-                            <h3 class="feature-card-title">Priority Actions</h3>
-                            <p class="feature-card-desc">Actionable recommendations highlighting critical legal gaps first.</p>
-                        </div>
+                    <div class="step reveal">
+                        <span class="num">2</span>
+                        <h3>Stamp</h3>
+                        <p>Google's Gemini checks the text against each of the 23 requirements and gives it a stamp.</p>
                     </div>
-
-                    <div class="feature-clean-card">
-                        <div>
-                            <div class="card-badge-num">4</div>
-                            <h3 class="feature-card-title">Legal State Tracking</h3>
-                            <p class="feature-card-desc">Separates gazetted commencement dates from proactive substantive readiness.</p>
-                        </div>
+                    <div class="step reveal">
+                        <span class="num">3</span>
+                        <h3>Add up</h3>
+                        <p>Points are totalled, divided by 23 and shown as a percentage, with suggestions for the biggest gaps.</p>
                     </div>
                 </div>
+            </section>
 
-                <!-- Minimal Call to action banner -->
-                <div class="cta-banner-warm">
-                    <h2>Benchmark Your Policies in Seconds.</h2>
-                    <p>Upload a document for instant evidence-based gap detection.</p>
-                    <button class="btn-pill-periwinkle" onclick="switchView('checker')" style="padding: 12px 28px; font-size: 14.5px;">
-                        <span>Launch Compliance Checker</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </button>
+            <section class="wrap" id="scoring" style="scroll-margin-top: 60px;">
+                <div class="stamps-row">
+                    <div class="reveal">
+                        <span class="big-print met">MET</span>
+                        <p>Clear evidence in the document. 1 point.</p>
+                    </div>
+                    <div class="reveal" style="--d: .12s;">
+                        <span class="big-print partial">PARTIALLY MET</span>
+                        <p>Some evidence, but incomplete or unclear. Half a point.</p>
+                    </div>
+                    <div class="reveal" style="--d: .24s;">
+                        <span class="big-print gap">NOT ADDRESSED</span>
+                        <p>No evidence found. No points.</p>
+                    </div>
                 </div>
-            </div>
+                <div class="scoring-notes reveal">
+                    <p class="formula">(Total points &divide; 23) &times; 100 = compliance %</p>
+                    <p>Every requirement counts the same. Severity (High, Medium or Low) doesn't change the score. It only suggests which gaps to look at first.</p>
+                </div>
+            </section>
+
+            <section class="wrap example-section">
+                <div class="report-panel reveal">
+                    <div class="score-top">
+                        <div>
+                            <p class="score-kicker">Example report. Not a real analysis.</p>
+                            <p class="score-num">63.0<small>%</small></p>
+                        </div>
+                        <p class="score-counts">11 met<br>7 partial<br>5 not addressed</p>
+                    </div>
+                    <div class="bands" style="--at: 63%;" aria-hidden="true">
+                        <i class="b1"></i><i class="b2"></i><i class="b3"></i>
+                        <div class="pin"></div>
+                    </div>
+                    <div class="band-labels">
+                        <span>Below 40<br>High remediation required</span>
+                        <span>40 to 69<br>Partially aligned</span>
+                        <span>70 and above<br>Substantially aligned</span>
+                    </div>
+                    <div class="ticks" id="exampleTicks" aria-hidden="true"></div>
+                </div>
+            </section>
         </div>
 
         <!-- ============================================================
-             2. CHECKER VIEW
+             CHECKER
              ============================================================ -->
         <div class="view" id="view-checker">
-            <div class="container">
-                <div class="section-head-editorial">
-                    <span class="pill-badge-sub">Act No. 9 of 2022 &amp; 2025 Amendment</span>
-                    <h1>Compliance Gap Checker</h1>
-                    <p>Upload your policy document (PDF or DOCX) to assess evidence against all 23 PDPA obligations.</p>
+            <div class="wrap">
+                <div class="page-head">
+                    <h1>Stamp a policy</h1>
+                    <p>Upload a PDF or DOCX to check it against all 23 requirements. It's a toy, so treat the result as a starting point.</p>
                 </div>
 
-                <div class="white-card">
-                    <label class="drop-zone-editorial" id="fileDrop">
-                        <input type="file" id="fileInput" accept=".pdf,.docx">
-                        <div class="drop-icon-circle">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                        </div>
-                        <div class="drop-title" id="fileDropLabel"><strong>Click to browse</strong> or drag &amp; drop document</div>
-                        <div class="drop-sub">PDF or DOCX files up to 10MB</div>
-                        <div class="drop-sub" style="margin-top: 2px;">Up to 200,000 characters of extracted text (roughly 80 pages) are analyzed per document</div>
-                    </label>
+                <label class="drop" id="fileDrop">
+                    <svg class="ants" aria-hidden="true"><rect x="1" y="1" width="99.7%" height="99.3%"/></svg>
+                    <input type="file" id="fileInput" accept=".pdf,.docx">
+                    <svg class="drop-arrow" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true"><path d="M12 20V5M6 11l6-6 6 6"/></svg>
+                    <span class="drop-title" id="fileDropLabel">Drop a policy here, or browse</span>
+                    <span class="drop-sub" id="fileDropSub">PDF or DOCX, up to 10 MB. Up to 200,000 characters (roughly 80 pages) are analyzed.</span>
+                </label>
 
-                    <div class="upload-row-actions">
-                        <button class="btn-pill-primary" id="uploadBtn" onclick="uploadFile()" style="padding: 11px 26px; font-size: 13.5px;">
-                            <span>Analyze Document</span>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </button>
+                <div class="upload-actions">
+                    <button type="button" class="btn" id="uploadBtn" onclick="uploadFile()">
+                        <span>Check this document</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+
+                <div class="preview" id="previewContainer" hidden>
+                    <div class="preview-head">
+                        <span>Document preview</span>
+                        <span id="previewFilename" style="color: var(--muted); word-break: break-word;"></span>
                     </div>
+                    <div id="previewArea"></div>
+                </div>
 
-                    <div id="previewContainer" style="display: none; margin-top: 20px; border-top: 1px solid var(--border-main); padding-top: 18px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 700;">
-                            <span>Document Preview</span>
-                            <span id="previewFilename" style="color: var(--ink-secondary);"></span>
-                        </div>
-                        <div id="previewArea"></div>
+                <div class="status" id="statusCard" role="status">
+                    <svg class="mini-stamp" viewBox="0 0 150 180" aria-hidden="true">
+                        <circle cx="75" cy="22" r="20" fill="#15110D"/>
+                        <rect x="65" y="38" width="20" height="34" fill="#15110D"/>
+                        <rect x="40" y="70" width="70" height="14" fill="#15110D"/>
+                        <rect x="16" y="84" width="118" height="26" fill="#A8102E"/>
+                        <rect x="16" y="110" width="118" height="8" fill="#15110D"/>
+                    </svg>
+                    <div>
+                        <div class="status-label" id="statusLabel"></div>
+                        <div class="status-text" id="statusText"></div>
                     </div>
                 </div>
 
-                <!-- Status panel -->
-                <div class="status-panel-editorial" id="statusCard">
-                    <div class="status-badge-lbl" id="statusLabel">Analysis In Progress</div>
-                    <div class="status-msg-text" id="statusText">
-                        <span class="clean-spinner"></span>
-                        <span>Extracting document text and cross-referencing against 23 checklist criteria...</span>
-                    </div>
-                </div>
-
-                <!-- Dynamic results container -->
-                <div id="resultsContainer"></div>
+                <div class="results" id="resultsContainer"></div>
             </div>
         </div>
 
         <!-- ============================================================
-             3. REQUIREMENTS VIEW
+             REQUIREMENTS
              ============================================================ -->
         <div class="view" id="view-requirements">
-            <div class="container">
-                <div class="section-head-editorial">
-                    <span class="pill-badge-sub">Statutory Reference</span>
-                    <h1>PDPA Requirements Catalog</h1>
-                    <p>Browse all 23 criteria evaluated during analysis, including categories, severities, and commencement notes.</p>
+            <div class="wrap">
+                <div class="page-head">
+                    <h1>The 23 requirements</h1>
+                    <p>Everything the checker looks for, drawn from Act No. 9 of 2022 and Act No. 22 of 2025. Open one to see the evidence it expects.</p>
                 </div>
 
-                <div class="search-filter-dock">
-                    <input type="text" class="search-editorial-input" id="reqSearch" placeholder="Search criteria, section, or keywords (e.g. DPO, breach, 21 days)...">
-                    <select class="select-editorial" id="reqCategoryFilter">
-                        <option value="">All Categories</option>
-                    </select>
-                    <select class="select-editorial" id="reqSeverityFilter">
-                        <option value="">All Severities</option>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
-                    </select>
-                    <select class="select-editorial" id="reqEnforceFilter">
-                        <option value="">All Legal States</option>
-                        <option value="commenced">In Force</option>
-                        <option value="pending">Pending Gazette</option>
-                    </select>
+                <div class="filters">
+                    <label class="field grow">Search
+                        <input type="text" id="reqSearch" placeholder="DPO, breach, 21 days">
+                    </label>
+                    <label class="field">Category
+                        <select id="reqCategoryFilter"><option value="">All categories</option></select>
+                    </label>
+                    <label class="field">Severity
+                        <select id="reqSeverityFilter">
+                            <option value="">All severities</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </label>
+                    <label class="field">Legal status
+                        <select id="reqEnforceFilter">
+                            <option value="">Any status</option>
+                            <option value="commenced">In force</option>
+                            <option value="pending">Not yet in force</option>
+                        </select>
+                    </label>
                 </div>
 
-                <div id="reqCount" style="font-size: 13px; color: var(--ink-secondary); margin-bottom: 14px; font-weight: 600;">Loading requirements...</div>
-                <div id="reqList"></div>
-            </div>
-        </div>
-
-        <!-- ============================================================
-             4. HOW IT WORKS VIEW
-             ============================================================ -->
-        <div class="view" id="view-howItWorks">
-            <div class="container">
-                <div class="section-head-editorial">
-                    <span class="pill-badge-sub">Methodology</span>
-                    <h1>How the Checker Works</h1>
-                    <p>A deterministic, AI-assisted pipeline designed to evaluate policies against statutory requirements.</p>
-                </div>
-
-                <div class="timeline-editorial">
-                    <div class="step-editorial-card">
-                        <div class="step-editorial-num">1</div>
-                        <div>
-                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Text &amp; Table Extraction</h3>
-                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">Uploaded PDFs or DOCX files are parsed server-side. All narrative clauses and table cells are cleanly extracted.</p>
-                        </div>
-                    </div>
-
-                    <div class="step-editorial-card">
-                        <div class="step-editorial-num">2</div>
-                        <div>
-                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Structured 23-Item Checklist</h3>
-                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">The backend evaluates evidence against predefined requirements derived from Act No. 9 of 2022 &amp; Act No. 22 of 2025.</p>
-                        </div>
-                    </div>
-
-                    <div class="step-editorial-card">
-                        <div class="step-editorial-num">3</div>
-                        <div>
-                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Gemini AI Analysis</h3>
-                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">The AI compares document clauses against each requirement and labels them <strong>Met</strong>, <strong>Partially Met</strong>, or <strong>Not Addressed</strong>.</p>
-                        </div>
-                    </div>
-
-                    <div class="step-editorial-card">
-                        <div class="step-editorial-num">4</div>
-                        <div>
-                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Deterministic Scoring</h3>
-                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">Overall percentage is calculated deterministically: Met = 1.0 pt, Partially Met = 0.5 pt, Not Addressed = 0.0 pt.</p>
-                        </div>
-                    </div>
-
-                    <div class="step-editorial-card">
-                        <div class="step-editorial-num">5</div>
-                        <div>
-                            <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Remediation Priorities</h3>
-                            <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.55;">High-severity gaps are highlighted first with concise action items.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================
-             5. SCORING METHODOLOGY VIEW
-             ============================================================ -->
-        <div class="view" id="view-scoring">
-            <div class="container">
-                <div class="section-head-editorial">
-                    <span class="pill-badge-sub">Scoring Model</span>
-                    <h1>Scoring Methodology</h1>
-                    <p>How the overall compliance percentage is calculated from the 23-item checklist evaluation.</p>
-                </div>
-
-                <div class="white-card" style="padding: 20px 16px; margin-bottom: 20px;">
-                    <div class="panel-headline">
-                        <span>Points Per Requirement</span>
-                    </div>
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">Fully addressed with clear evidence in the document</span>
-                            <span class="badge-chip Met">Met · 1.0 pt</span>
-                        </div>
-                    </div>
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">Some evidence present, but incomplete or unclear</span>
-                            <span class="badge-chip Partially Met">Partially Met · 0.5 pt</span>
-                        </div>
-                    </div>
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">No evidence found in the document</span>
-                            <span class="badge-chip Not Addressed">Not Addressed · 0.0 pt</span>
-                        </div>
-                    </div>
-                    <p style="font-size: 13px; color: var(--ink-secondary); margin-top: 14px; line-height: 1.6;">
-                        The overall score is the sum of points earned across all 23 requirements, divided by 23, expressed as a percentage:
-                    </p>
-                    <p style="font-size: 13.5px; font-weight: 700; margin-top: 8px; background: var(--bg-card-alt); padding: 10px 14px; border-radius: var(--radius-sm); display: inline-block;">
-                        (Total Points ÷ 23) × 100 = Compliance %
-                    </p>
-                </div>
-
-                <div class="white-card" style="padding: 20px 16px; margin-bottom: 20px;">
-                    <div class="panel-headline">
-                        <span>Score Bands</span>
-                    </div>
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">70% and above</span>
-                            <span class="badge-chip Met">Substantially Aligned</span>
-                        </div>
-                    </div>
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">40% to 69%</span>
-                            <span class="badge-chip Partially Met">Partially Aligned</span>
-                        </div>
-                    </div>
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">Below 40%</span>
-                            <span class="badge-chip Not Addressed">High Remediation Required</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="white-card" style="padding: 20px 16px;">
-                    <div class="panel-headline">
-                        <span>A Note on Severity</span>
-                    </div>
-                    <p style="font-size: 13.5px; color: var(--ink-secondary); line-height: 1.6;">
-                        Each requirement also carries a <strong>severity</strong> rating (High, Medium, or Low) shown alongside its result. Severity does not currently change the points a requirement contributes to the overall score &mdash; every requirement is weighted equally. Severity instead signals which gaps to prioritize first when acting on the recommendations, since a "Not Addressed" High-severity item generally represents greater exposure than a "Not Addressed" Low-severity one.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================
-             6. DISCLAIMER VIEW (Dedicated Toy Project Notice)
-             ============================================================ -->
-        <div class="view" id="view-disclaimer">
-            <div class="container">
-                <div class="disclaimer-hero-card">
-                    <div class="disclaimer-badge">
-                        <span>⚠️ Prototype &amp; Demonstration Project</span>
-                    </div>
-
-                    <h1 class="disclaimer-title">Project Scope &amp; Legal Notice</h1>
-
-                    <p class="disclaimer-lead">
-                        <strong>HeyPDPA! is an experimental toy project and educational prototype.</strong> It was created to demonstrate automated gap detection concepts and is not an official compliance audit tool. No output constitutes binding legal advice or formal certification.
-                    </p>
-
-                    <div class="disclaimer-grid">
-                        <div class="disclaimer-box">
-                            <h3>🏷️ Arbitrary Severity Weightings</h3>
-                            <p>Severity labels (<strong>High</strong>, <strong>Medium</strong>, <strong>Low</strong>) and scoring point values are demonstration heuristics assigned without formal regulatory backing or gazetted consensus.</p>
-                        </div>
-
-                        <div class="disclaimer-box">
-                            <h3>⚖️ Not Legal Advice</h3>
-                            <p>This software does not provide legal opinions or regulatory clearance. Compliance determinations require qualified legal counsel and data protection specialists.</p>
-                        </div>
-
-                        <div class="disclaimer-box">
-                            <h3>📜 Commencement Schedules</h3>
-                            <p>Provisions of the PDPA follow phased commencement dates via government Gazette notices. Some provisions are not yet legally in force.</p>
-                        </div>
-
-                        <div class="disclaimer-box">
-                            <h3>🤖 AI Verification</h3>
-                            <p>AI text models may overlook subtle nuances or misinterpret complex clauses. Results must always be verified manually against the primary legislation.</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="req-count" id="reqCount" aria-live="polite"></div>
+                <div class="req-list" id="reqList"></div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-nav">
-            <a onclick="switchView('landing')">What We Do</a>
-            <a onclick="switchView('checker')">Checker</a>
-            <a onclick="switchView('requirements')">Requirements</a>
-            <a onclick="switchView('howItWorks')">How It Works</a>
-            <a onclick="switchView('scoring')">Scoring</a>
-            <a onclick="switchView('disclaimer')" style="color: #c53030;">Disclaimer</a>
+    <footer id="notice">
+        <div class="wrap">
+            <p class="notice-lead">HeyPDPA! is a toy project and an educational prototype. Nothing it produces is legal advice or a formal certification.</p>
+            <div class="notice-grid">
+                <div>
+                    <h3>Made-up weightings</h3>
+                    <p>Severity labels and point values are demonstration heuristics, with no regulatory backing.</p>
+                </div>
+                <div>
+                    <h3>Not legal advice</h3>
+                    <p>Real compliance decisions need qualified legal counsel and data protection specialists.</p>
+                </div>
+                <div>
+                    <h3>Phased commencement</h3>
+                    <p>PDPA provisions commence in phases through Gazette notices, and some are not yet in force.</p>
+                </div>
+                <div>
+                    <h3>AI can be wrong</h3>
+                    <p>AI models can miss nuance or misread clauses. Check results against the Act itself.</p>
+                </div>
+            </div>
+            <nav class="footer-nav" aria-label="Footer">
+                <a class="navlink" href="#home">Home</a>
+                <a class="navlink" href="#checker">Checker</a>
+                <a class="navlink" href="#requirements">Requirements</a>
+                <a class="navlink" href="#how">How it works</a>
+                <a class="navlink" href="#scoring">Scoring</a>
+            </nav>
+            <p class="wordmark" aria-hidden="true"><span>H</span><span>e</span><span>y</span><span>P</span><span>D</span><span>P</span><span>A</span><span>!</span></p>
+            <p class="legal">&copy; 2026 HeyPDPA! Educational prototype for Sri Lanka's Personal Data Protection Act (Act No. 9 of 2022 and Act No. 22 of 2025).</p>
         </div>
-        <p>&copy; 2026 HeyPDPA! · Educational Prototype for Sri Lanka Personal Data Protection Act (Act No. 9 of 2022 &amp; Act No. 22 of 2025)</p>
     </footer>
 
     <!-- ============================================================
@@ -1999,6 +1031,17 @@
         let checklistLoadError = null;
         let reqInitialized = false;
         let reqDataLoaded = false;
+        const openRequirements = new Set();
+
+        const ARROW_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>`;
+        const MINI_STAMP_SVG = `<svg class="mini-stamp" viewBox="0 0 150 180" aria-hidden="true"><circle cx="75" cy="22" r="20" fill="#15110D"/><rect x="65" y="38" width="20" height="34" fill="#15110D"/><rect x="40" y="70" width="70" height="14" fill="#15110D"/><rect x="16" y="84" width="118" height="26" fill="#A8102E"/><rect x="16" y="110" width="118" height="8" fill="#15110D"/></svg>`;
+
+        // Analysis text and filenames come from outside this page.
+        function esc(value) {
+            const div = document.createElement("div");
+            div.textContent = value == null ? "" : String(value);
+            return div.innerHTML;
+        }
 
         async function loadChecklistData() {
             try {
@@ -2025,82 +1068,59 @@
             }
         }
 
-        // Mobile Menu Toggling
-        function toggleMobileMenu() {
-            const btn = document.getElementById("mobileMenuBtn");
-            const dropdown = document.getElementById("mobileDropdown");
-            if (btn && dropdown) {
-                btn.classList.toggle("open");
-                dropdown.classList.toggle("open");
-            }
+        // Scroll reveals
+        const revealObserver = "IntersectionObserver" in window
+            ? new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("in");
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" })
+            : null;
+
+        function observeReveals(root) {
+            root.querySelectorAll(".reveal").forEach(el => {
+                if (revealObserver) revealObserver.observe(el);
+                else el.classList.add("in");
+            });
         }
 
-        function handleMobileNav(viewName) {
-            const btn = document.getElementById("mobileMenuBtn");
-            const dropdown = document.getElementById("mobileDropdown");
-            if (btn) btn.classList.remove("open");
-            if (dropdown) dropdown.classList.remove("open");
+        // Page routing
+        const VIEW_HASHES = { '': 'landing', '#home': 'landing', '#checker': 'checker', '#requirements': 'requirements' };
 
-            switchView(viewName);
+        function showView(viewName) {
+            document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "view-" + viewName));
+            document.querySelectorAll("[data-nav]").forEach(link => {
+                if (link.dataset.nav === viewName) link.setAttribute("aria-current", "page");
+                else link.removeAttribute("aria-current");
+            });
+            if (viewName === "requirements") openRequirementsTab();
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener("click", (e) => {
-            const navbar = document.getElementById("mainNavbar");
-            const btn = document.getElementById("mobileMenuBtn");
-            const dropdown = document.getElementById("mobileDropdown");
-            if (navbar && !navbar.contains(e.target) && dropdown && dropdown.classList.contains("open")) {
-                dropdown.classList.remove("open");
-                if (btn) btn.classList.remove("open");
+        function route() {
+            const hash = window.location.hash;
+            const viewName = VIEW_HASHES[hash];
+            if (viewName) {
+                showView(viewName);
+                window.scrollTo(0, 0);
+                return;
             }
-        });
-
-        // View Switching
-        function switchView(viewName) {
-            document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-            document.querySelectorAll(".nav-item").forEach(t => t.classList.remove("active"));
-            document.querySelectorAll(".mobile-nav-link").forEach(l => l.classList.remove("active"));
-
-            const targetView = document.getElementById("view-" + viewName);
-            if (targetView) {
-                targetView.classList.add("active");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            const tabBtnMap = {
-                'landing': 'tabLanding',
-                'checker': 'tabChecker',
-                'requirements': 'tabRequirements',
-                'howItWorks': 'tabHowItWorks',
-                'scoring': 'tabScoring',
-                'disclaimer': 'tabDisclaimer'
-            };
-
-            const mTabMap = {
-                'landing': 'mTabLanding',
-                'checker': 'mTabChecker',
-                'requirements': 'mTabRequirements',
-                'howItWorks': 'mTabHowItWorks',
-                'scoring': 'mTabScoring',
-                'disclaimer': 'mTabDisclaimer'
-            };
-
-            const activeBtn = document.getElementById(tabBtnMap[viewName]);
-            if (activeBtn) activeBtn.classList.add("active");
-
-            const activeMBtn = document.getElementById(mTabMap[viewName]);
-            if (activeMBtn) activeMBtn.classList.add("active");
-
-            if (viewName === "requirements") {
-                openRequirementsTab();
-            }
+            // Anything else is a section of the home page, such as #how.
+            const target = hash.length > 1 ? document.getElementById(hash.slice(1)) : null;
+            const inFooter = target && target.tagName === "FOOTER";
+            if (!inFooter) showView("landing");
+            if (target) target.scrollIntoView({ behavior: "smooth" });
         }
 
-        // Requirements Tab logic
+        window.addEventListener("hashchange", route);
+
+        // Requirements page
         async function openRequirementsTab() {
             const list = document.getElementById("reqList");
             if (!reqDataLoaded) {
-                list.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--ink-faint);"><span class="clean-spinner"></span> Loading statutory criteria...</div>`;
+                list.innerHTML = `<div class="loader-line">${MINI_STAMP_SVG}<span>Loading the requirements. The free server can take up to a minute to wake up.</span></div>`;
                 document.getElementById("reqCount").textContent = "";
 
                 await loadChecklistData();
@@ -2108,9 +1128,9 @@
 
                 if (checklistLoadError || PDPA_CHECKLIST.length === 0) {
                     list.innerHTML = `
-                        <div style="text-align:center; padding: 40px; color: var(--ink-secondary);">
-                            Unable to connect to server (${checklistLoadError || "no data returned"}).<br><br>
-                            <button class="btn-pill-sec" onclick="reqDataLoaded=false; openRequirementsTab();">Retry</button>
+                        <div class="empty">
+                            <p>Couldn't reach the server (${esc(checklistLoadError || "no data returned")}).</p>
+                            <button type="button" class="btn-quiet" style="margin-top: 14px;" onclick="reqDataLoaded=false; openRequirementsTab();">Try again</button>
                         </div>
                     `;
                     return;
@@ -2122,8 +1142,8 @@
         function initRequirementsFilters() {
             const categoryFilter = document.getElementById("reqCategoryFilter");
             const categories = [...new Set(PDPA_CHECKLIST.map(item => item.category))].sort();
-            
-            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+
+            categoryFilter.innerHTML = '<option value="">All categories</option>';
             categories.forEach(cat => {
                 const opt = document.createElement("option");
                 opt.value = cat;
@@ -2139,9 +1159,13 @@
             reqInitialized = true;
         }
 
-        function toggleReqCard(id) {
-            const el = document.getElementById("req-card-" + id);
-            if (el) el.classList.toggle("open");
+        function toggleReq(id) {
+            const row = document.getElementById("req-" + id);
+            if (!row) return;
+            const isOpen = row.classList.toggle("open");
+            row.querySelector(".req-toggle").setAttribute("aria-expanded", String(isOpen));
+            if (isOpen) openRequirements.add(id);
+            else openRequirements.delete(id);
         }
 
         function renderRequirements() {
@@ -2169,46 +1193,39 @@
             });
 
             document.getElementById("reqCount").textContent =
-                `Showing ${filtered.length} of ${PDPA_CHECKLIST.length} statutory requirements`;
+                `Showing ${filtered.length} of ${PDPA_CHECKLIST.length}`;
 
             const list = document.getElementById("reqList");
 
             if (filtered.length === 0) {
-                list.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--ink-faint);">No requirements match your current search filters.</div>`;
+                const noneInForce = enforceFilter === "commenced" && !PDPA_CHECKLIST.some(item => item.enforcement.commenced);
+                list.innerHTML = `<div class="empty">${noneInForce
+                    ? "None of these requirements is in force yet, according to the checklist. Choose \"Not yet in force\" or \"Any status\" to see them."
+                    : "Nothing matches those filters."}</div>`;
                 return;
             }
 
-            list.innerHTML = filtered.map(item => {
-                const enforceLabel = item.enforcement.commenced ? "In Force" : "Pending Gazette";
-                const enforceClass = item.enforcement.commenced ? "pill-tag in-force" : "pill-tag";
-
+            list.innerHTML = filtered.map((item, idx) => {
+                const isOpen = openRequirements.has(item.id);
+                const secShort = esc(String(item.act_reference.section).replace(/^Section\s+/, "S.").split(",")[0]);
                 return `
-                    <div class="req-card-editorial" id="req-card-${item.id}" onclick="toggleReqCard('${item.id}')">
-                        <div class="req-card-header">
-                            <div>
-                                <span class="req-item-id">${item.id} · ${item.category}</span>
-                                <div class="req-item-title">${item.requirement}</div>
+                    <div class="req${isOpen ? " open" : ""}" id="req-${esc(item.id)}" style="--d: ${Math.min(idx, 10) * 0.03}s;">
+                        <button type="button" class="req-toggle" aria-expanded="${isOpen}" onclick="toggleReq('${esc(item.id)}')">
+                            <span class="req-sec">${secShort}</span>
+                            <span class="req-name">${esc(item.category)}</span>
+                            <span class="req-sev ${esc(item.severity)}">${esc(item.severity)}</span>
+                            <svg class="req-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg>
+                        </button>
+                        <div class="req-body"><div>
+                            <div class="req-inner">
+                                <div class="wide"><h4>The requirement</h4><p>${esc(item.requirement)}</p></div>
+                                <div><h4>Evidence it looks for</h4><p>${esc(item.what_to_look_for)}</p></div>
+                                <div>
+                                    <h4>Legal status</h4><p>${esc(item.enforcement.note)}</p>
+                                    <p class="mono" style="font-size: 13px; color: var(--muted); margin-top: 12px;">${esc(item.id)} · ${esc(item.act_reference.part)} · ${esc(item.act_reference.section)}</p>
+                                </div>
                             </div>
-                            <div class="req-badges-row">
-                                <span class="pill-tag ${item.severity}">${item.severity}</span>
-                                <span class="${enforceClass}">${enforceLabel}</span>
-                            </div>
-                        </div>
-                        <div class="req-card-body">${item.what_to_look_for}</div>
-                        <div class="req-card-foot">
-                            <span class="req-statutory-cite">${item.act_reference.part} · ${item.act_reference.section}</span>
-                            <button class="req-toggle-link" onclick="event.stopPropagation(); toggleReqCard('${item.id}')">Details</button>
-                        </div>
-                        <div class="req-details-drawer">
-                            <div style="margin-bottom: 8px;">
-                                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-faint);">Evidence to look for</div>
-                                <div style="font-size: 13px; color: var(--ink-secondary); line-height: 1.5;">${item.what_to_look_for}</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-faint);">Enforcement Schedule Note</div>
-                                <div style="font-size: 13px; color: var(--ink-secondary); line-height: 1.5;">${item.enforcement.note}</div>
-                            </div>
-                        </div>
+                        </div></div>
                     </div>
                 `;
             }).join("");
@@ -2218,6 +1235,8 @@
         const fileInput = document.getElementById("fileInput");
         const fileDrop = document.getElementById("fileDrop");
         const fileDropLabel = document.getElementById("fileDropLabel");
+        const fileDropSub = document.getElementById("fileDropSub");
+        const fileDropSubDefault = fileDropSub.textContent;
         const previewContainer = document.getElementById("previewContainer");
         const previewArea = document.getElementById("previewArea");
         const previewFilename = document.getElementById("previewFilename");
@@ -2225,26 +1244,29 @@
         fileInput.addEventListener("change", () => {
             previewArea.innerHTML = "";
             if (fileInput.files.length === 0) {
-                fileDropLabel.innerHTML = "<strong>Click to browse</strong> or drag &amp; drop document";
-                previewContainer.style.display = "none";
+                fileDropLabel.textContent = "Drop a policy here, or browse";
+                fileDropSub.textContent = fileDropSubDefault;
+                previewContainer.hidden = true;
                 return;
             }
 
             const file = fileInput.files[0];
             const ext = file.name.split(".").pop().toLowerCase();
-            fileDropLabel.innerHTML = `Selected: <strong>${file.name}</strong> (${(file.size / (1024*1024)).toFixed(2)} MB)`;
-            previewContainer.style.display = "block";
+            fileDropLabel.textContent = file.name;
+            fileDropSub.textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB. Choose or drop another file to replace it.`;
+            previewContainer.hidden = false;
             previewFilename.textContent = file.name;
 
             if (ext === "pdf") {
-                const fileURL = URL.createObjectURL(file);
-                previewArea.innerHTML = `<iframe src="${fileURL}" style="width:100%; height:320px; border:1px solid var(--border-main); border-radius:12px;"></iframe>`;
+                const frame = document.createElement("iframe");
+                frame.src = URL.createObjectURL(file);
+                frame.title = "Preview of " + file.name;
+                previewArea.appendChild(frame);
             } else {
-                previewArea.innerHTML = `
-                    <div style="background:var(--bg-page); padding:18px; text-align:center; font-size:13.5px; color:var(--ink-secondary); border-radius:12px; border:1px solid var(--border-main);">
-                        Word Document (.${ext}) selected. Content and tables will be extracted during analysis.
-                    </div>
-                `;
+                const note = document.createElement("div");
+                note.className = "preview-note";
+                note.textContent = "Word documents can't be previewed here. The text and tables will be extracted when you run the check.";
+                previewArea.appendChild(note);
             }
         });
 
@@ -2278,8 +1300,15 @@
             const statusText = document.getElementById("statusText");
             const resultsContainer = document.getElementById("resultsContainer");
 
+            function showStatus(type, label, message) {
+                statusCard.className = "status visible" + (type ? " " + type : "");
+                statusLabel.textContent = label;
+                statusText.textContent = message;
+                statusCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+
             if (fileInput.files.length === 0) {
-                showStatus("error", "Notice", "Please select a PDF or DOCX file first.");
+                showStatus("error", "No file yet", "Choose a PDF or DOCX file first.");
                 return;
             }
 
@@ -2287,9 +1316,9 @@
             formData.append("file", fileInput.files[0]);
 
             uploadBtn.disabled = true;
-            uploadBtn.innerHTML = `<span>Analyzing...</span>`;
+            uploadBtn.innerHTML = `<span>Stamping...</span>`;
             resultsContainer.innerHTML = "";
-            showStatus("", "AI Compliance Engine Active", '<span class="clean-spinner"></span><span>Extracting clauses and cross-referencing against 23 PDPA requirements...</span>');
+            showStatus("", "Working on it", "Reading the document and checking all 23 requirements. If the free server is asleep, this can take an extra minute.");
 
             try {
                 let response = await fetch(`${API_BASE}/upload`, {
@@ -2314,163 +1343,139 @@
                 }
 
                 const data = await response.json();
-                statusCard.className = "status-panel-editorial";
+                statusCard.className = "status";
                 renderResults(data);
             } catch (error) {
-                showStatus("error", "Analysis Error", error.message || "An unexpected error occurred.");
+                showStatus("error", "That didn't work", error.message || "An unexpected error occurred.");
             } finally {
                 uploadBtn.disabled = false;
-                uploadBtn.innerHTML = `<span>Analyze Document</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
-            }
-
-            function showStatus(type, label, message) {
-                statusCard.className = "status-panel-editorial visible" + (type ? " " + type : "");
-                statusLabel.textContent = label;
-                statusText.innerHTML = message;
+                uploadBtn.innerHTML = `<span>Check this document</span>${ARROW_SVG}`;
             }
         }
 
-        // SVG Speedometer Meter
-        function buildSpeedometerSVG(percentage) {
-            let strokeColor = "#c53030";
-            if (percentage >= 70) strokeColor = "#1e8346";
-            else if (percentage >= 40) strokeColor = "#b45309";
+        const STATUS_CLASS = { "Met": "met", "Partially Met": "partial", "Not Addressed": "gap" };
 
-            const radius = 78;
-            const circumference = Math.PI * radius;
-            const filled = (percentage / 100) * circumference;
+        function bandFor(percentage) {
+            if (percentage >= 70) return { label: "SUBSTANTIALLY ALIGNED", color: "var(--met)" };
+            if (percentage >= 40) return { label: "PARTIALLY ALIGNED", color: "var(--partial)" };
+            return { label: "HIGH REMEDIATION REQUIRED", color: "var(--gap)" };
+        }
 
-            return `
-                <svg width="190" height="110" viewBox="0 0 200 115">
-                    <path d="M 22 105 A 78 78 0 0 1 178 105"
-                        fill="none" stroke="#e6e1d6" stroke-width="15" stroke-linecap="round" />
-                    <path d="M 22 105 A 78 78 0 0 1 178 105"
-                        fill="none" stroke="${strokeColor}" stroke-width="15" stroke-linecap="round"
-                        stroke-dasharray="${circumference}"
-                        stroke-dashoffset="${circumference - filled}"
-                        style="transition: stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1);" />
-                </svg>
-            `;
+        function countUp(el, target) {
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                el.textContent = target.toFixed(1);
+                return;
+            }
+            const start = performance.now();
+            const duration = 1100;
+            (function frame(now) {
+                const t = Math.min(1, (now - start) / duration);
+                const eased = 1 - Math.pow(1 - t, 3);
+                el.textContent = (target * eased).toFixed(1);
+                if (t < 1) requestAnimationFrame(frame);
+            })(start);
         }
 
         function renderResults(data) {
             const resultsContainer = document.getElementById("resultsContainer");
-            const percentage = data.compliance_percentage;
-
-            let scoreColor = "#c53030";
-            let statusLabel = "High Remediation Required";
-            if (percentage >= 70) {
-                scoreColor = "#1e8346";
-                statusLabel = "Substantially Aligned";
-            } else if (percentage >= 40) {
-                scoreColor = "#b45309";
-                statusLabel = "Partially Aligned";
-            }
+            const percentage = Number(data.compliance_percentage) || 0;
+            const band = bandFor(percentage);
 
             const metCount = data.results.filter(r => r.status === "Met").length;
             const partialCount = data.results.filter(r => r.status === "Partially Met").length;
             const unaddressedCount = data.results.filter(r => r.status === "Not Addressed").length;
 
-            let html = `
-                <div class="white-card">
-                    <div class="score-banner-editorial">
-                        <div class="gauge-wrap-clean">
-                            ${buildSpeedometerSVG(percentage)}
-                            <div class="gauge-display-center">
-                                <div class="gauge-score-num" style="color: ${scoreColor}">${percentage}%</div>
-                                <div class="gauge-score-status">${statusLabel}</div>
-                            </div>
-                        </div>
+            const bars = data.results.map((item, idx) =>
+                `<div class="bar ${STATUS_CLASS[item.status] || "gap"}" title="${esc(item.category)}: ${esc(item.status)}" style="--d: ${(idx * 0.03).toFixed(2)}s;"></div>`
+            ).join("");
+
+            const rows = data.results.map(item => {
+                const cls = STATUS_CLASS[item.status] || "gap";
+                return `
+                    <div class="result-row reveal">
                         <div>
-                            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Overall PDPA Compliance Score</h3>
-                            <div style="font-size: 13px; color: var(--ink-secondary); font-weight: 600; word-break: break-all;">File: ${data.filename}</div>
-                            ${data.document_truncated ? `
-                            <div style="font-size: 13px; color: var(--status-partial); background: var(--status-partial-bg); font-weight: 600; line-height: 1.5; padding: 8px 12px; border-radius: var(--radius-sm); margin-top: 10px;">
-                                This document was too long to analyze in full. Only the first ${data.characters_analyzed.toLocaleString()} of ${data.characters_total.toLocaleString()} characters were checked, so requirements covered later in the document may be marked Not Addressed.
-                            </div>` : ""}
-                            <div class="score-pills-row">
-                                <div class="stat-chip">
-                                    <span class="stat-chip-num" style="color: #1e8346;">${metCount}</span>
-                                    <span class="stat-chip-lbl">Met</span>
-                                </div>
-                                <div class="stat-chip">
-                                    <span class="stat-chip-num" style="color: #b45309;">${partialCount}</span>
-                                    <span class="stat-chip-lbl">Partial</span>
-                                </div>
-                                <div class="stat-chip">
-                                    <span class="stat-chip-num" style="color: #c53030;">${unaddressedCount}</span>
-                                    <span class="stat-chip-lbl">Missing</span>
-                                </div>
-                                <div class="stat-chip">
-                                    <span class="stat-chip-num">${data.results.length}</span>
-                                    <span class="stat-chip-lbl">Total Checks</span>
-                                </div>
-                            </div>
+                            <h3>${esc(item.category)}</h3>
+                            <div class="meta">${item.id ? esc(item.id) + " · " : ""}${esc(item.severity)} severity</div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="results-editorial-grid">
-                    <div class="white-card" style="padding: 20px 16px;">
-                        <div class="panel-headline">
-                            <span>Requirement Breakdown</span>
-                            <span style="font-size: 12px; color: var(--ink-faint); font-weight: 600;">${data.results.length} Evaluated</span>
-                        </div>
-                        <div>
-            `;
-
-            data.results.forEach(item => {
-                let badgeStatusClass = item.status === "Met" ? "Met" : item.status === "Partially Met" ? "Partially Met" : "Not Addressed";
-
-                html += `
-                    <div class="result-row-editorial">
-                        <div class="result-row-head">
-                            <span class="result-cat-title">${item.id ? '[' + item.id + '] ' : ''}${item.category}</span>
-                            <span class="badge-chip ${badgeStatusClass}">${item.status}</span>
-                        </div>
-                        <div class="result-row-expl">${item.explanation}</div>
-                        <div style="font-size: 11px; color: var(--ink-faint); margin-top: 6px; font-weight: 600;">Severity: ${item.severity}</div>
+                        <span class="print ${cls}"><span class="ink">${esc(String(item.status).toUpperCase())}</span></span>
+                        <p class="expl">${esc(item.explanation)}</p>
                     </div>
                 `;
-            });
+            }).join("");
 
-            html += `
-                        </div>
+            const recs = (data.recommendations && data.recommendations.length > 0)
+                ? data.recommendations.map((rec, idx) => `
+                    <div class="rec reveal">
+                        <span class="n">${idx + 1}</span>
+                        <p>${esc(rec)}</p>
                     </div>
+                `).join("")
+                : `<p style="font-size: 16px; line-height: 1.45;">No critical gaps were identified in this document.</p>`;
 
-                    <div class="white-card" style="padding: 20px 16px;">
-                        <div class="panel-headline">
-                            <span>Recommended Actions</span>
-                            <span style="font-size: 11px; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 99px;">High Priority</span>
-                        </div>
+            resultsContainer.innerHTML = `
+                <div class="report-panel reveal">
+                    <div class="score-top">
                         <div>
-            `;
-
-            if (data.recommendations && data.recommendations.length > 0) {
-                data.recommendations.forEach((rec, idx) => {
-                    html += `
-                        <div class="rec-item-editorial">
-                            <div class="rec-num-badge">${idx + 1}</div>
-                            <div>${rec}</div>
+                            <p class="score-kicker">${esc(data.filename)}</p>
+                            <p class="score-num"><span id="scoreValue">0.0</span><small>%</small></p>
+                            <span class="band-stamp" style="color: ${band.color};">${band.label}</span>
                         </div>
-                    `;
-                });
-            } else {
-                html += `<div style="color: var(--ink-secondary); font-size: 13.5px;">No critical gaps identified in this document.</div>`;
-            }
+                        <p class="score-counts">${metCount} met<br>${partialCount} partial<br>${unaddressedCount} not addressed</p>
+                    </div>
+                    ${data.document_truncated ? `
+                    <p class="notice">This document was too long to check in full. Only the first ${Number(data.characters_analyzed).toLocaleString()} of ${Number(data.characters_total).toLocaleString()} characters were read, so requirements covered later may show as Not Addressed.</p>` : ""}
+                    <div class="bands" style="--at: ${Math.min(100, percentage)}%;" aria-hidden="true">
+                        <i class="b1"></i><i class="b2"></i><i class="b3"></i>
+                        <div class="pin"></div>
+                    </div>
+                    <div class="band-labels">
+                        <span>Below 40<br>High remediation required</span>
+                        <span>40 to 69<br>Partially aligned</span>
+                        <span>70 and above<br>Substantially aligned</span>
+                    </div>
+                    <div class="ticks" aria-hidden="true">${bars}</div>
+                </div>
 
-            html += `
-                        </div>
+                <div class="results-grid">
+                    <div>
+                        <h2 class="col-title">All ${data.results.length} stamps</h2>
+                        ${rows}
+                    </div>
+                    <div class="recs">
+                        <h2 class="col-title">Where to start</h2>
+                        ${recs}
                     </div>
                 </div>
             `;
 
-            resultsContainer.innerHTML = html;
-            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            observeReveals(resultsContainer);
+            countUp(document.getElementById("scoreValue"), percentage);
+            resultsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        // Home page decoration
+        function buildHomeDetails() {
+            const names = [
+                ['S.5', 'Lawful basis'], ['S.6', 'Purpose limitation'], ['S.7', 'Data minimization'], ['S.8', 'Data accuracy'],
+                ['S.9', 'Retention limitation'], ['S.10', 'Security of processing'], ['S.11', 'Privacy notice'], ['S.12', 'Accountability'],
+                ['S.13', 'Access'], ['S.14', 'Withdrawal and objection'], ['S.15', 'Rectification'], ['S.16', 'Erasure'],
+                ['S.17', 'Request timelines'], ['S.18', 'Automated decisions'], ['S.20', 'Data Protection Officer'], ['S.21', 'Processor engagement'],
+                ['S.22', 'Processor obligations'], ['S.23', 'Breach notification'], ['S.24', 'Impact assessment'], ['S.25', 'Risk mitigation'],
+                ['S.26', 'Cross-border flow'], ['S.27', 'Direct marketing'], ['S.5', 'Children']
+            ];
+            document.getElementById("tapeTrack").innerHTML = names.concat(names)
+                .map(([sec, name]) => `<span><b>${sec}</b> ${name}</span>`).join("");
+
+            const classes = { M: "met", P: "partial", N: "gap" };
+            document.getElementById("exampleTicks").innerHTML = "PMMMPMMPMPMPPNNMMNNPMMN".split("")
+                .map((st, idx) => `<div class="bar ${classes[st]}" title="${names[idx][0]} ${names[idx][1]}" style="--d: ${(idx * 0.04).toFixed(2)}s;"></div>`).join("");
         }
 
         // Preload checklist on page startup
         window.addEventListener("DOMContentLoaded", () => {
+            buildHomeDetails();
+            observeReveals(document);
+            route();
             loadChecklistData();
         });
     </script>

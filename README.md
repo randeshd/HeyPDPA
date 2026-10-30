@@ -12,11 +12,10 @@ The checklist tracks each requirement's legal enforcement status separately from
 
 ## Features
 
+- **Home** — explains the extraction → AI analysis → scoring pipeline and the exact scoring model: points per status, the score formula, score bands, and how severity relates to the score
 - **Checker** — upload a PDF/DOCX, get a full 23-point gap analysis with a compliance score, requirement-by-requirement breakdown, and recommendations
 - **Requirements** — browse all 23 checklist items with search, category, severity, and enforcement-status filters
-- **How It Works** — explains the extraction → checklist → AI analysis → scoring pipeline
-- **Scoring** — documents the exact scoring model: points per status, the score formula, score bands, and how severity relates to the score
-- **Disclaimer** — scope and limitations notice
+- **Disclaimer** — scope and limitations notice, in the footer of every page
 
 ## Tech stack
 
