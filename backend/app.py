@@ -15,6 +15,7 @@ CORS(app)
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 MAX_FILE_SIZE_MB = 10
+MAX_DOCUMENT_CHARS = 200000
 ALLOWED_EXTENSIONS = [".pdf", ".docx"]
 
 with open("pdpa_checklist.json", "r") as f:
@@ -61,7 +62,7 @@ CHECKLIST:
 {checklist_text}
 
 DOCUMENT TO ANALYZE:
-{document_text[:8000]}
+{document_text[:MAX_DOCUMENT_CHARS]}
 
 Respond ONLY with valid JSON (no markdown formatting, no code blocks, no extra text) in this exact structure:
 
@@ -181,6 +182,9 @@ def upload_file():
     return {
         "filename": filename,
         "compliance_percentage": compliance_percentage,
+        "document_truncated": len(extracted_text) > MAX_DOCUMENT_CHARS,
+        "characters_analyzed": min(len(extracted_text), MAX_DOCUMENT_CHARS),
+        "characters_total": len(extracted_text),
         "results": results,
         "recommendations": recommendations
     }

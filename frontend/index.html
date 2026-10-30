@@ -1734,7 +1734,7 @@
                         </div>
                         <div class="drop-title" id="fileDropLabel"><strong>Click to browse</strong> or drag &amp; drop document</div>
                         <div class="drop-sub">PDF or DOCX files up to 10MB</div>
-                        <div class="drop-sub" style="margin-top: 2px;">Only the first ~8,000 characters of extracted text are analyzed per document</div>
+                        <div class="drop-sub" style="margin-top: 2px;">Up to 200,000 characters of extracted text (roughly 80 pages) are analyzed per document</div>
                     </label>
 
                     <div class="upload-row-actions">
@@ -2384,6 +2384,10 @@
                         <div>
                             <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Overall PDPA Compliance Score</h3>
                             <div style="font-size: 13px; color: var(--ink-secondary); font-weight: 600; word-break: break-all;">File: ${data.filename}</div>
+                            ${data.document_truncated ? `
+                            <div style="font-size: 13px; color: var(--status-partial); background: var(--status-partial-bg); font-weight: 600; line-height: 1.5; padding: 8px 12px; border-radius: var(--radius-sm); margin-top: 10px;">
+                                This document was too long to analyze in full. Only the first ${data.characters_analyzed.toLocaleString()} of ${data.characters_total.toLocaleString()} characters were checked, so requirements covered later in the document may be marked Not Addressed.
+                            </div>` : ""}
                             <div class="score-pills-row">
                                 <div class="stat-chip">
                                     <span class="stat-chip-num" style="color: #1e8346;">${metCount}</span>
